@@ -3,16 +3,32 @@
 #When working together on the same repository we have to avoid merge conflicts. Therefore this file was created. It will, when used correctly, save endless amounts of time.
 
 Instruction:
-1. Use "git clone git@github.com:knusperpeter/minishell.git minishell" to clone the main branch.
-2. Use "git checkout -b <branchname>" to switch to the new branch.
-3. Edit the files in this branch to your liking.
-4. Use "git add *" and "git commit -m <commit message>" to add and commit the changes made.
-5. Use "git push -u origin <branchname>" if it is the first time you are pushing the branch to create a pull request for the branch. (if you want to push this branch again later, "git push" works.
-6. Use "git pull origin main" to bring any changes that have been made in main into your branch. This will avoid potential merge conflicts since it will update the branch with changes made in main.
-7. Go to github.com and check the pull requests. Click on "New pull request" and add details. Then go on and click "Create pull request"
-8. Now check again in "Pull requests" if there are merge conflicts. If there are no conflicts, merge the pull request.
-  8.1 In case of conflicts use "git pull origin main", then look at the conflict in the code editor. Now check the code, and select which changes should be accepted. Make sure to save the file.
-  8.2 Use "git add *", "git commit -m <commit message>" and "git push" on the branch.
-  8.3 Go back to step 7.
-9. If you are finished on that particular branch, you can go back to main branch with "git checkout main", then "git pull" to update the local main with the made changes.
-10. Use "git branch -D <branchname>" to delete the finished branch on your local machine. The branch will still be saved online.
+1.	Use "git clone git@github.com:knusperpeter/minishell.git minishell" to clone the main branch.
+
+2.	Use "git checkout -b <branchname>" to switch to the new branch.
+
+3.	Edit the files in this branch to your liking.
+
+4.	Use "git add *" and "git commit -m <commit message>" to add and commit the changes made.
+
+5.	Use "git push -u origin <branchname>" if it is the first time you are pushing the branch to create
+	a pull request for the branch. (if you want to push this branch again later, "git push" works.
+
+6.	Use "git pull origin main" to bring any changes that have been made in main into your branch.
+	This will avoid potential merge conflicts since it will update the branch with changes made in main.
+
+7.	Go to github.com and check the pull requests. Click on "New pull request" and add details.
+	Then go on and click "Create pull request"
+
+8.	Now check again in "Pull requests" if there are merge conflicts. If there are no conflicts,
+	merge the pull request.
+	8.1	In case of conflicts use "git pull origin main", then look at the conflict in the code editor.
+		Now check the code, and select which changes should be accepted. Make sure to save the file.
+	8.2	Use "git add *", "git commit -m <commit message>" and "git push" on the branch.
+	8.3	Go back to step #7
+
+9.	If you are finished on that particular branch, you can go back to main branch with
+	"git checkout main", then "git pull" to update the local main with the made changes.
+
+10.	Use "git branch -D <branchname>" to delete the finished branch on your local machine.
+	The branch will still be saved online.
