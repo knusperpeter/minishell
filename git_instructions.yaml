@@ -1,7 +1,7 @@
-#This is the instruction file for using git in the minishell team.
+# This is the instruction file for using git in the minishell team.
 
-#When working together on the same repository we have to avoid merge conflicts.
-#Therefore this file was created. It will, when used correctly, save endless amounts of time.
+# When working together on the same repository we have to avoid merge conflicts.
+# Therefore this file was created. It will, when used correctly, save endless amounts of time.
 
 Instruction:
 1.	Use "git clone git@github.com:knusperpeter/minishell.git minishell" to clone the main branch.
@@ -24,7 +24,7 @@ Instruction:
 8.	Now check again in "Pull requests" if there are merge conflicts. If there are no conflicts,
 	merge the pull request.
 	8.1	In case of conflicts use "git pull origin main", then look at the conflict in the code editor.
-		Now check the code, and select which changes should be accepted. Make sure to save the file.
+		Now check the code, and select which changes should be accepted. Make sure to save the file!
 	8.2	Use "git add *", "git commit -m <commit message>" and "git push" on the branch.
 	8.3	Go back to step #7
 
