@@ -6,9 +6,13 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/01/28 23:43:56 by caigner          ###   ########.fr       */
+/*   Updated: 2024/01/29 18:35:40 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
+int	main(void)
+{
+	return (0);
+}
