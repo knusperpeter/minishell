@@ -17,5 +17,3 @@ Here's a step-by-step guide to the project:
 8. **Handle signals**: Your shell should respond appropriately to certain signals, such as `ctrl + C`, `ctrl + \`, and `ctrl + D`. For these signals, you'll need to catch `SIGINT` and `SIGQUIT`, and check for `EOF` or the end of string (`NULL` character) in the case of `ctrl + D` [Source 0](https://m4nnb3ll.medium.com/minishell-building-a-mini-bash-a-42-project-b55a10598218).
 
 9. **Test your shell**: Finally, thoroughly test your shell to ensure it behaves as expected. Be prepared to handle edge cases and potential errors [Source 2](https://harm-smits.github.io/42docs/projects/minishell).
-
-Remember, this is a complex project that requires careful planning and testing. Don't hesitate to seek help from others if you encounter difficulties.
