@@ -1,1 +1,13 @@
-delete all and pull branch again.
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/30 15:57:31 by caigner           #+#    #+#             */
+/*   Updated: 2024/01/30 15:58:20 by caigner          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+//declare -x is widely used to mark a variable for export to environment variables
