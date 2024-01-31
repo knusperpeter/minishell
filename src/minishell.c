@@ -6,11 +6,43 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/01/31 18:32:22 by caigner          ###   ########.fr       */
+/*   Updated: 2024/01/31 19:15:07 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+#include <stdlib.h>
+
+void free_nodes(t_env *start)
+{
+    t_env *tmp;
+
+    while (start != NULL) {
+        tmp = start;
+        start = start->next;
+        free(tmp->variable);
+        free(tmp);
+    }
+}
+
+int	create_list_element(void **element, size_t size)
+{
+	*element = malloc(size);
+	if (*element == NULL)
+		return (1);
+	return (0);
+}
+
+void	init_env(t_env *node, char *envp, t_env *prev)
+{
+		node->variable = ft_strdup(envp);
+		node->flag = 0;
+		if (!*(ft_strchr(node->variable, '=') + 1))
+			node->flag = 1;
+		node->prev = prev;
+		node->next = NULL;
+}
 
 int	dup_env(t_common *c, char **envp)
 {
@@ -24,18 +56,12 @@ int	dup_env(t_common *c, char **envp)
 	prev = NULL;
 	while (envp[i])
 	{
-		node = malloc(sizeof(t_env));
-		if (!node)
+		if (create_list_element((void **) &node, sizeof(t_env)))
 		{
 			free_nodes(start);
-			return (-1);
+			return (1);
 		}
-		node->variable = ft_strdup(envp[i]);
-		node->flag = 0;
-		if (!*(ft_strchr(node->variable, '=') + 1))
-			node->flag = 1;
-		node->prev = prev;
-		node->next = NULL;
+		init_env(node, envp[i], prev);
 		if (!start)
 			start = node;
 		else

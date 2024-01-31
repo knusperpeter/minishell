@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/01/31 17:46:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/01/31 19:29:01 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,13 @@ typedef struct s_env{
 	struct s_env	*prev;
 } t_env;
 
-//Inputs and what attributes come with them is locatedhere.
+//Inputs and what attributes come with them is locatedhere. Felix meint: Each pipe creates a new node.
 struct s_node{
 	char			**str;
 	int				quote;
+	int				in_fd;
+	int				out_fd;
+	int				builtin;
 	t_type			type;
 	struct s_node	*next;
 	struct s_node	*prev;
