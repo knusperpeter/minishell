@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/01/30 20:11:07 by caigner          ###   ########.fr       */
+/*   Updated: 2024/01/31 17:46:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,30 +48,29 @@ typedef struct PromptData {
 }	t_prompt;
 
 //Environment key-value pairs are saved here. The flag indicates if the key is defined or not.
-struct s_env{
-	char	*key;
-	char	*value;
-	int		flag;
-	s_env	*next;
-	s_env	*prev;
-};
+typedef struct s_env{
+	char			*variable;
+	int				flag;
+	struct s_env	*next;
+	struct s_env	*prev;
+} t_env;
 
 //Inputs and what attributes come with them is locatedhere.
 struct s_node{
-	char	**str;
-	int		quote;
-	t_type	type;
-	s_node	*next;
-	s_node	*prev;
+	char			**str;
+	int				quote;
+	t_type			type;
+	struct s_node	*next;
+	struct s_node	*prev;
 };
 
 //Common struct
 typedef struct common_data
 {
-	int			exitstatus;
-	s_env		*env;
-	s_node		*tokenslist;
-	t_prompt	*t_prompt;
+	int				exitstatus;
+	t_env			*env;
+	struct s_node	*tokenslist;
+	t_prompt		*prompt;
 }	t_common;
 
 #endif
