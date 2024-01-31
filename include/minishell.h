@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/01/31 19:29:01 by caigner          ###   ########.fr       */
+/*   Updated: 2024/01/31 22:30:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@
 
 // enum can be used anywhere. VOID == 0, PIPE == 1, STRING == 2, ...
 // https://www.programiz.com/c-programming/c-enumeration
-// Ex.: "common->tokenslist->type = VOID" is the same as "common->tokenslist->type = 0"
+// Ex.: "common->tokenslist->type = VOID" is the same as
+//		"common->tokenslist->type = 0"
 typedef enum e_type
 {
 	VOID,
@@ -41,22 +42,27 @@ typedef enum e_type
 }	t_type;
 
 //Promptdata. Self-explainatory...
-typedef struct PromptData {
+typedef struct PromptData
+{
 	char			*username;
 	char			*hostname;
 	char			*prompt_text;
 }	t_prompt;
 
-//Environment key-value pairs are saved here. The flag indicates if the key is defined or not.
-typedef struct s_env{
+//Environment key-value pairs are saved here. The flag indicates if
+//the key is defined or not.
+typedef struct s_env
+{
 	char			*variable;
 	int				flag;
 	struct s_env	*next;
 	struct s_env	*prev;
-} t_env;
+}	t_env;
 
-//Inputs and what attributes come with them is locatedhere. Felix meint: Each pipe creates a new node.
-struct s_node{
+//Inputs and what attributes come with them is locatedhere.
+//Each pipe stands for a new node.???????
+struct s_node
+{
 	char			**str;
 	int				quote;
 	int				in_fd;
@@ -75,5 +81,11 @@ typedef struct common_data
 	struct s_node	*tokenslist;
 	t_prompt		*prompt;
 }	t_common;
+
+int	create_list_element(void **element, size_t size);
+
+//builtins
+int	ft_pwd(void);
+int	ft_env(t_env *env);
 
 #endif

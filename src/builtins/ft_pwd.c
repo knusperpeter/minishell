@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/01/29 22:22:14 by caigner          ###   ########.fr       */
+/*   Updated: 2024/01/31 21:59:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_pwd(void)
 {
 	char	buf[PATH_MAX];
 
-	if (getcwd(buf, sizeof(buf)) == NULL)
+	if (getcwd(buf, sizeof(buf)) != NULL)
 		printf("%s\n", buf);
 	else
 	{
