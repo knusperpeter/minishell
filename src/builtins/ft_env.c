@@ -1,13 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/01/28 23:49:42 by caigner          ###   ########.fr       */
+/*   Created: 2024/01/30 15:57:31 by caigner           #+#    #+#             */
+/*   Updated: 2024/01/30 15:58:20 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+//declare -x is widely used to mark a variable for export to environment variables
