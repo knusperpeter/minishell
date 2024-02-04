@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/01/31 22:30:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/03 18:48:55 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include <stdlib.h>
 
-void	free_nodes(t_env *start)
+void	free_env_nodes(t_env *start)
 {
 	t_env	*tmp;
 
@@ -35,14 +35,31 @@ int	create_list_element(void **element, size_t size)
 	return (0);
 }
 
-void	init_env(t_env *node, char *envp, t_env *prev)
+int	init_env(t_env *node, char *envp, t_env *prev)
 {
-	node->variable = ft_strdup(envp);
+	char	*equals;
+	int		i;
+	int		size;
+	
+	i = 0;
+	equals = ft_strchr(envp, '=');
+	size = equals - envp;
+	node->variable = malloc(size + 1);
+	if (!node->variable)
+		return (EXIT_FAILURE);
+	while (i < size)
+	{
+		node->variable[i] = envp[i];
+		i++;
+	}
+	node->variable[i] = 0;
 	node->flag = 0;
-	if (!*(ft_strchr(node->variable, '=') + 1))
-		node->flag = 1;
+	if (!*(equals + 1))
+		return (node->flag = 1, EXIT_SUCCESS);
+	node->value = ft_strdup(equals + 1);
 	node->prev = prev;
 	node->next = NULL;
+	return (EXIT_SUCCESS);
 }
 
 int	dup_env(t_common *c, char **envp)
@@ -59,7 +76,7 @@ int	dup_env(t_common *c, char **envp)
 	{
 		if (create_list_element((void **) &node, sizeof(t_env)))
 		{
-			free_nodes(start);
+			free_env_nodes(start);
 			return (1);
 		}
 		init_env(node, envp[i], prev);
@@ -84,9 +101,8 @@ int	main(int ac, char **av, char **envp)
 	{
 		printf("%s@%s:%s", c.prompt->username, c.prompt->hostname, c.prompt->prompt_text);
 	} */
-	ft_pwd();
 	if (envp)
 		dup_env(&c, envp);
-	ft_env(c.env);
+	ft_export(NULL, c.env);
 	return (0);
 }

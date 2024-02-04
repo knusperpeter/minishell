@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/01/31 22:30:19 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/03 18:44:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct PromptData
 typedef struct s_env
 {
 	char			*variable;
+	char			*value;
 	int				flag;
 	struct s_env	*next;
 	struct s_env	*prev;
@@ -87,5 +88,7 @@ int	create_list_element(void **element, size_t size);
 //builtins
 int	ft_pwd(void);
 int	ft_env(t_env *env);
+void	free_env_nodes(t_env *start);
+int	ft_export(char **args, t_env *env);
 
 #endif

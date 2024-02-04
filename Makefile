@@ -9,7 +9,8 @@ LIBFT_LIB	= libft.a
 
 SOURCES	=	src/minishell.c \
 			src/builtins/ft_pwd.c \
-			src/builtins/ft_env.c
+			src/builtins/ft_env.c \
+			src/builtins/ft_export.c
 
 OBJECTS = $(SOURCES:.c=.o)
 
