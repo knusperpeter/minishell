@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/03 18:48:55 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/05 18:07:44 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	init_env(t_env *node, char *envp, t_env *prev)
 	
 	i = 0;
 	equals = ft_strchr(envp, '=');
+	if (!equals)
+		return (EXIT_FAILURE);
 	size = equals - envp;
 	node->variable = malloc(size + 1);
 	if (!node->variable)
@@ -54,8 +56,6 @@ int	init_env(t_env *node, char *envp, t_env *prev)
 	}
 	node->variable[i] = 0;
 	node->flag = 0;
-	if (!*(equals + 1))
-		return (node->flag = 1, EXIT_SUCCESS);
 	node->value = ft_strdup(equals + 1);
 	node->prev = prev;
 	node->next = NULL;
@@ -94,15 +94,19 @@ int	dup_env(t_common *c, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	t_common	c;
+	char		**export;
+	char		**ex;
 	(void)		ac;
 	(void)		av;
 
-/* 	while (1)
-	{
-		printf("%s@%s:%s", c.prompt->username, c.prompt->hostname, c.prompt->prompt_text);
-	} */
+	export = malloc(sizeof(char **) * 2);
+	export[0] = ft_strdup("export");
+	export[1] = ft_strdup("x=lol");
 	if (envp)
 		dup_env(&c, envp);
-	ft_export(NULL, c.env);
+	ft_export(export, c.env);
+	ex = malloc(sizeof(char **));//exported variable does not show up. why?
+	ex[0] = ft_strdup("export");
+	ft_export(ex, c.env);
 	return (0);
 }
