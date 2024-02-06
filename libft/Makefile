@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: miheider <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/13 11:49:47 by miheider          #+#    #+#              #
-#    Updated: 2023/09/23 12:54:37 by miheider         ###   ########.fr        #
+#    Updated: 2024/02/06 21:11:21 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRCS=ft_isprint.c ft_isalpha.c ft_isdigit.c ft_strjoin.c ft_strlen.c \
 	 ft_memchr.c ft_strdup.c ft_strlcpy.c ft_strlcat.c ft_memcmp.c ft_strncmp.c \
 	 ft_strnstr.c ft_atoi.c ft_strtrim.c ft_putchar_fd.c ft_putstr_fd.c \
 	 ft_putendl_fd.c ft_putnbr_fd.c ft_split.c ft_striteri.c ft_strmapi.c \
-	 ft_itoa.c ft_substr.c 
+	 ft_itoa.c ft_substr.c ft_atoll.c ft_lltoa.c
 
 B_SRCS=ft_lstnew.c ft_lstsize.c ft_lstadd_front.c ft_lstlast.c ft_lstadd_back.c \
 	   ft_lstdelone.c ft_lstclear.c ft_lstiter.c

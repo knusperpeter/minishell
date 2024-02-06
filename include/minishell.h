@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/05 16:01:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/06 20:05:48 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ struct s_node
 //Common struct
 typedef struct common_data
 {
-	int				exitstatus;
+	unsigned int	exitstatus;
 	t_env			*env;
 	struct s_node	*tokenslist;
 	t_prompt		*prompt;
