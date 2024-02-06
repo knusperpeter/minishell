@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/02/05 19:15:07 by miheider         ###   ########.fr       */
+/*   Updated: 2024/02/06 15:32:38 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //#include "minishell.h"
-#include <stddef.h>
-#include <string.h>
-#include <stdio.h>
+#include "../include/minishell.h"
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
