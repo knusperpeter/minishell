@@ -6,14 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/05 18:25:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/06 12:14:57 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 void	print_env(t_env *env)//add alphabetical order?
 {
@@ -34,7 +31,7 @@ void	printerror(char *args)
 	perror("': not a valid identifier");
 }
 
-int	is_valid_env(char *env)// bash: export: `1=1': not a valid identifier
+int	is_valid_env(char *env)
 {
 	int	i;
 
@@ -73,7 +70,7 @@ int	already_in_env(char *args, t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-void	add_env(t_env *env, char *args, int errorno)//check if it works
+void	add_env(t_env *env, char *args, int errorno)
 {
 	t_env	*new;
 	t_env	*prev;
