@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/02/06 16:48:21 by miheider         ###   ########.fr       */
+/*   Updated: 2024/02/06 19:02:29 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,8 @@ void	preparing_input(char *input, char first)
 					input++;
 					printf("4\n");
 				}
+				if (*(input - 2) == '.' || *input == '.')   //. insteadt of ' or
+					wc--;
 				printf("Wie\n");
 			}
 			else if (check_string(*input, *(input + 1)) == 2)
@@ -186,6 +188,8 @@ void	preparing_input(char *input, char first)
 					cc += 2;
 					input += 2;
 				}
+				if (*input == '\0' || *(input - 3) == '.' || *input == '.') // . instead of ' or "
+					wc--;
 				printf("gehts?\n");
 			}
 			else if (check_string(*input, *(input + 1)) == 4)
