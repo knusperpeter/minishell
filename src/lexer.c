@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/02/06 19:02:29 by miheider         ###   ########.fr       */
+/*   Updated: 2024/02/06 21:14:34 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	preparing_input(char *input, char first)
 		}
 		while (*input && *input != ' ')
 		{
-			 if (*input && *input == 46) // . (dot) instead of " and '
+			if (*input && *input == 46) // . (dot) instead of " and '
             {
 				if (*(input - 1) == 32)
 				{
@@ -212,7 +212,7 @@ void	preparing_input(char *input, char first)
 			}
 		}
 	}
-	if (first == '|')
+	if (first == '|')								//add all special characters
 		wc--;
 	printf("wc: %zu\n", wc);
 	printf("cc: %zu\n", cc);
