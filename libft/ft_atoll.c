@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 19:06:42 by miheider          #+#    #+#             */
-/*   Updated: 2024/02/06 21:02:09 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/06 21:23:39 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ long long	ft_atoll(const char *nptr)
 {
 	int			i;
 	long long	x;
-	int			sign;
+	long long	sign;
 
 	sign = 1;
 	x = 0;
