@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/02/05 19:15:07 by miheider         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:29:43 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int check_string(char input, char next)
     return (0);
 }
 
-void	preparing_input(char *input)
+void	preparing_input(char *input, char first)
 {
 	size_t	wc;				//word counter (zählt alle Wörter)
 	size_t	cc;				//char-count (zählt alle nicht-spaces)
@@ -192,16 +192,16 @@ void	preparing_input(char *input)
 			}
 			else if (check_string(*input, *(input + 1)) == 4)
 			{
-				if (/**input &&*/ *input != ' ')
+				if (/**input &&*/ *(input - 1) != ' ')
 				{
-				//	wc++;
+					wc++;
 					cc++;
 					input++;
 					printf("dir\n");
 				}
 				else if (/**input &&*/ *(input - 1) == ' ')
 				{
-					wc++;
+				//	wc++;
 					cc++;
 					input++;
 					printf("denn?");
@@ -210,6 +210,8 @@ void	preparing_input(char *input)
 			}
 		}
 	}
+	if (first == '|')
+		wc--;
 	printf("wc: %zu\n", wc);
 	printf("cc: %zu\n", cc);
 }
@@ -222,6 +224,6 @@ int	main(int argc, char **argv)
 
 	argc = argc - 1 + 1;
 	input = NULL;
-	preparing_input(argv[1]);
+	preparing_input(argv[1], argv[1][0]);
 	return (0);
 }
