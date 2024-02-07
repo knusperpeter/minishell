@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/06 12:14:57 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/07 22:29:37 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	add_env(t_env *env, char *args, int errorno)
 	while (prev->next)
 		prev = prev->next;
 	create_list_element((void **) &new, sizeof(t_env));
-	init_env(new, args, prev);
+	ft_init_env(new, args, prev);
 	new->flag = errorno;
 	prev->next = new;
 }

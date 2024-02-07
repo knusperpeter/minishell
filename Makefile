@@ -3,6 +3,7 @@ CC		= cc
 AR		= ar
 RM		= rm
 CFLAGS	= -Wall -Wextra -Werror -Ofast -march=native -g
+LFLAGS	= -lreadline
 HDRS	= include/minishell.h
 LIBFT	= libft
 LIBFT_LIB	= libft.a
@@ -10,6 +11,7 @@ LIBFT_LIB	= libft.a
 SOURCES	=	src/minishell.c \
 			src/builtins/ft_pwd.c \
 			src/builtins/ft_env.c \
+			src/init_env.c \
 			src/builtins/ft_export.c
 
 OBJECTS = $(SOURCES:.c=.o)
@@ -18,7 +20,7 @@ all		: $(NAME)
 
 $(NAME)	: $(OBJECTS) $(HDRS)
 	make --no-print-directory all -C $(LIBFT)
-	$(CC) $(SOURCES) $(CFLAGS) -o $(NAME) -L$(LIBFT) -lft
+	$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) -o $(NAME) -L$(LIBFT) -lft
 
 %.o		: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
