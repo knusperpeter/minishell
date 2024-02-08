@@ -12,7 +12,8 @@ SOURCES	=	src/minishell.c \
 			src/builtins/ft_pwd.c \
 			src/builtins/ft_env.c \
 			src/init_env.c \
-			src/builtins/ft_export.c
+			src/builtins/ft_export.c \
+			src/builtins/ft_exit.c
 
 OBJECTS = $(SOURCES:.c=.o)
 

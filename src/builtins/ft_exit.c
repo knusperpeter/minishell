@@ -6,17 +6,19 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/07 17:55:21 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/08 13:56:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+#include <stdlib.h>
 
 int	overflows_ll(t_common *c, char *arg)
 {
 	long long	i;
 	int			len;
 	char		*s;
+	(void) c;
 	
 	len = ft_strlen(arg);
 	i = ft_atoll(arg);
@@ -68,8 +70,8 @@ void	ft_exit(t_common *c, char **cmd)
 		{
 			return ;
 		}
-	}	
-	return ;
+	}
+	exit(c->exitstatus);
 }
 
 /* 

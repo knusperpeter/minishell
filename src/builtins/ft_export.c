@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 13:05:06 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/08 13:46:50 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	ft_export(char **args, t_env *env)//export hallo+=lol oder auch export += $h
 	int	i;
 	int	errorno;
 
-	if (args == NULL)
+	if (!args)
 		return (EXIT_FAILURE);
 	i = 1;
 	if (!args[1])
