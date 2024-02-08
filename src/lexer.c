@@ -194,16 +194,15 @@ void	preparing_input(char *input, char first)
 			}
 			else if (check_string(*input, *(input + 1)) == 4)
 			{
-				if (/**input &&*/ *(input - 1) != ' ')
+				if (*(input - 1) != ' ')
 				{
 					wc++;
 					cc++;
 					input++;
 					printf("dir\n");
 				}
-				else if (/**input &&*/ *(input - 1) == ' ')
+				else if (*(input - 1) == ' ')
 				{
-				//	wc++;
 					cc++;
 					input++;
 					printf("denn?");
