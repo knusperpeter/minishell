@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/07 22:36:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/08 13:19:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,13 @@ int	main(int ac, char **av, char **envp)
 
 	(void)		ac;
 	(void)		av;
-	char *x = "x=1";
-	char *y	= "export";
-	char **exportx = malloc(2*sizeof(char *));
-	exportx[0] = y;
-	exportx[1] = x;
+	char **exportx = malloc(4*sizeof(char *));
+	char **exporty = malloc(sizeof(char *));
+	exporty[0] = "export";
+	exportx[0] = "export";
+	exportx[1] = "x";
+	exportx[2] = "y=1";
+	exportx[3] = NULL;
 	init_minishell(&c, envp);
 	while (1)
 	{
@@ -54,9 +56,14 @@ int	main(int ac, char **av, char **envp)
 		if (!ft_strncmp("export", c.raw_prompt, 6))
 		{	
 			ft_export(exportx, c.env);
-			exportx[1] = NULL;
+			ft_export(exporty, c.env);
+			exportx[1] = "x=1";
 			ft_export(exportx, c.env);
+			printf("\n");
+			ft_export(exporty, c.env);
 		}
+		if (!ft_strncmp("env", c.raw_prompt, 3))
+			ft_env(c.env);
 	}
 	return (0);
 }

@@ -6,11 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/07 22:29:37 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/08 13:05:06 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+#include <stdlib.h>
 
 void	print_env(t_env *env)//add alphabetical order?
 {
@@ -58,7 +59,7 @@ int	already_in_env(char *args, t_env *env)
 		len++;
 	while (env)
 	{
-		if (!ft_strncmp(args, env->variable, len) && !env->variable[len])
+		if (!ft_strncmp(args, env->variable, len) && (!env->variable[len]))
 		{
 			if (env->value)
 				free(env->value);
@@ -67,6 +68,29 @@ int	already_in_env(char *args, t_env *env)
 		}
 		env = env->next;
 	}
+	return (EXIT_SUCCESS);
+}
+
+int	declare_uninitialized_variable(t_env *node, char *envp, t_env *prev)
+{
+	int		i;
+	int		size;
+	
+	i = 0;
+	size = ft_strlen(envp);
+	node->variable = malloc(size + 1);
+	if (!node->variable)
+		return (EXIT_FAILURE);
+	while (i < size)
+	{
+		node->variable[i] = envp[i];
+		i++;
+	}
+	node->variable[i] = 0;
+	node->flag = 1;
+	node->value = NULL;
+	node->prev = prev;
+	node->next = NULL;
 	return (EXIT_SUCCESS);
 }
 
@@ -79,7 +103,8 @@ void	add_env(t_env *env, char *args, int errorno)
 	while (prev->next)
 		prev = prev->next;
 	create_list_element((void **) &new, sizeof(t_env));
-	ft_init_env(new, args, prev);
+	if (ft_init_env(new, args, prev) == EXIT_FAILURE)
+		declare_uninitialized_variable(new, args, prev);
 	new->flag = errorno;
 	prev->next = new;
 }
