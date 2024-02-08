@@ -1,28 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/13 17:26:41 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/13 17:44:26 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+void	ft_putchar_fd(char c, int fd)
 {
-	char	buf[PATH_MAX];
-
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
-	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+	write(fd, &c, 1);
+	return ;
 }

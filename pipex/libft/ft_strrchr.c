@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/06 11:55:26 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/08 13:27:54 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
-
-int	ft_pwd(void)
+char	*ft_strrchr(const char *s, int c)
 {
-	char	buf[PATH_MAX];
+	const char	*p;
+	int			i;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	i = 0;
+	while (s[i])
+		i++;
+	p = s + i;
+	while (p >= s)
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		if ((char)c == *p)
+			return ((char *)p);
+		p--;
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }

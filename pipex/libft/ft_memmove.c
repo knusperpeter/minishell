@@ -1,28 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/07 10:24:31 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/13 16:51:30 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	char	buf[PATH_MAX];
+	unsigned char		*d;
+	const unsigned char	*s;
+	size_t				i;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
+	d = dest;
+	s = src;
+	i = 0;
+	if (d == s || n == 0)
+		return (dest);
+	if (d < s || d >= s + n)
+	{
+		while (i < n)
+		{
+			d[i] = s[i];
+			i++;
+		}
+	}
 	else
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		while (n--)
+			d[n] = s[n];
 	}
-	return (EXIT_SUCCESS);
+	return (dest);
 }

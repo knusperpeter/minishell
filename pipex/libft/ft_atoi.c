@@ -1,28 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/06 11:54:39 by caigner           #+#    #+#             */
+/*   Updated: 2023/11/16 11:33:06 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
-
-int	ft_pwd(void)
+int	ft_atoi(const char *str)
 {
-	char	buf[PATH_MAX];
+	int	sign;
+	int	result;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
+		str++;
+	if (*str == 0)
+		return (0);
+	sign = 1;
+	result = 0;
+	if (*str == '+' || *str == '-')
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		if (*str == '-')
+			sign = -1;
+		str++;
 	}
-	return (EXIT_SUCCESS);
+	result = 0;
+	while (*str >= '0' && *str <= '9')
+	{
+		result = result * 10 + *str - '0';
+		str++;
+	}
+	return (result * sign);
 }

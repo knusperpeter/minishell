@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/06 16:37:15 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/09 11:36:44 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	char	buf[PATH_MAX];
+	size_t				i;
+	const unsigned char	*p = s;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	i = 0;
+	while (i < n)
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		if (p[i] == (unsigned char)c)
+			return ((void *)(p + i));
+		i++;
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }

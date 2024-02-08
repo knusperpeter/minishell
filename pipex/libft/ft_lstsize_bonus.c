@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/10/30 19:42:29 by caigner           #+#    #+#             */
+/*   Updated: 2023/10/30 20:38:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+int	ft_lstsize(t_list *lst)
 {
-	char	buf[PATH_MAX];
+	int		i;
+	t_list	*node;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	i = 0;
+	node = lst;
+	while (node != 0)
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		i++;
+		node = node->next;
 	}
-	return (EXIT_SUCCESS);
+	return (i);
 }

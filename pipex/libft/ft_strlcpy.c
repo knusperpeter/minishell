@@ -1,28 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/06 14:49:52 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/12 15:59:47 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
-	char	buf[PATH_MAX];
+	size_t	i;
+	size_t	len;
+	size_t	max;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	len = 0;
+	while (src[len])
+		len++;
+	if (size == 0)
+		return (len);
+	max = 0;
+	if (size > 0)
+		max = size - 1;
+	i = 0;
+	while (i < max && src[i])
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		dest[i] = src[i];
+		i++;
 	}
-	return (EXIT_SUCCESS);
+	dest[i] = 0;
+	return (len);
 }

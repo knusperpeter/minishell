@@ -1,28 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/06 11:54:57 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/07 13:12:26 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
-
-int	ft_pwd(void)
+int	ft_isalpha(int c)
 {
-	char	buf[PATH_MAX];
-
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+		return (1);
 	else
-	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+		return (0);
 }

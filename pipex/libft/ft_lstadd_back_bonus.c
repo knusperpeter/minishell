@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_lstadd_back_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/10/30 19:55:24 by caigner           #+#    #+#             */
+/*   Updated: 2023/12/16 12:06:21 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+void	ft_lstadd_back(t_list **lst, t_list *newlst)
 {
-	char	buf[PATH_MAX];
+	t_list	*temp;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	temp = *lst;
+	if (!newlst)
+		return ;
+	if (!*lst)
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		*lst = newlst;
+		return ;
 	}
-	return (EXIT_SUCCESS);
+	temp = ft_lstlast(temp);
+	temp->next = newlst;
 }

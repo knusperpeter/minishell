@@ -6,11 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:57:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/05 15:47:18 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/08 18:15:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// declare -x is widely used to mark a variable for export to environment variables
+// declare -x is widely used to mark a variable for export to
+// environment variables
 // $?
 #include "../../include/minishell.h"
 #include <stdlib.h>

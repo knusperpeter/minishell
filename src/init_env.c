@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/07 22:27:48 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/08 18:13:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,17 @@ int	create_list_element(void **element, size_t size)
 	return (0);
 }
 
+int	ft_get_var_size(char *envp, char *equals)
+{
+	int	size;
+	
+	if (equals)
+		size = equals - envp;
+	else
+		size = ft_strlen(envp);
+	return (size);
+}
+
 int	ft_init_env(t_env *node, char *envp, t_env *prev)
 {
 	char	*equals;
@@ -41,9 +52,7 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	
 	i = 0;
 	equals = ft_strchr(envp, '=');
-	if (!equals)
-		return (EXIT_FAILURE);
-	size = equals - envp;
+	size = ft_get_var_size(envp, equals);
 	node->variable = malloc(size + 1);
 	if (!node->variable)
 		return (EXIT_FAILURE);
@@ -54,7 +63,10 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	}
 	node->variable[i] = 0;
 	node->flag = 0;
-	node->value = ft_strdup(equals + 1);
+	if (equals)
+		node->value = ft_strdup(equals + 1);
+	else
+	 	node->value = NULL;
 	node->prev = prev;
 	node->next = NULL;
 	return (EXIT_SUCCESS);

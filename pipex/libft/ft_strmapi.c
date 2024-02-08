@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/13 14:10:49 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/13 16:25:50 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	char	buf[PATH_MAX];
+	size_t	i;
+	size_t	len;
+	char	*p;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	if (s == 0 || f == 0)
+		return (0);
+	len = ft_strlen(s);
+	p = malloc(sizeof(*s) * (len + 1));
+	if (p == 0)
+		return (0);
+	i = 0;
+	while (i < len)
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		p[i] = f(i, s[i]);
+		i++;
 	}
-	return (EXIT_SUCCESS);
+	p[i] = 0;
+	return (p);
 }

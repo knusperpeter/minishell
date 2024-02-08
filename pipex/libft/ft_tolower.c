@@ -1,28 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/06 11:55:28 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/07 13:21:04 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
-
-int	ft_pwd(void)
+int	ft_tolower(int c)
 {
-	char	buf[PATH_MAX];
-
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
-	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+	if (c >= 'A' && c <= 'Z')
+		c += ('a' - 'A');
+	return (c);
 }

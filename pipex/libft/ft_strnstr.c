@@ -1,28 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/06 11:55:23 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/12 16:47:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	char	buf[PATH_MAX];
+	size_t	i;
+	size_t	j;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	i = 0;
+	j = 0;
+	if (*little == 0)
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		return ((char *)big);
 	}
-	return (EXIT_SUCCESS);
+	if (big == 0 && len == 0)
+		return (0);
+	while (big[i] && i < len)
+	{
+		while (big[i + j] == little[j] && little[j] != 0 && i + j < len)
+		{
+			j++;
+		}
+		if (little[j] == 0)
+			return ((char *)big + i);
+		j = 0;
+		i++;
+	}
+	return (0);
 }

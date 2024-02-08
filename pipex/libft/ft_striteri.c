@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/13 16:58:33 by caigner           #+#    #+#             */
+/*   Updated: 2023/09/13 17:11:33 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
 {
-	char	buf[PATH_MAX];
+	size_t	i;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	if (!s || !f)
+		return ;
+	i = 0;
+	while (s[i])
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		f(i, &s[i]);
+		i++;
 	}
-	return (EXIT_SUCCESS);
+	return ;
 }

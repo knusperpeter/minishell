@@ -1,28 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:16:48 by caigner          ###   ########.fr       */
+/*   Created: 2023/09/07 16:48:37 by caigner           #+#    #+#             */
+/*   Updated: 2023/12/04 20:06:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_pwd(void)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	char	buf[PATH_MAX];
+	size_t			i;
+	size_t			total;
+	void			*ptr;
+	unsigned char	*byteptr;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
+	i = 0;
+	total = nmemb * size;
+	if (nmemb != 0 && total / nmemb != size)
+		return (0);
+	ptr = malloc(total);
+	if (ptr != 0)
 	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
+		byteptr = (unsigned char *)ptr;
+		while (i < total)
+		{
+			byteptr[i] = 0;
+			i++;
+		}
 	}
-	return (EXIT_SUCCESS);
+	return (ptr);
 }

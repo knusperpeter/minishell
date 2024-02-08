@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/08 13:50:57 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/08 18:54:15 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*prompt(void)
 {
 	char	*line;
 
-	line = readline("🚬🦦🫗 ✗"); //$USER // check rl_redisplay
+	line = readline("minishell🔮: 🚬🦦 ✗"); //$USER // check rl_redisplay
 	if (ft_strlen(line) > 0)
 		add_history(line);
 	return (line);
@@ -40,15 +40,15 @@ int	main(int ac, char **av, char **envp)
 
 	(void)		ac;
 	(void)		av;
-	char **exportx = malloc(4*sizeof(char *));
-	char **exporty = malloc(sizeof(char *));
+	//TEST CASE
+	char **exportx = malloc(3*sizeof(char *));
 	char **exitx = malloc(sizeof (char *));
-	exporty[0] = "export";
 	exportx[0] = "export";
-	exportx[1] = "x";
-	exportx[2] = "y=1";
-	exportx[3] = NULL;
+	exportx[1] = "";
+	exportx[2] = NULL;
 	exitx[0] = "exit";
+
+	
 	init_minishell(&c, envp);
 	while (1)
 	{
@@ -56,21 +56,13 @@ int	main(int ac, char **av, char **envp)
 		c.raw_prompt = prompt();
 		if (!ft_strncmp("pwd", c.raw_prompt, 3))
 			ft_pwd();
-		if (!ft_strncmp("export", c.raw_prompt, 6))
-		{	
+		if (!ft_strncmp("export", c.raw_prompt, 6))	
 			ft_export(exportx, c.env);
-			ft_export(exporty, c.env);
-			exportx[1] = "x=1";
-			ft_export(exportx, c.env);
-			printf("\n");
-			ft_export(exporty, c.env);
-		}
 		if (!ft_strncmp("env", c.raw_prompt, 3))
 			ft_env(c.env);
 		if (!ft_strncmp("exit", c.raw_prompt, 4))
 			ft_exit(&c, exitx);
 	}
-	free(exporty);
 	free(exportx);
 	return (0);
 }
