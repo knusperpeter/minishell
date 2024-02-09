@@ -56,6 +56,45 @@ int check_string(char input, char next)
     return (0);
 }
 
+void    ft_counter(long unsigned int *cc, char **input, long unsigned int *wc, int x)
+{
+    if (x == 0)
+    {
+        *cc += 1;
+        (*input)++;
+    }
+    if (x == 1)
+    {
+        *cc += 1;
+        (*input)++;
+        *wc += 1;
+    }
+    if (x == 2)
+    {
+        *cc += 1;
+        (*input)++;
+        *wc += 2;
+    }
+    if (x == 3)
+    {
+        *cc += 2;
+        (*input) += 2;
+        *wc += 1;
+    }
+    if (x == 4)
+    {
+        *cc += 2;
+        (*input) += 2;
+    }
+    if (x == 5)
+    {
+        *cc += 2;
+        (*input) += 2;
+        *wc += 2;
+    }
+}
+
+
 void	preparing_input(char *input, char first)
 {
 	size_t	wc;				//word counter (zählt alle Wörter)
@@ -74,140 +113,63 @@ void	preparing_input(char *input, char first)
 			if (*input == '\0')
 				break;
 			wc++;
-			printf("0\n");
 		}
 		while (*input && *input != ' ')
 		{
 			if (*input && *input == 46) // . (dot) instead of " and '
             {
 				if (*(input - 1) == 32)
-				{
-                	input++;
-                	cc++;
-				}
+				    ft_counter(&cc, &input, &wc, 0);
 				else if (*(input - 1) != 32)
-				{
-					input++;
-					cc++;
-					wc++;
-				}
+				    ft_counter(&cc, &input, &wc, 1);
                 while (*input && *input != 46)
-                {
-                    cc++;
-                    input++;
-                    printf("%zu\n", cc);
-                }
-
+				    ft_counter(&cc, &input, &wc, 0);
                 if (*input && *input == 46 && *(input + 1) == 32)
-				{
-					cc++;
-					input++;
-				}
+				    ft_counter(&cc, &input, &wc, 0);
 				else if (*input && *input == 46 && *(input + 1) != 32)
-                {
-                    cc++;
-					input++;
-					wc++;
-                }
+				    ft_counter(&cc, &input, &wc, 1);
             }
 			else if (check_string(*input, *(input + 1)) == 0)
-			{
-				cc++;
-				input++;
-				printf("Hallo\n");
-			}
+				ft_counter(&cc, &input, &wc, 0);
 			else if (check_string(*input, *(input + 1)) == 3)
 			{
-				printf("%c\n", *input);
-				input++;
-				cc++;
+				ft_counter(&cc, &input, &wc, 0);
 				while (*input != 34 || *input != 39)
-				{
-					input++;
-					cc++;
-				}
-				input++;
-				cc++;
-				wc++;
+				    ft_counter(&cc, &input, &wc, 0);
+				ft_counter(&cc, &input, &wc, 1);
 			}
 			else if (check_string(*input, *(input + 1)) == 1)
 			{
 				if (*(input - 1) == 32 && (*(input + 1) != 32 || *(input + 1) == '\0'))
-				{
-					wc++;
-					cc++;
-					input++;
-					printf("1\n");
-				}
+				    ft_counter(&cc, &input, &wc, 1);
 				else if (*(input - 1) != 32 && ((*(input + 1) == 32) || *(input + 1) == '\0'))
-				{
-					wc++;
-					cc++;
-					input++;
-					printf("2\n");
-				}
+				    ft_counter(&cc, &input, &wc, 1);
 				else if (*(input - 1) == 32 && *(input + 1) == 32)
-				{
-					cc++;
-					input++;
-					printf("3\n");
-				}
+				    ft_counter(&cc, &input, &wc, 0);
 				else
-				{
-					wc += 2;
-					cc++;
-					input++;
-					printf("4\n");
-				}
+				    ft_counter(&cc, &input, &wc, 2);
 				if (*(input - 2) == '.' || *input == '.')   //. insteadt of ' or
 					wc--;
-				printf("Wie\n");
 			}
 			else if (check_string(*input, *(input + 1)) == 2)
 			{
 				if (*(input - 1) == 32 && (*(input + 2) != 32 || *(input + 2) == '\0'))
-				{
-					wc += 1;
-					cc += 2;
-					input += 2;
-				}
+				    ft_counter(&cc, &input, &wc, 3);
 				else if (*(input -1) != 32 && (*(input + 2) == 32 || *(input + 2) == '\0'))
-				{
-					wc += 1;
-					cc += 2;
-					input += 2;
-				}
+				    ft_counter(&cc, &input, &wc, 3);
 				else if (*(input - 1) == 32 && *(input + 2) == 32)
-				{
-					cc += 2;
-					input += 2;
-				}
+				    ft_counter(&cc, &input, &wc, 4);
 				else
-				{
-					wc += 2;
-					cc += 2;
-					input += 2;
-				}
+				    ft_counter(&cc, &input, &wc, 5);
 				if (*input == '\0' || *(input - 3) == '.' || *input == '.') // . instead of ' or "
 					wc--;
-				printf("gehts?\n");
 			}
 			else if (check_string(*input, *(input + 1)) == 4)
 			{
-				if (*(input - 1) != ' ')
-				{
-					wc++;
-					cc++;
-					input++;
-					printf("dir\n");
-				}
-				else if (*(input - 1) == ' ')
-				{
-					cc++;
-					input++;
-					printf("denn?");
-				}
-				printf("heute\n");
+				if (/**input &&*/ *(input - 1) != ' ')
+				    ft_counter(&cc, &input, &wc, 1);
+				else if (/**input &&*/ *(input - 1) == ' ')
+				    ft_counter(&cc, &input, &wc, 0);
 			}
 		}
 	}
@@ -216,8 +178,6 @@ void	preparing_input(char *input, char first)
 	printf("wc: %zu\n", wc);
 	printf("cc: %zu\n", cc);
 }
-
-
 
 int	main(int argc, char **argv)
 {
