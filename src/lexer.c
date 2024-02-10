@@ -33,14 +33,73 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (x);
 }
 
+int special_char(char character)
+{
+    char special[11];
+    char *special_ptr = special;
+
+    ft_strlcpy(special, "*?[()]<>|#", 10);
+    while (*special_ptr)
+    {
+        if (*special_ptr == character)
+            return (1);
+    special_ptr++;
+    }
+    return (0);
+}
+
+
+void    set_up_array(int wc, int cc, char *input)
+{
+    char *norm;
+    int i;
+    int j;
+
+    norm = malloc(sizeof(char) * (wc + cc +1));
+    if (!norm)
+    {
+        printf("malloc fail (1)!");
+        exit (1);
+    }
+    i = 0;
+    j = 0;
+    while (input[i] == ' ')
+        i++;
+    while (input[i])
+    {
+        while (input[i] == ' ')
+            i++;
+        if (input[i - 1] == ' ')
+        {
+            norm[j] = ' ';
+            j++;
+        }
+        if (input[i] != ' ' && !special_char(input[i]))
+        {    
+            norm[j] = input[i];
+            j++;
+        }
+        if (input[i] != ' ' && special_char(input[i]))
+        {
+            norm[j] = ' ';
+            j++;
+            norm[j] = input[i];
+            j++;
+        }
+        i++;
+    }
+    input[i] = '\0';
+    printf("result: %s\n", norm);
+}
+
+
 int check_string(char input, char next)
 {
     char special[11];
     char *special_ptr = special;
 
-	printf("%c\n", input);
     ft_strlcpy(special, "*?[()]<>|#", 10);
-	if (input == 34 || input == 39 || input == 46)
+	if (input == '"' || input == '\'' || input == '.')      //delete '.' for final project.
 		return (3);
     while (*special_ptr)
     {
@@ -59,7 +118,7 @@ int check_string(char input, char next)
 void    ft_counter(long unsigned int *cc, char **input, long unsigned int *wc, int x)
 {
     if (x == 0)
-    {
+    { 
         *cc += 1;
         (*input)++;
     }
@@ -98,8 +157,10 @@ void    ft_counter(long unsigned int *cc, char **input, long unsigned int *wc, i
 void	preparing_input(char *input, char first)
 {
 	size_t	wc;				//word counter (zählt alle Wörter)
-	size_t	cc;				//char-count (zählt alle nicht-spaces)
+	size_t	cc;             //char-count (zählt alle nicht-spaces)
+    char    *string;
 
+    string = input;
 	cc = 0;
 	wc = 0;
 	while (*input)
@@ -116,17 +177,17 @@ void	preparing_input(char *input, char first)
 		}
 		while (*input && *input != ' ')
 		{
-			if (*input && *input == 46) // . (dot) instead of " and '
+			if (*input && *input == '.') // . (dot) instead of " and '
             {
-				if (*(input - 1) == 32)
+				if (*(input - 1) == ' ')
 				    ft_counter(&cc, &input, &wc, 0);
-				else if (*(input - 1) != 32)
+				else if (*(input - 1) != ' ')
 				    ft_counter(&cc, &input, &wc, 1);
-                while (*input && *input != 46)
+                while (*input && *input != '.')                  //. (dot instead of " and ')
 				    ft_counter(&cc, &input, &wc, 0);
-                if (*input && *input == 46 && *(input + 1) == 32)
+                if (*input && *input == '.' && *(input + 1) == ' ')      // . (dot) instead of " and '
 				    ft_counter(&cc, &input, &wc, 0);
-				else if (*input && *input == 46 && *(input + 1) != 32)
+				else if (*input && *input == '.' && *(input + 1) != ' ')      //. (dot) instead of " and '
 				    ft_counter(&cc, &input, &wc, 1);
             }
 			else if (check_string(*input, *(input + 1)) == 0)
@@ -134,17 +195,17 @@ void	preparing_input(char *input, char first)
 			else if (check_string(*input, *(input + 1)) == 3)
 			{
 				ft_counter(&cc, &input, &wc, 0);
-				while (*input != 34 || *input != 39)
+				while (*input != '"' || *input != '\'' || *input != '.')      //delete . for final program
 				    ft_counter(&cc, &input, &wc, 0);
 				ft_counter(&cc, &input, &wc, 1);
 			}
 			else if (check_string(*input, *(input + 1)) == 1)
 			{
-				if (*(input - 1) == 32 && (*(input + 1) != 32 || *(input + 1) == '\0'))
+				if (*(input - 1) == ' ' && (*(input + 1) != ' ' || *(input + 1) == '\0'))
 				    ft_counter(&cc, &input, &wc, 1);
-				else if (*(input - 1) != 32 && ((*(input + 1) == 32) || *(input + 1) == '\0'))
+				else if (*(input - 1) != ' ' && ((*(input + 1) == ' ') || *(input + 1) == '\0'))
 				    ft_counter(&cc, &input, &wc, 1);
-				else if (*(input - 1) == 32 && *(input + 1) == 32)
+				else if (*(input - 1) == ' ' && *(input + 1) == ' ')
 				    ft_counter(&cc, &input, &wc, 0);
 				else
 				    ft_counter(&cc, &input, &wc, 2);
@@ -153,11 +214,11 @@ void	preparing_input(char *input, char first)
 			}
 			else if (check_string(*input, *(input + 1)) == 2)
 			{
-				if (*(input - 1) == 32 && (*(input + 2) != 32 || *(input + 2) == '\0'))
+				if (*(input - 1) == ' ' && (*(input + 2) != ' ' || *(input + 2) == '\0'))
 				    ft_counter(&cc, &input, &wc, 3);
-				else if (*(input -1) != 32 && (*(input + 2) == 32 || *(input + 2) == '\0'))
+				else if (*(input -1) != ' ' && (*(input + 2) == ' ' || *(input + 2) == '\0'))
 				    ft_counter(&cc, &input, &wc, 3);
-				else if (*(input - 1) == 32 && *(input + 2) == 32)
+				else if (*(input - 1) == ' ' && *(input + 2) == ' ')
 				    ft_counter(&cc, &input, &wc, 4);
 				else
 				    ft_counter(&cc, &input, &wc, 5);
@@ -177,14 +238,15 @@ void	preparing_input(char *input, char first)
 		wc--;
 	printf("wc: %zu\n", wc);
 	printf("cc: %zu\n", cc);
+    set_up_array(wc, cc, string);
 }
 
 int	main(int argc, char **argv)
 {
-	char	*input;
+//	char	*input;
 
 	argc = argc - 1 + 1;
-	input = NULL;
+//	input = NULL;
 	preparing_input(argv[1], argv[1][0]);
 	return (0);
 }
