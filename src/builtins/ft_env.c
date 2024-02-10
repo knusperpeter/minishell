@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:57:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:15:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/10 19:48:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 // environment variables
 // $?
 #include "../../include/minishell.h"
-#include <stdlib.h>
 
 int	ft_env(t_env *env)
 {

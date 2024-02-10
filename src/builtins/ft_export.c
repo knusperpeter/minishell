@@ -6,12 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 19:00:09 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/10 19:48:21 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <stdlib.h>
 
 void	export_print_env(t_env *env)//add alphabetical order?
 {

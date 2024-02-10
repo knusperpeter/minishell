@@ -6,12 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/08 18:54:15 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/10 19:55:46 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdlib.h>
 
 void	init_minishell(t_common *c, char **envp)
 {
@@ -43,11 +42,14 @@ int	main(int ac, char **av, char **envp)
 	//TEST CASE
 	char **exportx = malloc(3*sizeof(char *));
 	char **exitx = malloc(sizeof (char *));
+	char **unsetx = malloc(3*sizeof (char *));
 	exportx[0] = "export";
-	exportx[1] = "";
+	exportx[1] = "x=1";
 	exportx[2] = NULL;
 	exitx[0] = "exit";
-
+	unsetx[0] = "unset";
+	unsetx[1] = "x";
+	unsetx[2] = NULL;
 	
 	init_minishell(&c, envp);
 	while (1)
@@ -62,6 +64,8 @@ int	main(int ac, char **av, char **envp)
 			ft_env(c.env);
 		if (!ft_strncmp("exit", c.raw_prompt, 4))
 			ft_exit(&c, exitx);
+		if (!ft_strncmp("unset", c.raw_prompt, 5))
+			ft_unset(unsetx, &c);
 	}
 	free(exportx);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 13:49:13 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/10 19:49:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	create_list_element(void **element, size_t size);
 //builtins
 int	ft_pwd(void);
 int	ft_env(t_env *env);
+int	ft_unset(char **args, t_common *c);
 void	ft_exit(t_common *c, char **cmd);
 int	ft_export(char **args, t_env *env);
 void	free_env_nodes(t_env *start);
