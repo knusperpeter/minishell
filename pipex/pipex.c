@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 13:48:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/09 15:57:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/10 20:31:18 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	main(int ac, char **av, char **envp)
 {
 	t_pipex	pipex;
 
-	if (initialize(ac, av, &pipex)==EXIT_FAILURE)
+	if (initialize(ac, av, &pipex) == EXIT_FAILURE)
 		return (EXIT_SUCCESS);
 	open_files(&pipex, ac, av);
 	ft_parse_args(&pipex, av);

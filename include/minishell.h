@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/10 19:49:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 03:11:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct s_env
 
 //Inputs and what attributes come with them is locatedhere.
 //Each pipe stands for a new node.???????
-struct s_node
+typedef struct s_node
 {
 	char			**str;
 	int				quote;
@@ -79,31 +79,33 @@ struct s_node
 	t_type			type;
 	struct s_node	*next;
 	struct s_node	*prev;
-};
+}	t_node;
 
 //Common struct
 typedef struct common_data
 {
 	t_prompt		*prompt;
 	t_env			*env;
-	struct s_node	*tokenslist;
+	t_node	*tokenslist;
 	unsigned int	exitstatus;
 	char			*raw_prompt;
-	
+
 	struct termios	old_settings;
 	struct termios	settings;
 }	t_common;
 
-int	create_list_element(void **element, size_t size);
+int		create_list_element(void **element, size_t size);
+int		ft_init_env(t_env *node, char *envp, t_env *prev);
+int		dup_env(t_common *c, char **envp);
+void	free_2d(char **str);
+void	free_all(t_common *c);
 
 //builtins
-int	ft_pwd(void);
-int	ft_env(t_env *env);
-int	ft_unset(char **args, t_common *c);
+int		ft_pwd(void);
+int		ft_env(t_env *env);
+int		ft_unset(char **args, t_common *c);
 void	ft_exit(t_common *c, char **cmd);
-int	ft_export(char **args, t_env *env);
-void	free_env_nodes(t_env *start);
-int	dup_env(t_common *c, char **envp);
-int	ft_init_env(t_env *node, char *envp, t_env *prev);
+int		ft_export(char **args, t_env *env);
+int		ft_echo(char **args);
 
 #endif

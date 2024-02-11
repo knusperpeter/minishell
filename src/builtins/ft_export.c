@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/10 19:48:21 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 02:52:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	is_valid_env(char *env)
 	return (1);
 }
 
-int	already_in_env(char *args, t_env *env)
+int	already_in_env(char *args, t_env *env, int errorno)
 {
 	size_t	len;
 
@@ -51,12 +51,15 @@ int	already_in_env(char *args, t_env *env)
 		len++;
 	while (env)
 	{
-		if (!ft_strncmp(args, env->variable, len) && args[len] == '=')
+		if (!ft_strncmp(args, env->variable, len))
 		{
-			if (env->value)
-				free(env->value);
-			env->value = ft_strdup(&args[len + 1]);
-			env->flag = 0;
+			if (errorno == 0)
+			{
+				if (env->value)
+					free(env->value);
+				env->value = ft_strdup(&args[len + 1]);
+				env->flag = 0;
+			}
 			return (EXIT_FAILURE);
 		}
 		env = env->next;
@@ -87,20 +90,20 @@ int	ft_export(char **args, t_env *env)
 
 	if (!args)
 		return (EXIT_FAILURE);
-	i = 0;
+	if (!args[1])
+		return (export_print_env(env), EXIT_SUCCESS);
+	i = 1;
 	while (args[i])
 	{
-		if (!args[1])
-			return (export_print_env(env), EXIT_SUCCESS);
 		errorno = is_valid_env(args[i]);
 		if (errorno < 0)
 		{
 			ft_putstr_fd("minishell: export: `", 2);
 			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n",2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
 			return (EXIT_FAILURE);
 		}
-		if (!already_in_env(args[i], env))
+		if (!already_in_env(args[i], env, errorno))
 			add_variable_to_env(env, args[i], errorno);
 		i++;
 	}

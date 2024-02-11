@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/10 19:55:46 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 03:29:09 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,37 +36,36 @@ void	init_loop_data(t_common *c){
 int	main(int ac, char **av, char **envp)
 {
 	t_common	c;
-
+	int			size;
 	(void)		ac;
 	(void)		av;
-	//TEST CASE
-	char **exportx = malloc(3*sizeof(char *));
-	char **exitx = malloc(sizeof (char *));
-	char **unsetx = malloc(3*sizeof (char *));
-	exportx[0] = "export";
-	exportx[1] = "x=1";
-	exportx[2] = NULL;
-	exitx[0] = "exit";
-	unsetx[0] = "unset";
-	unsetx[1] = "x";
-	unsetx[2] = NULL;
 	
 	init_minishell(&c, envp);
+	c.tokenslist = malloc(sizeof(t_node *));
 	while (1)
 	{
 		init_loop_data(&c);
 		c.raw_prompt = prompt();
-		if (!ft_strncmp("pwd", c.raw_prompt, 3))
-			ft_pwd();
-		if (!ft_strncmp("export", c.raw_prompt, 6))	
-			ft_export(exportx, c.env);
-		if (!ft_strncmp("env", c.raw_prompt, 3))
-			ft_env(c.env);
-		if (!ft_strncmp("exit", c.raw_prompt, 4))
-			ft_exit(&c, exitx);
-		if (!ft_strncmp("unset", c.raw_prompt, 5))
-			ft_unset(unsetx, &c);
+		if (c.raw_prompt[0])
+		{
+			c.tokenslist->str = ft_split(c.raw_prompt, ' ');
+			size = ft_strlen(c.tokenslist->str[0]);
+			if (!ft_strncmp("pwd", c.tokenslist->str[0], size))
+				ft_pwd();
+			if (!ft_strncmp("export", c.tokenslist->str[0], size))	
+				ft_export(c.tokenslist->str, c.env);
+			if (!ft_strncmp("env", c.tokenslist->str[0], size))
+				ft_env(c.env);
+			if (!ft_strncmp("exit", c.tokenslist->str[0], size))
+				ft_exit(&c, c.tokenslist->str);
+			if (!ft_strncmp("unset", c.tokenslist->str[0], size))
+				ft_unset(c.tokenslist->str, &c);
+			if (!ft_strncmp("echo", c.tokenslist->str[0], size))
+				ft_echo(c.tokenslist->str);
+			free_2d(c.tokenslist->str);
+			free(c.raw_prompt);
+		}
 	}
-	free(exportx);
+	free_all(&c);
 	return (0);
 }

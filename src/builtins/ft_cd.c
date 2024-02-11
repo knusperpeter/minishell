@@ -6,8 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/01/29 18:15:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/10 21:10:13 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+
+//Wenn pwd unsettest und dann cd ausführst, ist old pwd unsetted

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:45 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/10 20:10:48 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/10 20:33:07 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	remove_node(t_env *env)
 {
 	t_env	*prev;
 	t_env	*next;
-	
+
 	prev = env->prev;
 	next = env->next;
 	if (prev)
@@ -47,7 +47,7 @@ int	check_and_unset(char *arg, t_env *env)
 		if (!ft_strncmp(arg, env->variable, len) && !env->variable[len])
 		{
 			remove_node(env);
-			return(EXIT_SUCCESS);
+			return (EXIT_SUCCESS);
 		}
 		env = env->next;
 	}
@@ -57,7 +57,7 @@ int	check_and_unset(char *arg, t_env *env)
 int	ft_unset(char **args, t_common *c)
 {
 	int	i;
-	
+
 	i = 1;
 	while (args[i])
 	{

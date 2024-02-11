@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/08 18:13:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 03:38:56 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void	free_env_nodes(t_env *start)
 	{
 		tmp = start;
 		start = start->next;
-		free(tmp->variable);
+		if (start->variable)
+			free(start->variable);
+		if (start->value)
+			free(start->value);
 		free(tmp);
 	}
 }
@@ -36,7 +39,7 @@ int	create_list_element(void **element, size_t size)
 int	ft_get_var_size(char *envp, char *equals)
 {
 	int	size;
-	
+
 	if (equals)
 		size = equals - envp;
 	else
@@ -49,7 +52,7 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	char	*equals;
 	int		i;
 	int		size;
-	
+
 	i = 0;
 	equals = ft_strchr(envp, '=');
 	size = ft_get_var_size(envp, equals);
@@ -64,9 +67,9 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	node->variable[i] = 0;
 	node->flag = 0;
 	if (equals)
-		node->value = ft_strdup(equals + 1);
+		node->value = ft_strdup(equals + 1);//check if fails
 	else
-	 	node->value = NULL;
+		node->value = NULL;
 	node->prev = prev;
 	node->next = NULL;
 	return (EXIT_SUCCESS);
