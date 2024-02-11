@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 03:46:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 19:25:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	ft_exit(t_common *c, char **cmd)
 			}
 		}
 	}
-	free_all(c);
 	exit(c->exitstatus);
 }
 

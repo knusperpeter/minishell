@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 03:46:19 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 19:24:05 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,30 @@ void	free_2d(char **str)
 	free(str);
 }
 
+void	free_env_nodes(t_env *start)
+{
+	t_env	*tmp;
+
+	while (start)
+	{
+		tmp = start;
+		start = start->next;
+		if (tmp->variable)
+			free(tmp->variable);
+		if (tmp->value)
+			free(tmp->value);
+		free(tmp);
+	}
+}
+
 void	free_all(t_common *c)
 {
-	t_env	*node;
-	
+//	t_env	*node;
+	rl_clear_history();
 	if (c)
 	{
-		while (c->env)
-		{
-			node = c->env;
-			c->env = c->env->next;
-			if (c->env->variable)
-				free(c->env->variable);
-			if (c->env->value)
-				free(c->env->value);
-			free(c->env);
-		}
+		while (c->env != NULL)
+	  free_env_nodes(c->env);
 		if (c->tokenslist)
 		{
 			if (c->tokenslist->str)
@@ -53,10 +61,4 @@ void	free_all(t_common *c)
 			free(c->raw_prompt);
 		free(c);
 	}
-//	clear_history();
 }
-
-//3:40 still reachable: 215,467 bytes in 445 blocks
-
-//3:45 definitely lost: 40 bytes in 1 blocks 
-//still reachable: 214,516 bytes in 257 blocks

@@ -6,11 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 02:52:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 18:58:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+#include <stdlib.h>
 
 void	export_print_env(t_env *env)//add alphabetical order?
 {
@@ -58,6 +59,8 @@ int	already_in_env(char *args, t_env *env, int errorno)
 				if (env->value)
 					free(env->value);
 				env->value = ft_strdup(&args[len + 1]);
+				if (!env->value)
+					exit(EXIT_FAILURE);
 				env->flag = 0;
 			}
 			return (EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/11 03:29:09 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 19:25:15 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,12 @@
 void	init_minishell(t_common *c, char **envp)
 {
 	ft_memset(c, 0, sizeof(t_common));
-	if (!dup_env(c, envp))
+	if(envp)
+	{
+		if (!dup_env(c, envp))
+			return (perror("Error initializing environment\n"));
+	}
+	else
 		return (perror("Error initializing environment\n"));
 }
 
@@ -23,7 +28,7 @@ char	*prompt(void)
 {
 	char	*line;
 
-	line = readline("minishell🔮: 🚬🦦 ✗"); //$USER // check rl_redisplay
+	line = readline("minishell🔮: 🚬🦦 ✗"); // check rl_redisplay
 	if (ft_strlen(line) > 0)
 		add_history(line);
 	return (line);
@@ -36,12 +41,15 @@ void	init_loop_data(t_common *c){
 int	main(int ac, char **av, char **envp)
 {
 	t_common	c;
-	int			size;
+	int			size;//Validate size before allocation. The size variable
+	// should be validated or bounded checked before allocating memory to avoid potential integer overflows.
 	(void)		ac;
 	(void)		av;
 	
 	init_minishell(&c, envp);
 	c.tokenslist = malloc(sizeof(t_node *));
+	if (!c.tokenslist)
+		return (perror("Error initializing tokenslist\n"), 1);
 	while (1)
 	{
 		init_loop_data(&c);
@@ -49,6 +57,8 @@ int	main(int ac, char **av, char **envp)
 		if (c.raw_prompt[0])
 		{
 			c.tokenslist->str = ft_split(c.raw_prompt, ' ');
+			if (!c.tokenslist->str)
+				return (perror("Error initializing tokenslist\n"), 1);
 			size = ft_strlen(c.tokenslist->str[0]);
 			if (!ft_strncmp("pwd", c.tokenslist->str[0], size))
 				ft_pwd();

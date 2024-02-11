@@ -6,32 +6,16 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 03:38:56 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/11 19:03:42 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	free_env_nodes(t_env *start)
-{
-	t_env	*tmp;
-
-	while (start)
-	{
-		tmp = start;
-		start = start->next;
-		if (start->variable)
-			free(start->variable);
-		if (start->value)
-			free(start->value);
-		free(tmp);
-	}
-}
-
 int	create_list_element(void **element, size_t size)
 {
-	*element = malloc(size);
-	if (*element == NULL)
+	*element = malloc(sizeof(char) * size);
+	if (!(*element))
 		return (1);
 	return (0);
 }
@@ -56,7 +40,7 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	i = 0;
 	equals = ft_strchr(envp, '=');
 	size = ft_get_var_size(envp, equals);
-	node->variable = malloc(size + 1);
+	node->variable = malloc(sizeof(char) * (size + 1));
 	if (!node->variable)
 		return (EXIT_FAILURE);
 	while (i < size)
@@ -67,7 +51,11 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	node->variable[i] = 0;
 	node->flag = 0;
 	if (equals)
-		node->value = ft_strdup(equals + 1);//check if fails
+	{
+		node->value = ft_strdup(equals + 1);
+		if (!node->value)
+			return (EXIT_FAILURE);
+	}
 	else
 		node->value = NULL;
 	node->prev = prev;
