@@ -42,5 +42,5 @@ fclean	:
 
 re		: fclean all
 
-# .SILENT:
+ .SILENT:
 .PHONY: all clean fclean re

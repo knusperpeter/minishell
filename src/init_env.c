@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 19:03:42 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/13 23:59:14 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <stdlib.h>
 
 int	create_list_element(void **element, size_t size)
 {
@@ -34,21 +35,14 @@ int	ft_get_var_size(char *envp, char *equals)
 int	ft_init_env(t_env *node, char *envp, t_env *prev)
 {
 	char	*equals;
-	int		i;
 	int		size;
 
-	i = 0;
 	equals = ft_strchr(envp, '=');
 	size = ft_get_var_size(envp, equals);
 	node->variable = malloc(sizeof(char) * (size + 1));
 	if (!node->variable)
 		return (EXIT_FAILURE);
-	while (i < size)
-	{
-		node->variable[i] = envp[i];
-		i++;
-	}
-	node->variable[i] = 0;
+	ft_strlcpy(node->variable, envp, size +1);
 	node->flag = 0;
 	if (equals)
 	{
@@ -59,8 +53,7 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	else
 		node->value = NULL;
 	node->prev = prev;
-	node->next = NULL;
-	return (EXIT_SUCCESS);
+	return (node->next = NULL, EXIT_SUCCESS);
 }
 
 int	dup_env(t_common *c, char **envp)

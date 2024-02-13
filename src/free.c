@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/13 13:19:46 by chris            ###   ########.fr       */
+/*   Updated: 2024/02/13 23:13:45 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,7 @@ void	free_all(t_common *c)
 	//rl_clear_history();
 	if (c)
 	{
-		while (c->env != NULL)
-	  free_env_nodes(c->env);
+		free_env_nodes(c->env);
 		if (c->tokenslist)
 		{
 			if (c->tokenslist->str)

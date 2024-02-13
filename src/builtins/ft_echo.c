@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:15 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 19:26:18 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/13 23:11:13 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ int	ft_echo(char **args)
 		if (check_nl(args[i]))
 			nl++;
 		else
-		 {
+		{
 			printf("%s", args[i]);
 			if (args[i + 1])
 				printf(" ");
-		 }
-		 i++;
+		}
+		i++;
 	}
 	if (!nl)
 		printf("\n");
