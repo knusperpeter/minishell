@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 18:55:02 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/13 23:08:12 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include <stdio.h>
 # include <string.h>
 # include <fcntl.h>
 # include <errno.h>
@@ -108,5 +108,7 @@ int		ft_unset(char **args, t_common *c);
 void	ft_exit(t_common *c, char **cmd);
 int		ft_export(char **args, t_env *env);
 int		ft_echo(char **args);
+void	set_env_value(t_env *env, char *variable, char *value);
+int		ft_cd(char **args, t_common *c);
 
 #endif

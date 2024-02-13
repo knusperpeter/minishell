@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 18:58:24 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/13 15:43:01 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,12 @@
 
 int	ft_pwd(void)
 {
-	char	buf[PATH_MAX];
+	char	*buf;
 
-	if (getcwd(buf, sizeof(buf)) != NULL)
-		printf("%s\n", buf);
-	else
-	{
-		perror("getcwd() error");
-		return (EXIT_FAILURE);
-	}
+	buf = getcwd(NULL, 0);
+	if (!buf)
+		return (perror("Error getting current directory\n"), EXIT_FAILURE);
+	printf("%s\n", buf);
+	free(buf);
 	return (EXIT_SUCCESS);
 }

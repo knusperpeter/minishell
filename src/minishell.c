@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/11 19:25:15 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/13 16:15:19 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int	main(int ac, char **av, char **envp)
 				ft_unset(c.tokenslist->str, &c);
 			if (!ft_strncmp("echo", c.tokenslist->str[0], size))
 				ft_echo(c.tokenslist->str);
+			if (!ft_strncmp("cd", c.tokenslist->str[0], size))
+				ft_cd(c.tokenslist->str, &c);
 			free_2d(c.tokenslist->str);
 			free(c.raw_prompt);
 		}

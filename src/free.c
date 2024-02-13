@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 19:24:05 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/13 13:19:46 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	free_env_nodes(t_env *start)
 void	free_all(t_common *c)
 {
 //	t_env	*node;
-	rl_clear_history();
+	//rl_clear_history();
 	if (c)
 	{
 		while (c->env != NULL)
