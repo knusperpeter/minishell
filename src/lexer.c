@@ -69,8 +69,22 @@ void    set_up_array(int wc, int cc, char *input)
     {
         while (input[i] == ' ')
             i++;
-        if (input[i - 1] == ' ')
+        if (input[i] == '.')                //. dot instead of " and '
         {
+            norm[j] = ' ';
+            j++;
+            norm[j] = input[i];
+            j++;
+            i++;
+            while(input[i] != '.')             // . dot instead of ' and "
+            {
+                norm[j] = input[i];
+                i++;
+                j++;
+            }
+            norm[j] = input[i];
+            j++;
+            i++;
             norm[j] = ' ';
             j++;
         }
@@ -81,15 +95,32 @@ void    set_up_array(int wc, int cc, char *input)
         }
         if (input[i] != ' ' && special_char(input[i]))
         {
-            norm[j] = ' ';
-            j++;
-            norm[j] = input[i];
-            j++;
+            if (special_char(input[i + 1]))
+            {
+                norm[j] = ' ';
+                j++;
+                norm[j] = input[i];
+                j++;
+                i++;
+                norm[j] = input[i];
+                j++;
+                norm[j] = ' ';
+                j++;
+            }
+            else
+            {
+                norm[j] = ' ';
+                j++;
+                norm[j] = input[i];
+                j++;
+                norm[j] = ' ';
+                j++;
+            }
         }
         i++;
     }
     input[i] = '\0';
-    printf("result: %s\n", norm);
+    printf("result:___%s___\n", norm);
 }
 
 
@@ -170,7 +201,7 @@ void	preparing_input(char *input, char first)
 			input++;
 		}
 		if (*input != 32)
-		{
+		{i
 			if (*input == '\0')
 				break;
 			wc++;
