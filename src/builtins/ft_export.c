@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/11 18:58:19 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/14 18:19:44 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	already_in_env(char *args, t_env *env, int errorno)
 		len++;
 	while (env)
 	{
-		if (!ft_strncmp(args, env->variable, len))
+		if (!ft_strncmp(args, env->variable, len) && !env->variable[len])
 		{
 			if (errorno == 0)
 			{
