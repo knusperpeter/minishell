@@ -34,12 +34,12 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (x);
 }
 
-int check_char(char *character)
+int check_char(char *character)                     //analysing character
 {
     char special[11] = "*?[]()<>|#\"";
     int i = 0;
 
-    if (*character == '.' || *character == '\'' || *character == '\"')
+    if (*character == '.' || *character == '\'' || *character == '\"')   //++del dot
         return (2);
 
     while (i < 11)
@@ -51,7 +51,7 @@ int check_char(char *character)
     return (0);
 }
 
-void set_up_array(int wc, int cc, char *input)
+void set_up_array(int wc, int cc, char *input)          //array for tokenizing
 {
     char *new_string;
     int i = 0;
@@ -69,7 +69,35 @@ void set_up_array(int wc, int cc, char *input)
     {
         while (input[i] && input[i] != ' ')
         {
-            if (check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
+            if (check_char(&input[i]) == 2)
+            {
+                if (input[i - 1] != ' ' && i != 0)
+                {
+                    new_string[j] = ' ';
+                    j++;
+                }
+                new_string[j] = input[i];
+                i++;
+                j++;
+                while (check_char(&input[i]) != 2)
+                {
+                    new_string[j] = input[i];
+                    i++;
+                    j++;
+                }
+                if (check_char(&input[i]) == 2 && input[i + 1] != ' ')
+                {
+                    new_string[j] = input[i];
+                    i++;
+                    j++;
+                    if (input[i] != '\0')
+                    {
+                        new_string[j] = ' ';
+                        j++;
+                    }
+                }
+            }
+            if (check_char(&input[i]) == 0 && check_char(&input[i + 1]) == 1)
             {
                 new_string[j] = ' ';
                 j++;
@@ -95,7 +123,7 @@ void set_up_array(int wc, int cc, char *input)
             new_string[j] = ' ';
             j++;
         }
-    }
+    } 
     new_string[j] = '\0';
     printf("erg:___%s___\n", new_string);
     free(new_string);
