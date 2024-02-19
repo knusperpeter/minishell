@@ -34,7 +34,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (x);
 }
 
-int check_char(char *character)
+int check_char(char *character)                     //analysing character
 {
     char special[11] = "*?[]()<>|#\"";
     int i = 0;
@@ -69,18 +69,68 @@ void set_up_array(int wc, int cc, char *input)
     {
         while (input[i] && input[i] != ' ')
         {
+            if (check_char(&input[i]) == 2)
+            {
+                if (input[i - 1] != ' ' && i > 0)
+                {
+                    new_string[j] = ' ';
+                    j++;
+                }
+                new_string[j] = input[i];
+                i++;
+                j++;
+                while (check_char(&input[i]) != 2)
+                {
+                    new_string[j] = input[i];
+                    i++;
+                    j++;
+                }
+                if (check_char(&input[i]) == 2)
+                {
+                    new_string[j] = input[i];
+                    j++;
+                    i++;
+                    if (input[i] == ' ')
+                        break;
+                    if (input[i] != ' ' && input[i] != '\0')
+                    {
+                        printf("%c\n", input[i]);
+                        new_string[j] = ' ';
+                        j++;
+                    }
+                }
+            }
+            if (check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
+            {
+                new_string[j] = ' ';
+                j++;
+            }
+            if (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 0 && input[i - 1] != ' ' && i > 0)
+            {
+                new_string[j] = ' ';
+                j++;
+            }
+            if (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 1 && input[i] != input[i - 1])
+            {
+                new_string[j] = ' ';
+                j++;
+            }
             new_string[j] = input[i];
             i++;
             j++;        
         }
         while (input[i] == ' ')
             i++;
+        if (input[i - 1] == ' ' && input[i] != '\0')
+        {
+            new_string[j] = ' ';
+            j++;
+        }
     }
     new_string[j] = '\0';
     printf("erg:___%s___\n", new_string);
     free(new_string);
 }
-
 
 void prep_input(char *input)
 {
