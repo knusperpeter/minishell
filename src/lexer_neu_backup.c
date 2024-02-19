@@ -14,7 +14,7 @@
 //#include "minishell.h"
 #include "../include/minishell.h"
 
-char    *ft_strchr (const char *s, int c)               //del - libft
+char    *ft_strchr (const char *s, int c) 
 {
     int a;
 
@@ -30,47 +30,31 @@ char    *ft_strchr (const char *s, int c)               //del - libft
     return (NULL);
 }
 
-char *ft_strtok(char *s1, const char *delim)
+char    *ft_strtok(char *s1, const char *delim)
 {
     static char *str;
     char        *start;
-    int         in_quotes;
 
-    in_quotes = 0;
     if (s1)
         str = s1;
     if (!str)
-        return NULL;
-    while (*str && strchr(delim, *str))
+        return (0);
+    while (*str && ft_strchr(delim, *str))
         str++;
     if (*str == '\0')
-        return NULL;
-    if (*str == '.')
-    {
-        in_quotes = 1;
-        str++;
-    }
+        return (0);
     start = str;
-    if (in_quotes)
-    {
-        while (*str && *str != '.')
-            str++;
-        if (*str == '.')
-            str++;
-    }
-    else
-    {
-        while (*str && !strchr(delim, *str))
-            str++;
-    }
+    while (*str && !ft_strchr(delim, *str))
+        str++;
     if (*str == '\0')
-        str = NULL;
-    else
-        *str++ = '\0';
-    return start;
+    {
+        *str != '\0';
+        str++;
+    }
+    return (start);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)   //del - libft
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
 	unsigned int	x;
 	unsigned int	y;
@@ -105,31 +89,6 @@ int check_char(char *character)                     //analysing character
         i++;
     }
     return (0);
-}
-
-
-void tokenize_input(char *input)
-{
-    char **result = NULL;
-    char *token;
-    int index = 0;
-
-    token = ft_strtok(input, " ");
-    while (token != NULL) {
-        result = realloc(result, (index + 1) * sizeof(char *));
-        if (result == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
-            return;
-        }
-        result[index++] = strdup(token);
-        token = ft_strtok(NULL, " ");
-    }
-
-    for (int i = 0; i < index; i++) {
-        printf("result[%d]: ___%s___\n", i, result[i]);
-        free(result[i]); // Free each token
-    }
-    free(result); // Free array of tokens
 }
 
 void set_up_array(int wc, int cc, char *input)
@@ -175,6 +134,7 @@ void set_up_array(int wc, int cc, char *input)
                         break;
                     if (input[i] != ' ' && input[i] != '\0')
                     {
+                        printf("%c\n", input[i]);
                         new_string[j] = ' ';
                         j++;
                     }
@@ -208,7 +168,6 @@ void set_up_array(int wc, int cc, char *input)
         }
     }
     new_string[j] = '\0';
-    tokenize_input(&new_string[0]);
     printf("erg:___%s___\n", new_string);
     free(new_string);
 }
@@ -251,8 +210,14 @@ void prep_input(char *input)
             else
             {
                 if (*(input - 1) != ' ')
+                {
                     wc++;
-                cc++;
+                    cc++;
+                }
+                else 
+                {
+                    cc++;
+                }
                 input++;
                 while (check_char(input) != 2 && *input)
                 {
@@ -264,8 +229,8 @@ void prep_input(char *input)
             input++;
         }
     }
-    printf("wc: %d\n", wc);                     // del wc
-    printf("cc: %d\n", cc);                     // del cc
+    printf("wc: %d\n", wc);
+    printf("cc: %d\n", cc);
     set_up_array(wc, cc, string);
 }
 
