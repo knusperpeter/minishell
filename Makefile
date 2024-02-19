@@ -11,6 +11,7 @@ LIBFT_LIB	= libft.a
 SOURCES	=	src/minishell.c \
 			src/init_env.c \
 			src/free.c \
+			src/exec.c \
 			src/builtins/ft_echo.c	\
 			src/builtins/ft_env.c \
 			src/builtins/ft_exit.c \
@@ -42,5 +43,5 @@ fclean	:
 
 re		: fclean all
 
- .SILENT:
+# .SILENT:
 .PHONY: all clean fclean re

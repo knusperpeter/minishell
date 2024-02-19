@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/14 00:01:25 by chris            ###   ########.fr       */
+/*   Updated: 2024/02/17 20:29:49 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ typedef struct common_data
 	unsigned int	exitstatus;
 	char			*raw_prompt;
 
-	struct termios	old_settings;
-	struct termios	settings;
 }	t_common;
 
 int		create_list_element(void **element, size_t size);
@@ -100,6 +98,7 @@ int		dup_env(t_common *c, char **envp);
 void	free_2d(char **str);
 void	free_env_nodes(t_env *start);
 void	free_all(t_common *c);
+int		ft_exec(t_common *c);
 
 //builtins
 int		ft_pwd(void);
