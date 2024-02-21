@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/13 23:13:45 by chris            ###   ########.fr       */
+/*   Updated: 2024/02/20 16:26:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,21 +43,34 @@ void	free_env_nodes(t_env *start)
 	}
 }
 
-void	free_all(t_common *c)
+void	free_cmd_table(void *content)
+{
+	int			i;
+	t_cmd_table *table;
+	
+	table = (t_cmd_table *)content;
+	if (table->str)
+	{
+		i = 0;
+		while (table->str[i])
+			free(table->str[i++]);
+		free(table->str);
+	}
+}
+
+void	free_all(t_common *c, t_cmd_table *cmds)
 {
 //	t_env	*node;
 	//rl_clear_history();
 	if (c)
 	{
 		free_env_nodes(c->env);
-		if (c->tokenslist)
+		if (c->cmd_struct)
 		{
-			if (c->tokenslist->str)
-				free_2d(c->tokenslist->str);
-			free(c->tokenslist);
+			if (cmds->str)
+				free_2d(cmds->str);
+			free(c->cmd_struct);
 		}
-		if (c->raw_prompt)
-			free(c->raw_prompt);
 		free(c);
 	}
 }

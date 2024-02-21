@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 13:16:33 by miheider          #+#    #+#             */
-/*   Updated: 2024/02/10 20:36:16 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/19 23:43:42 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stddef.h>
+# include "get_next_line.h"
 
 typedef struct s_list
 {
@@ -67,5 +68,6 @@ void		ft_lstclear(t_list **lst, void (*del)(void *));
 void		ft_lstiter(t_list *lst, void (*f)(void *));
 char		*ft_lltoa(long long n);
 long long	ft_atoll(const char *nptr);
+
 
 #endif
