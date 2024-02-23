@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/21 14:50:38 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/23 17:01:56 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@
 typedef enum e_type
 {
 	VOID,
-	PIPE,
-	STRING,
+//	STRING,
 	REDIR_IN,
 	REDIR_OUT,
 	APPEND,
@@ -73,15 +72,24 @@ typedef struct s_token // "< in" -> type = REDIR_IN     data = "in"
 	s_token			*next;
 }	t_token;
 
+typedef struct s_io_red
+{
+	t_type			type;
+	char			*infile;
+	char			*outfile;
+	char			*heredoc_limiter;
+}	t_io_red;
+
 // Inputs and what attributes come with them is locatedhere.
 // Each pipe stands for a new node.???????
 typedef struct s_cmd_table
 {
 	int					read_fd;
 	int					write_fd;
-	int					io_red;
-	char				**str;
+	t_list				*io_red;
 	char				*heredoc_name;
+	char				**str;
+	char				*exec_path;
 	struct s_cmd_table	*next;//not needed i guess?
 	struct s_cmd_table	*prev;//
 }	t_cmd_table;
@@ -113,7 +121,8 @@ void	free_2d(char **str);
 void	free_env_nodes(t_env *start);
 void	free_cmd_table(void *content);
 void	free_all(t_common *c, t_cmd_table *cmds);
-int		ft_exec(t_common *c);
+int		ft_loop(t_common *c);
+int		ft_parsing(t_common *c);
 
 // builtins
 int		ft_pwd(void);

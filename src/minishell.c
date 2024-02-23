@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/21 13:06:49 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/23 12:48:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,15 @@ void	init_minishell(t_common *c, char **envp)
 int	init_loop(t_common *c)
 {
 //protect that shit, also maybe make a function, that will init t_list and subs
-	c->tokens = malloc (sizeof(t_list *));
-	if (!c->tokens)
-		return (perror("Error initializing t_list\n"), 1);
-	c->tokens->content = malloc (sizeof(t_token *));
-	if (!c->tokens->content)
-		return (perror("Error initializing t_token\n"), 1);
-	c->cmd_struct = malloc (sizeof(t_list *));
-	if (!c->cmd_struct)
-		return (perror("Error initializing t_list\n"), 1);
-	c->cmd_struct->content = malloc(sizeof(t_cmd_table *));
-	if (!c->cmd_struct->content)
-		return (perror("Error initializing cmd_struct\n"), 1);
+	c->tokens = ft_lstnew(malloc (sizeof(t_token *)));
+	if (!c->tokens || !c->tokens->content)
+		return (perror("Error initializing tokens\n"), 1);
+	c->cmd_struct = ft_lstnew(malloc (sizeof(t_cmd_table *)));
+	if (!c->cmd_struct || !c->cmd_struct->content)
+		return (perror("Error initializing cmd_table\n"), 1);
 	while (1)
 	{
-		ft_exec(c);
+		ft_loop(c);
 		ft_lstiter(c->cmd_struct, free_cmd_table);
 	//		free_loop_data(c);
 	}
