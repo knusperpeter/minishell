@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/02/21 13:40:47 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/23 16:45:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,94 +49,6 @@ void	init_loop_data(t_common *c){
 	c->cmd_struct = NULL;
 }
 
-void	here_doc(char *limiter, t_cmd_table *cmd_table)
-{
-	char	*buf;
-
-	if (cmd_table->read_fd == -1)
-		printf("pipex: %s: %s\n", limiter, strerror(errno));
-	while (1)
-	{
-		write(1, "minishell heredoc> ", 15);
-		if (get_next_line(0, &buf, 0) < 0)
-			exit (1);
-		if (buf == NULL || *buf == '\0')
-			break ;
-		if (ft_strncmp(limiter, buf, ft_strlen(limiter)) == 0)
-			break ;
-		write(cmd_table->read_fd, buf, ft_strlen(buf));
-	}
-	get_next_line(0, &buf, 1);
-	free(buf);
-	close(cmd_table->read_fd);
-	cmd_table->read_fd = open(".heredoc_tmp", O_RDONLY);
-	if (cmd_table->read_fd == -1)
-	{
-		unlink(".heredoc_tmp");
-		printf("minishell: %s\n", strerror(errno));
-	}
-}
-
-int	open_file(t_token *token, t_cmd_table *cmd_table)
-{
-	if (token->type == HEREDOC)
-	{
-		cmd_table->read_fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		here_doc(token->data, cmd_table);
-	}
-	else if (token->type == REDIR_IN)
-	{
-		cmd_table->read_fd = open(token->data, O_RDONLY);
-		if (cmd_table->read_fd == -1)
-			printf("minishell: %s: %s\n", token->data, strerror(errno));
-	}
-	else if (token->type == REDIR_OUT)
-	{
-		cmd_table->write_fd = open(token->data, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR
-				| S_IWUSR);
-	}
-	else if (token->type == APPEND)
-	{
-		cmd_table->write_fd = open(token->data, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR
-				| S_IWUSR);
-	}
-	if (cmd_table->write_fd == -1)
-		printf("minishell: %s: %s\n", token->data, strerror(errno));
-	return (EXIT_SUCCESS);
-}
-
-void	open_in_out(t_token *token, t_common *c)
-{
-	if (token->type == REDIR_IN || token->type == REDIR_OUT
-			|| token->type == APPEND || token->type == HEREDOC)
-		open_file(c->tokens->content, c->cmd_struct->content);
-}
-
-void	setup_env(t_common *c, t_cmd_table *cmd_table)
-{
-	t_env	*tmp;
-
-	tmp = c->env;
-	
-}
-
-int	prepare_execution(t_common *c)
-{
-	t_list	*tmp_tok;
-	t_list	*tmp_cmd;
-	
-	tmp_tok = c->tokens;
-	while (tmp_tok)
-	{
-		setup_env(c, tmp_cmd->content);
-		//expand_variable(c->tokens->content, c->env);
-		open_in_out(tmp_tok->content, c);
-		add_cmd(c->cmd_struct->content);
-		tmp_tok = tmp_tok->next;
-	}
-	return (EXIT_SUCCESS);
-}
-
 int	ft_execute_builtins(t_cmd_table *cmd, t_common *c)
 {
 	cmd->str = ft_split(c->raw_prompt, ' ');
@@ -162,15 +74,16 @@ int	ft_execute_builtins(t_cmd_table *cmd, t_common *c)
 }
 
 // ex.: < in cat | cat > out
-int	ft_exec(t_common *c)
+int	ft_loop(t_common *c)
 {
 	init_loop_data(c);
 	c->raw_prompt = prompt();
 	if (c->raw_prompt[0])
 	{
 		//lexing&parsing
-		prepare_execution(c);
-		ft_execute_builtins(c->cmd_struct->content, c);
+		ft_parsing(c);
+//		ft_execute(c);
+//		ft_execute_builtins(c->cmd_struct->content, c);
 	}
 	return (0);
 }
