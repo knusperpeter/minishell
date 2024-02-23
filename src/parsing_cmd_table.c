@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/23 16:45:38 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/23 17:02:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ t_token	*cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 	i = 0;
 	while (tmp)
 	{
-		if (tmp->type == VOID || tmp->type == STRING)
+		if (tmp->type == VOID)
 			i++;
 		tmp = tmp->next;
 	}
@@ -150,7 +150,7 @@ t_token	*cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 	i = 0;
 	while (token)
 	{
-		if (token->type == VOID || token->type == STRING)
+		if (token->type == VOID)
 			cmd_node->str[i++] = token->data;
 		token = token->next;
 	}

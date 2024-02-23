@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/23 16:45:44 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/23 17:01:56 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 typedef enum e_type
 {
 	VOID,
-	STRING,
+//	STRING,
 	REDIR_IN,
 	REDIR_OUT,
 	APPEND,
