@@ -3,21 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:45 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/07 16:58:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/14 18:17:16 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-/* The unset  builtin is used to destroy arrays.  unset name[subscript] 
-destroys the array element at index subscript, for both indexed and 
-associative arrays.  Negative subscripts to indexed arrays are interpreted 
-as described above.  Unsetting the last element of an array variable does 
-not unset the variable.  unset name, where name is an array, or unset 
-name[subscript], where  subscript is * or @, removes the entire array.
-When  using a variable name with a subscript as an argument to a command, 
-such as with unset, without using the word expansion syntax described above, 
-the argument is subject to pathname expansion.  If pathname expansion is not 
-desired, the argument should be quoted. */
+
+void	free_env_node(t_env *env)
+{
+	if (env->value)
+		free(env->value);
+	if (env->variable)
+		free(env->variable);
+	free(env);
+}
+
+void	remove_node(t_env *env)
+{
+	t_env	*prev;
+	t_env	*next;
+
+	prev = env->prev;
+	next = env->next;
+	if (prev)
+		prev->next = next;
+	if (next)
+		next->prev = prev;
+	free_env_node(env);
+}
+
+int	check_and_unset(char *arg, t_env *env)
+{
+	size_t	len;
+
+	len = 0;
+	while (arg[len])
+		len++;
+	while (env)
+	{
+		if (!ft_strncmp(arg, env->variable, len) && !env->variable[len])
+		{
+			remove_node(env);
+			return (EXIT_SUCCESS);
+		}
+		env = env->next;
+	}
+	return (EXIT_FAILURE);
+}
+
+int	ft_unset(char **args, t_common *c)
+{
+	int	i;
+
+	i = 1;
+	while (args[i])
+	{
+		check_and_unset(args[i], c->env);
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}

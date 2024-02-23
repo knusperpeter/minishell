@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_cd_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/13 23:10:26 by chris            ###   ########.fr       */
+/*   Created: 2024/02/13 23:07:09 by chris             #+#    #+#             */
+/*   Updated: 2024/02/13 23:10:38 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <stdlib.h>
 
-int	ft_pwd(void)
+void	set_env_value(t_env *env, char *variable, char *value)
 {
-	char	*buf;
+	int	i;
 
-	buf = getcwd(NULL, 0);
-	if (!buf)
-		return (perror("Error getting current directory\n"), EXIT_FAILURE);
-	printf("%s\n", buf);
-	free(buf);
-	return (EXIT_SUCCESS);
+	while (env)
+	{
+		i = ft_strlen(variable);
+		if (!ft_strncmp(env->variable, variable, i))
+		{
+			free(env->value);
+			env->value = ft_strdup(value);
+			return ;
+		}
+		env = env->next;
+	}
 }

@@ -90,18 +90,13 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)   //del - libft
 	return (x);
 }
 
-<<<<<<< HEAD
 int check_char(char *character)                     //analysing character
-=======
-int check_char(char *character)                     //analysing character                     //analysing character
->>>>>>> fc2fba343dec93213594546bb72a95625831a5b2
 {
     char special[11] = "*?[]()<>|#\"";
     int i = 0;
 
     if (*character == '.' || *character == '\'' || *character == '\"')
         return (2);
-
     while (i < 11)
     {
         if (special[i] == *character)
@@ -110,32 +105,121 @@ int check_char(char *character)                     //analysing character       
     }
     return (0);
 }
-
-
-void tokenize_input(char *input)
+/*
+int     check_parsing(char *first)
 {
-    char **result = NULL;
-    char *token;
-    int index = 0;
+    int i = 0;
 
-    token = ft_strtok(input, " ");
-    while (token != NULL) {
-        result = realloc(result, (index + 1) * sizeof(char *));
-        if (result == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
-            return;
+    if (first[0] == '<' && first[1] == '\0')
+        return (1);
+    else if (first[0] == '<' && first[1] == '<')
+        return (2);
+    else if (first[0] == '>' && first[1] == '\0')
+        return (3);
+    else if (first[0] == '>' && first[1] == '>')
+        return (4);
+    else if (first[0] == '|' && first[1] == '\0')
+        return (5);
+    while (first[i])
+    {
+        if (first[i] == '\' && first[i + 1] == '.')
+            return (6);
+        i++;
+    }
+    return (0);
+}
+
+void    set_up_list(char *token, int value)
+{
+    t_env   data;
+
+
+
+    
+}
+
+
+
+
+void    parse_tokens(char **tokens, int index)
+{
+    int i = 0;
+    int ret = 0;
+    int len = 0;
+
+    while (tokens[i])
+    {
+        ret = check_parsing(tokens[i]);
+        len = ft_strlen(tokens);
+        if (ret == 1 && len == 1)                        // <
+            set_up_list(tokens[i], REDIR_L);
+        else if (ret == 2 && len == 2)                   // <<
+            set_up_list(tokens[i], HEREDOC_L);
+        else if (ret == 3 && len == 1)                   // >
+            set_up_list(tokens[i], REDIR_R);
+        else if (ret == 4 && len == 2)                   // >>
+            set_up_list(tokens[i], APPEND);
+        else if (ret == 5 && len == 1)                   // |
+            set_up_list(tokens[i], PIPE);
+        else if (ret == 6)                               // "
+            set_up_list(tokens[i], STRING);
+        else 
+            set_up_list(tokens[i], VOID);
+        i++;
+    }
+}*/
+/*erhält nach pipe tokenizeden tokens und tokenized sie nach spaces und speicher sie in linked list*/
+/*
+void    tokenize_tokens(char **tokens, int index)
+{
+    int i = 0;
+    char *tok;
+    
+    while (i < index)
+    {
+        tok = ft_strtok(tokens[i], " ");
+        while (tok != NULL)
+        {
+
         }
-        result[index++] = strdup(token);
-        token = ft_strtok(NULL, " ");
     }
 
-    for (int i = 0; i < index; i++) {
+}*/
+
+/*erstellt array mit den nach pipes getokenizeden tokens*/
+void tokenize_input(char *input)
+{
+    char **result = malloc(num_tokens * sizeof(char *));
+    if (result == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed\n");
+        return;
+    }
+
+    char *token = ft_strtok(input, "|");
+    int index = 0;
+    while (token != NULL && index < num_tokens)
+    {
+        result[index++] = strdup(token);
+        token = ft_strtok(NULL, "|");
+    }
+
+    if (index < num_tokens)
+    {
+        fprintf(stderr, "Expected %d tokens, but found only %d tokens.\n", num_tokens, index);
+        // You may handle this situation according to your needs.
+    }
+
+   // tokenize_tokens(result, index);
+
+    for (int i = 0; i < index; i++)
+    {
         printf("result[%d]: ___%s___\n", i, result[i]);
         free(result[i]); // Free each token
     }
     free(result); // Free array of tokens
 }
-
+/*richtet input zum tokenizen her (genau 1 space)*/
 void set_up_array(int wc, int cc, char *input)
 {
     char *new_string;
@@ -216,7 +300,7 @@ void set_up_array(int wc, int cc, char *input)
     printf("erg:___%s___\n", new_string);
     free(new_string);
 }
-
+/*zählt Wörter und Characters im input*/
 void prep_input(char *input)
 {
     int wc = 0;

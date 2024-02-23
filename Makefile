@@ -9,10 +9,18 @@ LIBFT	= libft
 LIBFT_LIB	= libft.a
 
 SOURCES	=	src/minishell.c \
-			src/builtins/ft_pwd.c \
-			src/builtins/ft_env.c \
 			src/init_env.c \
-			src/builtins/ft_export.c
+			src/free.c \
+			src/exec.c \
+			src/parsing_cmd_table.c \
+			src/builtins/ft_echo.c	\
+			src/builtins/ft_env.c \
+			src/builtins/ft_exit.c \
+			src/builtins/ft_export.c \
+			src/builtins/ft_pwd.c \
+			src/builtins/ft_unset.c \
+			src/builtins/ft_cd_1.c \
+			src/builtins/ft_cd_2.c
 
 OBJECTS = $(SOURCES:.c=.o)
 

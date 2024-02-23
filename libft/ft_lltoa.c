@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 08:29:48 by miheider          #+#    #+#             */
-/*   Updated: 2024/02/06 21:09:57 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/10 20:35:35 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	signer(long long int *num, int n, int *sign)
 char	*ft_lltoa(long long n)
 {
 	int				sign;
-	long long	num;
+	long long		num;
 	int				len_n;
 	char			*str;
 

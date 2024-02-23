@@ -12,9 +12,46 @@
 /* ************************************************************************** */
 
 //#include "minishell.h"
-#include "../include/minishell.h"
+//#include "../include/minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-char    *ft_strchr (const char *s, int c)               //del - libft
+/*libft - ft_strlen*/
+size_t  ft_strlen(const char *s)
+{
+    int i;
+
+    i = 0;
+    if(!s)
+        return (0);
+    while (s[i])
+        i++;
+    return (i);
+}
+
+/*libft - ft_strdup*/
+char    *ft_strdup(const char *s)
+{
+    int     i;
+    int     a;
+    char    *dupl;
+
+    a = ft_strlen(s);
+    dupl = malloc(sizeof(char) * a + 1);
+    if (!dupl)
+        return (NULL);
+    i = 0;
+    while (i < a)
+    {
+        dupl[i] = s[i];
+        i++;
+    }
+    dupl[i] = '\0';
+    return (dupl);
+}
+
+/*libft - ft_strchr*/
+char    *ft_strchr (const char *s, int c) 
 {
     int a;
 
@@ -30,79 +67,17 @@ char    *ft_strchr (const char *s, int c)               //del - libft
     return (NULL);
 }
 
-char *ft_strtok(char *s1, const char *delim)
+/*this function checks for special characters, except for pipes*/
+int check_char(char *character)
 {
-    static char *str;
-    char        *start;
-    int         in_quotes;
+    char    *special;
+    int     i;
 
-    in_quotes = 0;
-    if (s1)
-        str = s1;
-    if (!str)
-        return NULL;
-    while (*str && strchr(delim, *str))
-        str++;
-    if (*str == '\0')
-        return NULL;
-    if (*str == '.')
-    {
-        in_quotes = 1;
-        str++;
-    }
-    start = str;
-    if (in_quotes)
-    {
-        while (*str && *str != '.')
-            str++;
-        if (*str == '.')
-            str++;
-    }
-    else
-    {
-        while (*str && !strchr(delim, *str))
-            str++;
-    }
-    if (*str == '\0')
-        str = NULL;
-    else
-        *str++ = '\0';
-    return start;
-}
-
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)   //del - libft
-{
-	unsigned int	x;
-	unsigned int	y;
-
-	x = 0;
-	while (src[x] != '\0')
-		x++;
-	if (size == 0)
-		return (x);
-	y = 0;
-	while (src[y] != '\0' && y < (size -1))
-	{
-		dst[y] = src[y];
-		y++;
-	}
-	dst[y] = '\0';
-	return (x);
-}
-
-<<<<<<< HEAD
-int check_char(char *character)                     //analysing character
-=======
-int check_char(char *character)                     //analysing character                     //analysing character
->>>>>>> fc2fba343dec93213594546bb72a95625831a5b2
-{
-    char special[11] = "*?[]()<>|#\"";
-    int i = 0;
-
+    i = 0;
+    special = "*?[]()<>#\"";
     if (*character == '.' || *character == '\'' || *character == '\"')
         return (2);
-
-    while (i < 11)
+    while (i < 10)
     {
         if (special[i] == *character)
             return (1);
@@ -111,6 +86,39 @@ int check_char(char *character)                     //analysing character       
     return (0);
 }
 
+
+/*tokenizing the input; rebuilt the original function strtok and addes a feature: it is ignoring the delimiter in quotes.*/
+char    *ft_strtok(char *s1, const char *delim)
+{
+    static char    *str;
+    char           *start;
+    int            in_quotes;
+
+    if (s1)
+        str = s1;
+    if (!str)
+        return (0);
+    while (*str && ft_strchr(delim, *str))
+        str++;
+    if (*str == '\0')
+        return (0);
+    start = str;
+    in_quotes = 0;
+    while (*str)
+    {
+        if (*str == '.')
+            in_quotes = !in_quotes;
+        if (!in_quotes && ft_strchr(delim, *str))
+            break;
+        str++;
+    }
+    if (*str != '\0')
+    {
+        *str = '\0';
+        str++;
+    }
+    return (start);
+}
 
 void tokenize_input(char *input)
 {
@@ -125,7 +133,7 @@ void tokenize_input(char *input)
             fprintf(stderr, "Memory allocation failed\n");
             return;
         }
-        result[index++] = strdup(token);
+        result[index++] = ft_strdup(token);
         token = ft_strtok(NULL, " ");
     }
 
@@ -201,7 +209,7 @@ void set_up_array(int wc, int cc, char *input)
             }
             new_string[j] = input[i];
             i++;
-            j++;        
+            j++;
         }
         while (input[i] == ' ')
             i++;
@@ -250,7 +258,7 @@ void prep_input(char *input)
                 wc++;
                 cc++;
             }
-            else if (check_char(input) == 0 && (check_char(input - 1) != 1)) 
+            else if (check_char(input) == 0 && (check_char(input - 1) != 1))
                 cc++;
             else
             {
@@ -273,9 +281,69 @@ void prep_input(char *input)
     set_up_array(wc, cc, string);
 }
 
-int  main(int argc, char **argv)
+/*tokenize the input the first time using the "|" as an delimiter*/
+void    tokenize_one(char *input, int pipe)
+{
+    char    **result;
+    char    *token;
+    int     index;
+    int     i;
+
+    result = malloc((pipe + 1) * sizeof(char *));
+    if (result == NULL)
+    {
+        printf("Error - malloc - tokenize_one\n");
+        return ;
+    }
+    token = ft_strtok(input, "|");
+    index = 0;
+    while (token != NULL && index <= pipe + 1)
+    {
+        result[index++] = ft_strdup(token);
+        token = ft_strtok(NULL, "|");
+    }
+    i = 0;
+    while (i < pipe + 1)
+    {
+        prep_input(result[i]);
+        i++;
+    }                                   
+    for (i = 0; i < index; i++)                         //loop for testing only
+    {
+        printf("result[%d]: ___%s___\n", i, result[i]);
+        free(result[i]);
+    }
+    free(result);
+}
+
+/*count "|"-sections within the input. used for allocating memory*/
+void    count_pipes(char *input)
+{
+    int i = 0;
+    int pipe = 0;
+
+    while (input[i])
+    {
+        if (input[i] == '.')
+        {
+            i++;
+            while (input[i] != '.')
+                i++;
+        }
+        while (input[i] == '|' && input[i + 1] != '|')
+        {
+            pipe += 1;
+            i++;
+        }
+        i++;
+    }
+    printf("pipes: %d\n", pipe);
+    tokenize_one(input, pipe);
+}
+
+int main(int argc, char **argv)
 {
     argc = argc - 1 + 1;
-    prep_input(argv[1]);
+    count_pipes(argv[1]);
     return (0);
 }
