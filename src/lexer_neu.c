@@ -91,10 +91,14 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)   //del - libft
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 int check_char(char *character)                     //analysing character
 =======
 int check_char(char *character)                     //analysing character                     //analysing character
 >>>>>>> fc2fba343dec93213594546bb72a95625831a5b2
+=======
+int check_char(char *character)                     //analysing character                     //analysing character
+>>>>>>> e941f789435c96f0713cd555ceae9b601e1c7623
 {
     char special[11] = "*?[]()<>|#\"";
     int i = 0;
@@ -154,6 +158,7 @@ void set_up_array(int wc, int cc, char *input)
     {
         while (input[i] && input[i] != ' ')
         {
+<<<<<<< HEAD
             if (check_char(&input[i]) == 2)
             {
                 if (input[i - 1] != ' ' && i > 0)
@@ -199,6 +204,8 @@ void set_up_array(int wc, int cc, char *input)
                 new_string[j] = ' ';
                 j++;
             }
+=======
+>>>>>>> e941f789435c96f0713cd555ceae9b601e1c7623
             new_string[j] = input[i];
             i++;
             j++;        
