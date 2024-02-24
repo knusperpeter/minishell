@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/24 16:32:47 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/24 17:45:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ int	init_loop(t_common *c)
 	while (1)
 	{
 		ft_loop(c);
-		ft_lstiter(c->cmd_struct, free_cmd_table);
-	//		free_loop_data(c);
 	}
 }
 

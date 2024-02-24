@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/24 15:57:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/24 18:28:30 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	open_file(t_io_red *io, t_cmd_table *cmd_node)
 		}
 		else
 			cmd_node->read_fd = open(io->infile, O_RDONLY);
+		if (cmd_node->read_fd == -1)
+			printf("minishell: %s: %s\n", io->infile, strerror(errno));
 	}
 	else if (io->type == REDIR_OUT || io->type == APPEND)
 	{
@@ -65,6 +67,8 @@ void	open_file(t_io_red *io, t_cmd_table *cmd_node)
 		else
 			cmd_node->write_fd = open(io->outfile, O_WRONLY | O_APPEND
 					| O_CREAT, S_IRUSR | S_IWUSR);
+		if (cmd_node->write_fd == -1)
+			printf("minishell: %s: %s\n", io->outfile, strerror(errno));
 	}
 }
 
@@ -78,10 +82,8 @@ void	open_io(t_list *io, t_cmd_table *cmd_node)
 	{
 		io_red = tmp->content;
 		open_file(tmp->content, cmd_node);
-		if (cmd_node->read_fd == -1)
-			printf("minishell: %s: %s\n", io_red->infile, strerror(errno));
-		if (cmd_node->write_fd == -1)
-			printf("minishell: %s: %s\n", io_red->outfile, strerror(errno));
+
+		
 		tmp = tmp->next;
 	}
 }

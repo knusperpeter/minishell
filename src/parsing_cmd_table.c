@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/24 16:45:30 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/24 18:25:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 		free(c);
 		if (!node->heredoc_name)
 			return (perror("Error initializing str in input_to_node\n"), 1);
+		tmp->infile = node->heredoc_name;
 	}
 	else
 		tmp->infile = token->data;

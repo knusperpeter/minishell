@@ -6,13 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/02/24 15:58:42 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/24 18:32:08 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <cstdlib>
-#include <stdlib.h>
 /*
 if i only have one cmd, do i still need to fork? 
 	->probably yes, so after execve i can free everything, and in case of pipes to close them.
@@ -20,7 +18,6 @@ if i only have one cmd, do i still need to fork?
 if no output redirect, and only 1 cmd, i need no pipe, right?
 if 
 */
- 
 
 int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 {
@@ -71,8 +68,12 @@ int	check_redirections(t_cmd_table *cmd_table)
 	while (curr_io)
 	{
 		io = curr_io->content;
-		if (io->type == HEREDOC)
-			
+		if (io->type == HEREDOC || io->type == REDIR_IN)
+			check_io_name(io->infile);
+		else if (io->type == APPEND || io->type == REDIR_OUT)
+			check_io_name(io->outfile);
+		
+//////////////////////////////////////////////	Show must go on here-> implement function: check_io_name
 	}
 	return (EXIT_SUCCESS);
 }
