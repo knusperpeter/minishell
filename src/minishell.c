@@ -6,12 +6,43 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/23 12:48:19 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/24 16:32:47 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdlib.h>
+
+char	*prompt(void)
+{
+	char	*line;
+
+	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
+	if (ft_strlen(line) > 0)
+		add_history(line);
+	return (line);
+}
+
+
+void	init_loop_data(t_common *c){
+	c->raw_prompt = NULL;
+	c->tokens = NULL;
+	c->cmd_struct = NULL;
+}
+
+int	ft_loop(t_common *c)
+{
+	init_loop_data(c);
+	c->raw_prompt = prompt();
+	if (c->raw_prompt[0])
+	{
+		//lexing&parsing
+		ft_parsing(c);
+		ft_execute(c);
+		ft_cleanup_loop(c);
+//		ft_execute_builtins(c->cmd_struct->content, c);
+	}
+	return (0);
+}
 
 void	init_minishell(t_common *c, char **envp)
 {
@@ -31,9 +62,6 @@ int	init_loop(t_common *c)
 	c->tokens = ft_lstnew(malloc (sizeof(t_token *)));
 	if (!c->tokens || !c->tokens->content)
 		return (perror("Error initializing tokens\n"), 1);
-	c->cmd_struct = ft_lstnew(malloc (sizeof(t_cmd_table *)));
-	if (!c->cmd_struct || !c->cmd_struct->content)
-		return (perror("Error initializing cmd_table\n"), 1);
 	while (1)
 	{
 		ft_loop(c);

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/23 17:01:56 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/24 15:32:21 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct s_token // "< in" -> type = REDIR_IN     data = "in"
 {
 	t_type			type;
 	char			*data;
-	s_token			*next;
+	struct s_token	*next;
 }	t_token;
 
 typedef struct s_io_red
@@ -90,8 +90,6 @@ typedef struct s_cmd_table
 	char				*heredoc_name;
 	char				**str;
 	char				*exec_path;
-	struct s_cmd_table	*next;//not needed i guess?
-	struct s_cmd_table	*prev;//
 }	t_cmd_table;
 
 typedef struct s_final_cmd_table //do i need this? no, exec to cmd_table
@@ -120,9 +118,12 @@ int		dup_env(t_common *c, char **envp);
 void	free_2d(char **str);
 void	free_env_nodes(t_env *start);
 void	free_cmd_table(void *content);
+void	ft_cleanup_loop(t_common *c);
 void	free_all(t_common *c, t_cmd_table *cmds);
 int		ft_loop(t_common *c);
 int		ft_parsing(t_common *c);
+void	open_io(t_list *io, t_cmd_table *cmd_node);
+int		ft_execute(t_common *c);
 
 // builtins
 int		ft_pwd(void);

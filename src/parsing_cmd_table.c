@@ -6,18 +6,18 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/23 17:02:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/24 16:45:30 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <iterator>
 #include <stdlib.h>
 
 char	**setup_env(t_env *env)
 {
 	t_env	*tmp;
 	char	**p;
+	char	*s;
 	int		i;
 
 	i = 0;
@@ -36,11 +36,13 @@ char	**setup_env(t_env *env)
 	{
 		if (!tmp->flag)
 		{
-			p[i] = ft_strjoin(env->variable, "=");
-			p[i] = ft_strjoin(p[i], env->value);
+			s = ft_strjoin(env->variable, "=");
+			p[i] = ft_strjoin(s, env->value);
+			free (s);
 		}
 		tmp = tmp->next;
 	}
+	return (p);
 }
 
 char	*prompt(void)
@@ -67,71 +69,7 @@ int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 	return (1);
 }
 
-void	init_loop_data(t_common *c){
-	c->raw_prompt = NULL;
-	c->tokens = NULL;
-	c->cmd_struct = NULL;
-}
-
-void	here_doc(char *limiter, t_cmd_table *cmd_table)
-{
-	static int	i; //die müsste wsl in parent function stehen?
-	char		*buf;
-
-	if (cmd_table->read_fd == -1)
-		printf("pipex: %s: %s\n", limiter, strerror(errno));
-	while (1)
-	{
-		write(1, "minishell heredoc> ", 15);
-		if (get_next_line(0, &buf, 0) < 0)
-			exit (1);
-		if (buf == NULL || *buf == '\0')
-			break ;
-		if (ft_strncmp(limiter, buf, ft_strlen(limiter)) == 0)
-			break ;
-		write(cmd_table->read_fd, buf, ft_strlen(buf));
-	}
-	get_next_line(0, &buf, 1);
-	free(buf);
-	close(cmd_table->read_fd);
-	cmd_table->read_fd = open(".heredoc_tmp", O_RDONLY);
-	if (cmd_table->read_fd == -1)
-	{
-		unlink(".heredoc_tmp");
-		printf("minishell: %s\n", strerror(errno));
-	}
-}
-//add return value?
-//ACHTUNG: ich kann erst öffnen, wenn expanded wurde!!!
-//erst expanden, dann mit cmd_table durchiterieren
-/* void	open_file(t_token *token, t_cmd_table *cmd_node)
-{
-	if (token->type == HEREDOC)
-	{
-		cmd_node->read_fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		here_doc(token->data, cmd_node);
-	}
-	else if (token->type == REDIR_IN)
-	{
-		cmd_node->read_fd = open(token->data, O_RDONLY);
-		if (cmd_node->read_fd == -1)
-			printf("minishell: %s: %s\n", token->data, strerror(errno));
-	}
-	else if (token->type == REDIR_OUT)
-	{
-		cmd_node->write_fd = open(token->data, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR
-				| S_IWUSR);
-	}
-	else if (token->type == APPEND)
-	{
-		cmd_node->write_fd = open(token->data, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR
-				| S_IWUSR);
-	}
-	if (cmd_node->write_fd == -1)
-		printf("minishell: %s: %s\n", token->data, strerror(errno));
-} */
-
-t_token	*cmd_to_node(t_token *token, t_cmd_table *cmd_node)
+int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 {
 	int	i;
 	t_token *tmp;
@@ -146,7 +84,7 @@ t_token	*cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 	}
 	cmd_node->str = malloc(sizeof(char*) * (i + 1));
 	if (!cmd_node->str)
-		return (perror("Error initializing char * in cmd_to_node\n"), NULL);//evtl token returnen?
+		return (perror("Error initializing str in cmd_to_node\n"), 1);
 	i = 0;
 	while (token)
 	{
@@ -155,24 +93,28 @@ t_token	*cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 		token = token->next;
 	}
 	cmd_node->str[i] = NULL;
-	return (token);
+	return (EXIT_SUCCESS);
 }
 
 int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 {
 	static int	i;
+	char		*c;
 
 	i = 0;
 	if (token->type == HEREDOC)
 	{
 		tmp->heredoc_limiter = token->data;
-		node->heredoc_name = ft_strjoin(".heredoc_tmp", ft_itoa(i++));
+		c = ft_itoa(i++);
+		node->heredoc_name = ft_strjoin(".heredoc_tmp", c);
+		free(c);
 		if (!node->heredoc_name)
 			return (perror("Error initializing str in input_to_node\n"), 1);
 	}
 	else
 		tmp->infile = token->data;
 	tmp->type = token->type;
+	return (EXIT_SUCCESS);
 }
 
 int	red_to_node(t_token *token, t_cmd_table *node)
@@ -228,13 +170,22 @@ int	ft_parsing(t_common *c)
 	t_list	*tmp_cmd;
 	
 	tmp_tok = c->tokens;
-	tmp_cmd = c->cmd_struct;
+	tmp_cmd = ft_lstnew(malloc(sizeof(t_cmd_table *)));
+	if (!tmp_cmd || !tmp_cmd->content)
+		return (perror("Error initializing cmd_struct\n"), 1);
 	while (tmp_tok)
 	{
-		//expand_variable(c->tokens->content, c->env);
 		token_to_struct(tmp_tok->content, tmp_cmd->content);
-		//add_cmd(c->cmd_struct->content);
+		ft_lstadd_back(&c->cmd_struct, tmp_cmd);
+		if (tmp_tok->next)
+		{
+			tmp_cmd = ft_lstnew(malloc(sizeof(t_cmd_table *)));
+			if (!tmp_cmd || !tmp_cmd->content)
+				return (perror("Error initializing cmd_struct\n"), 1);
+		}
 		tmp_tok = tmp_tok->next;
 	}
+	//ft_expansion(c->cmd_struct);
+	//rm_quotes(c->cmd_struct);
 	return (EXIT_SUCCESS);
 }
