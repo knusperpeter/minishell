@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/24 18:25:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/26 15:50:33 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,14 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 	if (token->type == HEREDOC)
 	{
 		tmp->heredoc_limiter = token->data;
+		if (node->heredoc_name)
+			free(node->heredoc_name);
 		c = ft_itoa(i++);
 		node->heredoc_name = ft_strjoin(".heredoc_tmp", c);
 		free(c);
 		if (!node->heredoc_name)
 			return (perror("Error initializing str in input_to_node\n"), 1);
-		tmp->infile = node->heredoc_name;
+		tmp->infile = node->heredoc_name; //CHECK IF .heredoc_tmp already EXISTS, IF YES increment i
 	}
 	else
 		tmp->infile = token->data;
@@ -140,6 +142,8 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 
 void	init_cmd_table(t_cmd_table *node)
 {
+	node->read_fd = 0;
+	node->write_fd = 1;
 	node->io_red = NULL;
 	node->heredoc_name = NULL;
 	node->str = NULL;

@@ -6,11 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/02/24 18:32:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/26 18:20:49 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <stdlib.h>
 /*
 if i only have one cmd, do i still need to fork? 
 	->probably yes, so after execve i can free everything, and in case of pipes to close them.
@@ -57,27 +58,52 @@ int	ft_execute_builtins(t_cmd_table *cmd, t_common *c)
 	return (EXIT_SUCCESS);
 }
 
-// if the filename is valid
-// check if the file is a directory: "cat: -: Is a directory"
-int	check_redirections(t_cmd_table *cmd_table)
+/* //check if it is a directory
+int	check_if_dir(t_io_red *io)
 {
-	t_list		*curr_io;
-	t_io_red	*io;
+	struct stat	s;
 
-	curr_io = cmd_table->io_red->content;
-	while (curr_io)
+	if (io->type == REDIR_IN || io->type == HEREDOC)
 	{
-		io = curr_io->content;
-		if (io->type == HEREDOC || io->type == REDIR_IN)
-			check_io_name(io->infile);
-		else if (io->type == APPEND || io->type == REDIR_OUT)
-			check_io_name(io->outfile);
-		
-//////////////////////////////////////////////	Show must go on here-> implement function: check_io_name
+		if (stat(io->infile, &s) == 0)
+		{
+			if (S_ISDIR(s.st_mode))//check if this is allowed
+				return (1);
+			else
+				return (0);
+		}
 	}
+	else if (io->type == REDIR_OUT || io->type == APPEND)
+	{
+		if (stat(io->outfile, &s) == 0)
+		{
+			if (S_ISDIR(s.st_mode))//check if this is allowed
+				return (1);
+			else
+				return (0);
+		}
+	}
+	else
+		return (-1);
+} */
+
+int	pipe_needed(t_cmd_table *cmd)
+{
+	if (cmd->read_fd != 0 || cmd->write_fd != 1)
+		return (1);
+	return (0);
+}
+
+int	create_pipe(t_pipe *new)
+{
+	if (new->read_fd != -1 || new->write_fd != -1)
+		printf("Pipe not empty");
+	if (pipe(new->pipes) == -1)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
+// wenn mehrere infiles, muss es das letzte sein. aber es muss erst gecheckt werden ob beide exisiteren.
 int	ft_execute(t_common *c)
 {
 	t_list		*curr_cmd;
@@ -87,8 +113,15 @@ int	ft_execute(t_common *c)
 	while (curr_cmd)
 	{
 		curr_cmd_table = curr_cmd->content;
-		if (!check_redirections(curr_cmd->content))
-			open_io(curr_cmd_table->io_red, curr_cmd_table);
+		open_io(curr_cmd_table->io_red, curr_cmd_table);
+		curr_cmd = curr_cmd->next;
+	}
+	curr_cmd = c->cmd_struct;
+	while (curr_cmd)
+	{
+		if (pipe_needed(curr_cmd->content))
+			create_pipe(&c->new_pipe);
+		
 		curr_cmd = curr_cmd->next;
 	}
 	return (EXIT_SUCCESS);
