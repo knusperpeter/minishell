@@ -95,11 +95,16 @@ void	add_token(t_token **lst, char **value, int *i)
 	if (!token)
 		return ;
 	token->type = check_token(value[*i]);
-	printf("%s\n", token->data);
 	if (token->type >= 1 && token->type <= 4)
-		token->data = value[++(*i)];
+	{
+		if (value[*i + 1])
+			token->data = value[++(*i)];
+		else
+			printf("minishell: syntax error");
+	}
 	else
 		token->data = value[*i];
+	printf("%s ", token->data);
 	token->next = NULL;
 	if (!*lst)
 		*lst = token;
@@ -341,7 +346,7 @@ int    count_pipes(char *input)
 		}
 		i++;
 	}
-	printf("pipes: %d\n", pipe);
+//	printf("pipes: %d\n", pipe);
 	return (pipe);
 //    tokenize_one(input, pipe); caigner
 }
