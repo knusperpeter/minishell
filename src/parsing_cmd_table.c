@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/26 15:50:33 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/28 14:47:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ int	ft_parsing(t_common *c)
 	//Michis part vom parsen gehört hier davor
 	t_list	*tmp_tok;
 	t_list	*tmp_cmd;
-	
+
 	tmp_tok = c->tokens;
 	tmp_cmd = ft_lstnew(malloc(sizeof(t_cmd_table *)));
 	if (!tmp_cmd || !tmp_cmd->content)
