@@ -14,6 +14,7 @@ SOURCES	=	src/minishell.c \
 			src/parsing_cmd_table.c \
 			src/open_io.c \
 			src/exec.c \
+			src/lexer_new.c \
 			src/builtins/ft_echo.c	\
 			src/builtins/ft_env.c \
 			src/builtins/ft_exit.c \

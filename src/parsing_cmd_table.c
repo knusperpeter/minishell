@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/28 14:47:43 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/28 18:05:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,30 +43,6 @@ char	**setup_env(t_env *env)
 		tmp = tmp->next;
 	}
 	return (p);
-}
-
-char	*prompt(void)
-{
-	char	*line;
-
-	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
-	if (ft_strlen(line) > 0)
-		add_history(line);
-	return (line);
-}
-
-int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
-{
-	int		i;
-	int		size;
-
-	i = 0;
-	size = ft_strlen(cmd_struct->str[0]);
-	while (cmd[i] && cmd[i] != ' ')
-		i++;
-	if (ft_strncmp(cmd, cmd_struct->str[0], size) || i != size)
-		return (0);
-	return (1);
 }
 
 int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
@@ -173,7 +149,24 @@ int	ft_parsing(t_common *c)
 	//Michis part vom parsen gehört hier davor
 	t_list	*tmp_tok;
 	t_list	*tmp_cmd;
+	char	**arr;
+	char	**sub_arr;
+	int		i;
+	int		size;
 
+	size = count_pipes(c->raw_prompt);
+	arr = tokenize_one(c->raw_prompt, size);
+	i = 0;
+    while (i <= size)
+    {
+        sub_arr = prep_input(arr[i++]);
+		tmp_tok = ft_lstnew(NULL);
+		if (!tmp_tok)
+			return (EXIT_FAILURE);
+		add_to_list(sub_arr, tmp_tok);
+		ft_lstadd_back(&c->tokens, tmp_tok);
+		printf("\n");
+    }                             
 	tmp_tok = c->tokens;
 	tmp_cmd = ft_lstnew(malloc(sizeof(t_cmd_table *)));
 	if (!tmp_cmd || !tmp_cmd->content)
