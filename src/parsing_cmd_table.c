@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/28 17:18:47 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/28 18:05:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ int	ft_parsing(t_common *c)
 			return (EXIT_FAILURE);
 		add_to_list(sub_arr, tmp_tok);
 		ft_lstadd_back(&c->tokens, tmp_tok);
+		printf("\n");
     }                             
 	tmp_tok = c->tokens;
 	tmp_cmd = ft_lstnew(malloc(sizeof(t_cmd_table *)));
