@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/23 17:01:56 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/26 18:19:03 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # include <string.h>
 # include <termios.h>
 # include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 
 # define STDIN 0
 # define STDOUT 1
@@ -69,7 +71,7 @@ typedef struct s_token // "< in" -> type = REDIR_IN     data = "in"
 {
 	t_type			type;
 	char			*data;
-	s_token			*next;
+	struct s_token	*next;
 }	t_token;
 
 typedef struct s_io_red
@@ -84,14 +86,13 @@ typedef struct s_io_red
 // Each pipe stands for a new node.???????
 typedef struct s_cmd_table
 {
+	int					id;
 	int					read_fd;
 	int					write_fd;
 	t_list				*io_red;
 	char				*heredoc_name;
 	char				**str;
 	char				*exec_path;
-	struct s_cmd_table	*next;//not needed i guess?
-	struct s_cmd_table	*prev;//
 }	t_cmd_table;
 
 typedef struct s_final_cmd_table //do i need this? no, exec to cmd_table
@@ -103,6 +104,13 @@ typedef struct s_final_cmd_table //do i need this? no, exec to cmd_table
 	int				write_fd;
 }	t_final_cmd_table;
 
+typedef struct	s_pipe
+{
+	int				pipes[2];
+	int				read_fd;
+	int				write_fd;
+}	t_pipe;
+
 // Common struct
 typedef struct common_data
 {
@@ -111,8 +119,12 @@ typedef struct common_data
 	t_list				*tokens; //t_token
 	unsigned int		exitstatus;
 	char				*raw_prompt;
+	t_pipe				new_pipe;
+	t_pipe				old_pipe;
+		
 	t_final_cmd_table	*final_cmd;
 }	t_common;
+
 
 int		create_list_element(void **element, size_t size);
 int		ft_init_env(t_env *node, char *envp, t_env *prev);
@@ -120,9 +132,13 @@ int		dup_env(t_common *c, char **envp);
 void	free_2d(char **str);
 void	free_env_nodes(t_env *start);
 void	free_cmd_table(void *content);
+void	ft_cleanup_loop(t_common *c);
 void	free_all(t_common *c, t_cmd_table *cmds);
 int		ft_loop(t_common *c);
 int		ft_parsing(t_common *c);
+int		open_io(t_list *io, t_cmd_table *cmd_node);
+int		ft_execute(t_common *c);
+void	ft_printerrno(char *s);
 
 // builtins
 int		ft_pwd(void);
