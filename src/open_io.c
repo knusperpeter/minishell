@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/26 16:24:54 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/28 17:08:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 		cmd_node->read_fd = open(io->infile, O_RDONLY);
 	if (cmd_node->read_fd == -1)
 		return (ft_printerrno(io->infile), EXIT_FAILURE);
+	return (0);
 }
 
 //ACHTUNG: ich kann erst öffnen, wenn expanded wurde!!!
