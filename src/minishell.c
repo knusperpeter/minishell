@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/28 14:47:50 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/28 17:18:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ char	*prompt(void)
 	return (line);
 }
 
-
 void	init_loop_data(t_common *c){
 	c->raw_prompt = NULL;
 	c->tokens = NULL;
@@ -35,11 +34,10 @@ int	ft_loop(t_common *c)
 	c->raw_prompt = prompt();
 	if (c->raw_prompt[0])
 	{
-		//lexing&parsing
 		ft_parsing(c);
-		ft_execute(c);
-		ft_cleanup_loop(c);
-//		ft_execute_builtins(c->cmd_struct->content, c);
+		//ft_execute(c);
+		//ft_cleanup_loop(c);
+		ft_execute_builtins(c->cmd_struct->content, c);
 	}
 	return (0);
 }

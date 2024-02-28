@@ -11,382 +11,337 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "minishell.h"
-//#include "../include/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-/*libft - ft_strlen*/
-size_t  ft_strlen(const char *s)
-{
-    int i;
-
-    i = 0;
-    if(!s)
-        return (0);
-    while (s[i])
-        i++;
-    return (i);
-}
-
-/*libft - ft_strdup*/
-char    *ft_strdup(const char *s)
-{
-    int     i;
-    int     a;
-    char    *dupl;
-
-    a = ft_strlen(s);
-    dupl = malloc(sizeof(char) * a + 1);
-    if (!dupl)
-        return (NULL);
-    i = 0;
-    while (i < a)
-    {
-        dupl[i] = s[i];
-        i++;
-    }
-    dupl[i] = '\0';
-    return (dupl);
-}
-
-/*libft - ft_strchr*/
-char    *ft_strchr (const char *s, int c) 
-{
-    int a;
-
-    a = 0;
-    while (s[a])
-    {
-        if (s[a] == (char)c) 
-            return ((char *)&s[a]);
-        a++;
-    }
-    if ((char)c == '\0')
-        return ((char *)&s[a]);
-    return (NULL);
-}
+#include "../include/minishell.h"
 
 /*checks token for <, >, >>, <<!*/
 int check_token(char *token)
 {
-    int len;
-    int i;
+	int len;
+	int i;
 
-    if (!token)
-        return (-1);
-    len = ft_strlen(token);
-    i = 0;
-    if (token[0] == "<" && len == 1)
-        return (1);
-    if (token[0] == "<" && token[1] == "<" && len == 2)
-        retur (2);
-    if (token[0] == ">" && len == 1)
-        return (3);
-    if (token[0] == ">" && token[1] == ">" && len == 2)
-        retur (4);
-    return (0);
+	if (!token)
+		return (-1);
+	len = ft_strlen(token);
+	i = 0;
+	if (token[0] == '<' && len == 1)
+		return (1);
+	if (token[0] == '>' && token[1] == '<' && len == 2)
+		return (2);
+	if (token[0] == '>' && len == 1)
+		return (3);
+	if (token[0] == '>' && token[1] == '>' && len == 2)
+		return (4);
+	return (0);
 }
 
 /*this function checks for special characters, except for pipes*/
 int check_char(char *character)
 {
-    char    *special;
-    int     i;
+	char    *special;
+	int     i;
 
-    i = 0;
-    special = "*?[]()<>#\"";
-    if (*character == '.' || *character == '\'' || *character == '\"')
-        return (2);
-    while (i < 10)
-    {
-        if (special[i] == *character)
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	special = "*?[]()<>#\"";
+	if (*character == '.' || *character == '\'' || *character == '\"')
+		return (2);
+	while (i < 10)
+	{
+		if (special[i] == *character)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 /*tokenizing the input; rebuilt the original function strtok and addes a feature: it is ignoring the delimiter in quotes.*/
 char    *ft_strtok(char *s1, const char *delim)
 {
-    static char    *str;
-    char           *start;
-    int            in_quotes;
+	static char    *str;
+	char           *start;
+	int            in_quotes;
 
-    if (s1)
-        str = s1;
-    if (!str)
-        return (0);
-    while (*str && ft_strchr(delim, *str))
-        str++;
-    if (*str == '\0')
-        return (0);
-    start = str;
-    in_quotes = 0;
-    while (*str)
-    {
-        if (*str == '.')
-            in_quotes = !in_quotes;
-        if (!in_quotes && ft_strchr(delim, *str))
-            break;
-        str++;
-    }
-    if (*str != '\0')
-    {
-        *str = '\0';
-        str++;
-    }
-    return (start);
+	if (s1)
+		str = s1;
+	if (!str)
+		return (0);
+	while (*str && ft_strchr(delim, *str))
+		str++;
+	if (*str == '\0')
+		return (0);
+	start = str;
+	in_quotes = 0;
+	while (*str)
+	{
+		if (*str == '.')
+			in_quotes = !in_quotes;
+		if (!in_quotes && ft_strchr(delim, *str))
+			break;
+		str++;
+	}
+	if (*str != '\0')
+	{
+		*str = '\0';
+		str++;
+	}
+	return (start);
 }
 
-void add_to_list(char *token, int i)
+void	add_token(t_token **lst, char **value, int *i)
 {
+	t_token	*token;
+	t_token	*tmp;
 
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return ;
+	token->type = check_token(value[*i]);
+	printf("%s\n", token->data);
+	if (token->type >= 1 && token->type <= 4)
+		token->data = value[++(*i)];
+	else
+		token->data = value[*i];
+	token->next = NULL;
+	if (!*lst)
+		*lst = token;
+	else
+	{
+		tmp = *lst;
+		while (tmp->next)
+		{
+			tmp = tmp->next;
+		}
+		tmp->next = token;
+	}
 }
 
-void tokenize_input(char *input)
+void add_to_list(char **token, t_list *lst)
 {
-    char **result = NULL;
-    char *token;
-    int index = 0;
-    int a;
+	t_token	*tmp;
+	int 	index;
 
-    token = ft_strtok(input, " ");
-    while (token != NULL) {
-        result = realloc(result, (index + 1) * sizeof(char *));
-        if (result == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
-            return;
-        }
-        result[index++] = ft_strdup(token);
-        token = ft_strtok(NULL, " ");
-    }
-    index = 0;
-    while (token[index])
-    {
-        a = check_token(token[index])
-        if (a == 1)
-            add_to_list(token[++index], REDIR_IN);
-        else if (a == 2)
-            add_to_list(token[++index], HEREDOC);
-        else if (a == 3)
-            add_to_list(token[++index], REDIR_OUT);
-        else if (a == 4)
-            add_to_list(token[++index], APPEND);
-        else
-            add_to_list(token[++index], NULL);
-        index++;
-    }
-
-    for (int i = 0; i < index; i++)                         //print only for testng 
-    {
-        printf("result[%d]: ___%s___\n", i, result[i]);
-        free(result[i]); // Free each token
-    }
-    free(result); // Free array of tokens
+	tmp = lst->content;
+	index = 0;
+	while (token[index])
+	{
+		add_token(&tmp, token, &index);
+		index++;
+	}
 }
 
-void set_up_array(int wc, int cc, char *input)
+char    **tokenize_input(char *input)
 {
-    char *new_string;
-    int i = 0;
-    int j = 0;
+	char **result = NULL;
+	char *token;
+	int index = 0;
 
-    new_string = (char *)malloc(sizeof(char) * (wc + cc));
-    if (!new_string)
-    {
-        printf("Memory allocation failed!\n");
-        exit(1);
-    }
-    while (input[i] == ' ')
-        i++;
-    while (input[i])
-    {
-        while (input[i] && input[i] != ' ')
-        {
-            if (check_char(&input[i]) == 2)
-            {
-                if (input[i - 1] != ' ' && i > 0)
-                {
-                    new_string[j] = ' ';
-                    j++;
-                }
-                new_string[j] = input[i];
-                i++;
-                j++;
-                while (check_char(&input[i]) != 2)
-                {
-                    new_string[j] = input[i];
-                    i++;
-                    j++;
-                }
-                if (check_char(&input[i]) == 2)
-                {
-                    new_string[j] = input[i];
-                    j++;
-                    i++;
-                    if (input[i] == ' ')
-                        break;
-                    if (input[i] != ' ' && input[i] != '\0')
-                    {
-                        new_string[j] = ' ';
-                        j++;
-                    }
-                }
-            }
-            if (check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
-            {
-                new_string[j] = ' ';
-                j++;
-            }
-            if (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 0 && input[i - 1] != ' ' && i > 0)
-            {
-                new_string[j] = ' ';
-                j++;
-            }
-            if (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 1 && input[i] != input[i - 1])
-            {
-                new_string[j] = ' ';
-                j++;
-            }
-            new_string[j] = input[i];
-            i++;
-            j++;
-        }
-        while (input[i] == ' ')
-            i++;
-        if (input[i - 1] == ' ' && input[i] != '\0')
-        {
-            new_string[j] = ' ';
-            j++;
-        }
-    }
-    new_string[j] = '\0';
-    tokenize_input(&new_string[0]);
-    printf("erg:___%s___\n", new_string);
-    free(new_string);
+	token = ft_strtok(input, " ");
+	while (token != NULL) {
+		result = realloc(result, (index + 1) * sizeof(char *));
+		if (result == NULL) {
+			fprintf(stderr, "Memory allocation failed\n");
+			return (NULL);
+		}
+		result[index++] = ft_strdup(token);
+		token = ft_strtok(NULL, " ");
+	}
+	return (result);
+//caigner
+//	free(result); // Free array of tokens
 }
 
-void prep_input(char *input)
+char **set_up_array(int wc, int cc, char *input)
 {
-    int wc = 0;
-    int cc = 0;
-    char *string;
+	char *new_string;
+	int i = 0;
+	int j = 0;
 
-    string = input;
-    if (check_char(input) == 1)
-        wc--;
-    while (*input)
-    {
-        while (*input == ' ')
-            input++;
-        if (*input != ' ')
-        {
-            if (*input == '\0')
-                break;
-            wc++;
-        }
-        while (*input && *input != ' ')
-        {
-            if (check_char(input) == 1 && ((*(input - 1) == ' ') || (*(input - 1) == *input)))
-                cc++;
-            else if (check_char(input) == 1 && *(input - 1) != ' ')
-            {
-                wc++;
-                cc++;
-            }
-            else if (check_char(input) == 0 && (check_char(input - 1) == 1 || check_char(input - 1) == 2))
-            {
-                wc++;
-                cc++;
-            }
-            else if (check_char(input) == 0 && (check_char(input - 1) != 1))
-                cc++;
-            else
-            {
-                if (*(input - 1) != ' ')
-                    wc++;
-                cc++;
-                input++;
-                while (check_char(input) != 2 && *input)
-                {
-                    cc++;
-                    input++;
-                }
-                cc++;
-            }
-            input++;
-        }
-    }
-    printf("wc: %d\n", wc);                     // del wc
-    printf("cc: %d\n", cc);                     // del cc
-    set_up_array(wc, cc, string);
+	new_string = (char *)malloc(sizeof(char) * (wc + cc));
+	if (!new_string)
+	{
+		printf("Memory allocation failed!\n");
+		exit(1);
+	}
+	while (input[i] == ' ')
+		i++;
+	while (input[i])
+	{
+		while (input[i] && input[i] != ' ')
+		{
+			if (check_char(&input[i]) == 2)
+			{
+				if (input[i - 1] != ' ' && i > 0)
+				{
+					new_string[j] = ' ';
+					j++;
+				}
+				new_string[j] = input[i];
+				i++;
+				j++;
+				while (check_char(&input[i]) != 2)
+				{
+					new_string[j] = input[i];
+					i++;
+					j++;
+				}
+				if (check_char(&input[i]) == 2)
+				{
+					new_string[j] = input[i];
+					j++;
+					i++;
+					if (input[i] == ' ')
+						break;
+					if (input[i] != ' ' && input[i] != '\0')
+					{
+						new_string[j] = ' ';
+						j++;
+					}
+				}
+			}
+			if (check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
+			{
+				new_string[j] = ' ';
+				j++;
+			}
+			if (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 0 && input[i - 1] != ' ' && i > 0)
+			{
+				new_string[j] = ' ';
+				j++;
+			}
+			if (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 1 && input[i] != input[i - 1])
+			{
+				new_string[j] = ' ';
+				j++;
+			}
+			new_string[j] = input[i];
+			i++;
+			j++;
+		}
+		while (input[i] == ' ')
+			i++;
+		if (input[i - 1] == ' ' && input[i] != '\0')
+		{
+			new_string[j] = ' ';
+			j++;
+		}
+	}
+	new_string[j] = '\0';
+	return (tokenize_input(&new_string[0]));
+//	free(new_string);
+}
+
+char    **prep_input(char *input)
+{
+	int wc = 0;
+	int cc = 0;
+	char *string;
+
+	string = input;
+	if (check_char(input) == 1)
+		wc--;
+	while (*input)
+	{
+		while (*input == ' ')
+			input++;
+		if (*input != ' ')
+		{
+			if (*input == '\0')
+				break;
+			wc++;
+		}
+		while (*input && *input != ' ')
+		{
+			if (check_char(input) == 1 && ((*(input - 1) == ' ') || (*(input - 1) == *input)))
+				cc++;
+			else if (check_char(input) == 1 && *(input - 1) != ' ')
+			{
+				wc++;
+				cc++;
+			}
+			else if (check_char(input) == 0 && (check_char(input - 1) == 1 || check_char(input - 1) == 2))
+			{
+				wc++;
+				cc++;
+			}
+			else if (check_char(input) == 0 && (check_char(input - 1) != 1))
+				cc++;
+			else
+			{
+				if (*(input - 1) != ' ')
+					wc++;
+				cc++;
+				input++;
+				while (check_char(input) != 2 && *input)
+				{
+					cc++;
+					input++;
+				}
+				cc++;
+			}
+			input++;
+		}
+	}
+	return (set_up_array(wc, cc, string));
 }
 
 /*tokenize the input the first time using the "|" as an delimiter*/
-void    tokenize_one(char *input, int pipe)
+char    **tokenize_one(char *input, int pipe)
 {
-    char    **result;
-    char    *token;
-    int     index;
-    int     i;
+	char    **result;
+	char    *token;
+	int     index;
 
-    result = malloc((pipe + 1) * sizeof(char *));
-    if (result == NULL)
-    {
-        printf("Error - malloc - tokenize_one\n");
-        return ;
-    }
-    token = ft_strtok(input, "|");
-    index = 0;
-    while (token != NULL && index <= pipe + 1)
-    {
-        result[index++] = ft_strdup(token);
-        token = ft_strtok(NULL, "|");
-    }
-    i = 0;
-    while (i < pipe + 1)
-    {
-        prep_input(result[i]);
-        i++;
-    }                                   
-    for (i = 0; i < index; i++)                         //loop for testing only
-    {
-        printf("result[%d]: ___%s___\n", i, result[i]);
-        free(result[i]);
-    }
-    free(result);
+	result = malloc((pipe + 1) * sizeof(char *));
+	if (result == NULL)
+	{
+		printf("Error - malloc - tokenize_one\n");
+		return (NULL);
+	}
+	token = ft_strtok(input, "|");
+	index = 0;
+	while (token != NULL && index <= pipe + 1)
+	{
+		result[index++] = ft_strdup(token);
+		token = ft_strtok(NULL, "|");
+	}
+	return (result);
+//caigner
+/* 
+	i = 0;
+	while (i < pipe + 1)
+	{
+		prep_input(result[i]);
+		i++;
+	}                                   
+	for (i = 0; i < index; i++)                         //loop for testing only
+	{
+		printf("result[%d]: ___%s___\n", i, result[i]);
+		free(result[i]);
+	}
+	free(result); */
 }
 
 /*count "|"-sections within the input. used for allocating memory*/
-void    count_pipes(char *input)
+int    count_pipes(char *input)
 {
-    int i = 0;
-    int pipe = 0;
+	int i = 0;
+	int pipe = 0;
 
-    while (input[i])
-    {
-        if (input[i] == '.')
-        {
-            i++;
-            while (input[i] != '.')
-                i++;
-        }
-        while (input[i] == '|' && input[i + 1] != '|')
-        {
-            pipe += 1;
-            i++;
-        }
-        i++;
-    }
-    printf("pipes: %d\n", pipe);
-    tokenize_one(input, pipe);
-}
-
-int main(int argc, char **argv)
-{
-    argc = argc - 1 + 1;
-    count_pipes(argv[1]);
-    return (0);
+	while (input[i])
+	{
+		if (input[i] == '.')
+		{
+			i++;
+			while (input[i] != '.')
+				i++;
+		}
+		while (input[i] == '|' && input[i + 1] != '|')
+		{
+			pipe += 1;
+			i++;
+		}
+		i++;
+	}
+	printf("pipes: %d\n", pipe);
+	return (pipe);
+//    tokenize_one(input, pipe); caigner
 }

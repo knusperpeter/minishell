@@ -26,7 +26,7 @@ void signal_cmd_bs(int signal, siginfo_t *info, void *ucontent)
     (void)ucontext;
     (void)info;
 
-    printf("\Quit (core dumped)\n");
+    printf("Quit (core dumped)\n");
     return (131);
 }
 
