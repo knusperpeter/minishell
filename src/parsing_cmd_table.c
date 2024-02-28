@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/28 18:05:19 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/28 19:59:07 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 {
 	static int	i;
 	t_token	*tmp;
-	
+
 	i = 0;
 	tmp = token;
 	init_cmd_table(cmd_node);
@@ -146,7 +146,6 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 
 int	ft_parsing(t_common *c)
 {
-	//Michis part vom parsen gehört hier davor
 	t_list	*tmp_tok;
 	t_list	*tmp_cmd;
 	char	**arr;
@@ -165,7 +164,7 @@ int	ft_parsing(t_common *c)
 			return (EXIT_FAILURE);
 		add_to_list(sub_arr, tmp_tok);
 		ft_lstadd_back(&c->tokens, tmp_tok);
-		printf("\n");
+//		printf("\n");
     }                             
 	tmp_tok = c->tokens;
 	tmp_cmd = ft_lstnew(malloc(sizeof(t_cmd_table *)));
@@ -173,6 +172,7 @@ int	ft_parsing(t_common *c)
 		return (perror("Error initializing cmd_struct\n"), 1);
 	while (tmp_tok)
 	{
+		printf("!!!!");
 		token_to_struct(tmp_tok->content, tmp_cmd->content);
 		ft_lstadd_back(&c->cmd_struct, tmp_cmd);
 		if (tmp_tok->next)

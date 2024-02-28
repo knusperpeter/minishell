@@ -104,7 +104,7 @@ void	add_token(t_token **lst, char **value, int *i)
 	}
 	else
 		token->data = value[*i];
-	printf("%s ", token->data);
+//	printf("%s ", token->data);
 	token->next = NULL;
 	if (!*lst)
 		*lst = token;

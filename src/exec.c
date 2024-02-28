@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/02/28 18:23:38 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/28 20:03:08 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 
 int	ft_execute_builtins(t_cmd_table *cmd, t_common *c)
 {
-	cmd->str = ft_split(c->raw_prompt, ' ');
 	if (!c->cmd_struct->content)
 		return (perror("Error initializing simple_cmd\n"), EXIT_FAILURE);
 	if (check_cmd("pwd", c->cmd_struct->content))
@@ -53,7 +52,6 @@ int	ft_execute_builtins(t_cmd_table *cmd, t_common *c)
 		ft_echo(cmd->str);
 	if (check_cmd("cd", c->cmd_struct->content))
 		ft_cd(cmd->str, c);
-	free_2d(cmd->str);
 	free(c->raw_prompt);
 	return (EXIT_SUCCESS);
 }
