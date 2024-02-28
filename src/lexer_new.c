@@ -67,6 +67,27 @@ char    *ft_strchr (const char *s, int c)
     return (NULL);
 }
 
+/*checks token for <, >, >>, <<!*/
+int check_token(char *token)
+{
+    int len;
+    int i;
+
+    if (!token)
+        return (-1);
+    len = ft_strlen(token);
+    i = 0;
+    if (token[0] == "<" && len == 1)
+        return (1);
+    if (token[0] == "<" && token[1] == "<" && len == 2)
+        retur (2);
+    if (token[0] == ">" && len == 1)
+        return (3);
+    if (token[0] == ">" && token[1] == ">" && len == 2)
+        retur (4);
+    return (0);
+}
+
 /*this function checks for special characters, except for pipes*/
 int check_char(char *character)
 {
@@ -85,7 +106,6 @@ int check_char(char *character)
     }
     return (0);
 }
-
 
 /*tokenizing the input; rebuilt the original function strtok and addes a feature: it is ignoring the delimiter in quotes.*/
 char    *ft_strtok(char *s1, const char *delim)
@@ -120,11 +140,17 @@ char    *ft_strtok(char *s1, const char *delim)
     return (start);
 }
 
+void add_to_list(char *token, int i)
+{
+
+}
+
 void tokenize_input(char *input)
 {
     char **result = NULL;
     char *token;
     int index = 0;
+    int a;
 
     token = ft_strtok(input, " ");
     while (token != NULL) {
@@ -136,8 +162,25 @@ void tokenize_input(char *input)
         result[index++] = ft_strdup(token);
         token = ft_strtok(NULL, " ");
     }
+    index = 0;
+    while (token[index])
+    {
+        a = check_token(token[index])
+        if (a == 1)
+            add_to_list(token[++index], REDIR_IN);
+        else if (a == 2)
+            add_to_list(token[++index], HEREDOC);
+        else if (a == 3)
+            add_to_list(token[++index], REDIR_OUT);
+        else if (a == 4)
+            add_to_list(token[++index], APPEND);
+        else
+            add_to_list(token[++index], NULL);
+        index++;
+    }
 
-    for (int i = 0; i < index; i++) {
+    for (int i = 0; i < index; i++)                         //print only for testng 
+    {
         printf("result[%d]: ___%s___\n", i, result[i]);
         free(result[i]); // Free each token
     }
