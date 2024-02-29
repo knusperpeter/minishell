@@ -12,6 +12,7 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <stdlib.h>
 
 /*checks token for <, >, >>, <<!*/
 int check_token(char *token)
@@ -25,11 +26,11 @@ int check_token(char *token)
 	i = 0;
 	if (token[0] == '<' && len == 1)
 		return (1);
-	if (token[0] == '>' && token[1] == '<' && len == 2)
-		return (2);
 	if (token[0] == '>' && len == 1)
-		return (3);
+		return (2);
 	if (token[0] == '>' && token[1] == '>' && len == 2)
+		return (3);
+	if (token[0] == '<' && token[1] == '<' && len == 2)
 		return (4);
 	return (0);
 }
@@ -86,24 +87,29 @@ char    *ft_strtok(char *s1, const char *delim)
 	return (start);
 }
 
-void	add_token(t_token **lst, char **value, int *i)
+int	add_token(t_token **lst, char **value, int i)
 {
 	t_token	*token;
 	t_token	*tmp;
+	int		ret;
 
+	ret = 0;
 	token = malloc(sizeof(t_token));
 	if (!token)
-		return ;
-	token->type = check_token(value[*i]);
+		return (-1);
+	if (!value[i])
+		return (-1);
+	token->type = check_token(value[i]);
 	if (token->type >= 1 && token->type <= 4)
 	{
-		if (value[*i + 1])
-			token->data = value[++(*i)];
+		if (value[i + 1])
+			token->data = value[i];//increment in parent function
 		else
 			printf("minishell: syntax error");
+		ret = 1;
 	}
 	else
-		token->data = value[*i];
+		token->data = value[i];
 //	printf("%s ", token->data);
 	token->next = NULL;
 	if (!*lst)
@@ -117,6 +123,7 @@ void	add_token(t_token **lst, char **value, int *i)
 		}
 		tmp->next = token;
 	}
+	return (ret);
 }
 
 void add_to_list(char **token, t_list *lst)
@@ -128,8 +135,10 @@ void add_to_list(char **token, t_list *lst)
 	index = 0;
 	while (token[index])
 	{
-		add_token(&tmp, token, &index);
-		index++;
+		if (add_token(&tmp, token, index) == 1)
+			index += 2;
+		else if (token[index])
+			index++;
 	}
 }
 
@@ -141,7 +150,7 @@ char    **tokenize_input(char *input)
 
 	token = ft_strtok(input, " ");
 	while (token != NULL) {
-		result = realloc(result, (index + 1) * sizeof(char *));
+		result = realloc(result, (index + 2) * sizeof(char *));
 		if (result == NULL) {
 			fprintf(stderr, "Memory allocation failed\n");
 			return (NULL);
@@ -149,6 +158,7 @@ char    **tokenize_input(char *input)
 		result[index++] = ft_strdup(token);
 		token = ft_strtok(NULL, " ");
 	}
+	result[index] = NULL;
 	return (result);
 //caigner
 //	free(result); // Free array of tokens

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/02/28 20:03:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/02/29 14:16:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,25 @@ int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 
 int	ft_execute_builtins(t_cmd_table *cmd, t_common *c)
 {
-	if (!c->cmd_struct->content)
-		return (perror("Error initializing simple_cmd\n"), EXIT_FAILURE);
-	if (check_cmd("pwd", c->cmd_struct->content))
+	t_cmd_table	*tmp;
+
+	tmp = cmd;
+	if (!tmp)
+		return (perror("Error initializing cmd\n"), EXIT_FAILURE);
+	if (check_cmd("pwd", tmp))
 		ft_pwd();
-	if (check_cmd("export", c->cmd_struct->content))	
-		ft_export(cmd->str, c->env);
-	if (check_cmd("env", c->cmd_struct->content))
+	else if (check_cmd("export", tmp))	
+		ft_export(tmp->str, c->env);
+	else if (check_cmd("env", tmp))
 		ft_env(c->env);
-	if (check_cmd("exit", c->cmd_struct->content))
-		ft_exit(c, cmd->str);
-	if (check_cmd("unset", c->cmd_struct->content))
-		ft_unset(cmd->str, c);
-	if (check_cmd("echo", c->cmd_struct->content))
-		ft_echo(cmd->str);
-	if (check_cmd("cd", c->cmd_struct->content))
-		ft_cd(cmd->str, c);
+	else if (check_cmd("exit", tmp))
+		ft_exit(c, tmp->str);
+	else if (check_cmd("unset", tmp))
+		ft_unset(tmp->str, c);
+	else if (check_cmd("echo", tmp))
+		ft_echo(tmp->str);
+	else if (check_cmd("cd", cmd))
+		ft_cd(tmp->str, c);
 	free(c->raw_prompt);
 	return (EXIT_SUCCESS);
 }
