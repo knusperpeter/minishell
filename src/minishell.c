@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/02/28 17:18:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/02 00:35:55 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ void	init_loop_data(t_common *c){
 	c->raw_prompt = NULL;
 	c->tokens = NULL;
 	c->cmd_struct = NULL;
+	c->envp = NULL;
+	c->old_pipe.pipes[0] = -1;
+	c->old_pipe.pipes[1] = -1;
 }
 
 int	ft_loop(t_common *c)
@@ -35,9 +38,9 @@ int	ft_loop(t_common *c)
 	if (c->raw_prompt[0])
 	{
 		ft_parsing(c);
-		//ft_execute(c);
-		//ft_cleanup_loop(c);
-		ft_execute_builtins(c->cmd_struct->content, c);
+		ft_execute(c);
+		ft_cleanup_loop(c);
+		//ft_execute_builtins(c->cmd_struct->content, c);
 	}
 	return (0);
 }

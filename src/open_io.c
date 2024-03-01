@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/28 17:08:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/01 19:56:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,12 @@ int	open_file(t_io_red *io, t_cmd_table *cmd_node)
 	return (EXIT_SUCCESS);
 }
 
+void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich einfach in cleanup machen, oder?
+{
+	if (io->type == HEREDOC)
+		unlink(cmd->heredoc_name);
+}
+
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 {
 	if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
@@ -106,12 +112,13 @@ int	open_io(t_list *io, t_cmd_table *cmd_node)
 	{
 		ft_close_old_fd(cmd_node, tmp->content);
 		if (open_file(tmp->content, cmd_node) == EXIT_FAILURE)
+		{
+			unlink_heredoc(io->content, cmd_node);
 			status = EXIT_FAILURE;
-//if multiplel infiles -> just take the last one. This should happen already in open_file
+		}
+//if multiple infiles -> just take the last one. This should happen already in open_file
 		tmp = tmp->next;
 	}
-	if (status == EXIT_FAILURE && cmd_node->heredoc_name)
-		unlink(cmd_node->heredoc_name);
 	return (status);
 }
 

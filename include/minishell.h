@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/28 17:15:35 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/02 00:17:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ typedef struct s_cmd_table
 	char				*exec_path;
 }	t_cmd_table;
 
-typedef struct s_final_cmd_table //do i need this? no, exec to cmd_table
+/* typedef struct s_final_cmd_table //do i need this? no, exec to cmd_table
 {
 	char			**simple_cmd;
 	char			*exec_path;
@@ -103,7 +103,7 @@ typedef struct s_final_cmd_table //do i need this? no, exec to cmd_table
 	int				read_fd;
 	int				write_fd;
 }	t_final_cmd_table;
-
+ */
 typedef struct	s_pipe
 {
 	int				pipes[2];
@@ -115,6 +115,7 @@ typedef struct	s_pipe
 typedef struct common_data
 {
 	t_env				*env;
+	char				**envp;
 	t_list				*cmd_struct;
 	t_list				*tokens; //t_token
 	unsigned int		exitstatus;
@@ -122,7 +123,7 @@ typedef struct common_data
 	t_pipe				new_pipe;
 	t_pipe				old_pipe;
 		
-	t_final_cmd_table	*final_cmd;
+//	t_final_cmd_table	*final_cmd;
 }	t_common;
 
 
@@ -132,12 +133,12 @@ int		dup_env(t_common *c, char **envp);
 void	free_2d(char **str);
 void	free_env_nodes(t_env *start);
 void	free_cmd_table(void *content);
-//void	ft_cleanup_loop(t_common *c);
+void	ft_cleanup_loop(t_common *c);
 void	free_all(t_common *c, t_cmd_table *cmds);
 int		ft_loop(t_common *c);
 int		ft_parsing(t_common *c);
 int		open_io(t_list *io, t_cmd_table *cmd_node);
-//int		ft_execute(t_common *c);
+int		ft_execute(t_common *c);
 void	ft_printerrno(char *s);
 int		count_pipes(char *input);
 char	**tokenize_one(char *input, int pipe);
@@ -154,6 +155,6 @@ int		ft_echo(char **args);
 void	set_env_value(t_env *env, char *variable, char *value);
 int		ft_cd(char **args, t_common *c);
 
-int	ft_execute_builtins(t_cmd_table *cmd, t_common *c);
+//int	ft_execute_builtins(t_cmd_table *cmd, t_common *c);
 
 #endif
