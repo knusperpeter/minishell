@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/24 15:08:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/02 20:45:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	free_cmd_table(void *content)
 
 void	ft_cleanup_loop(t_common *c)
 {
-	ft_lstclear(&c->cmd_struct, &free_cmd_table);
+	ft_lst_d_clear(&c->cmd_struct, &free_cmd_table);
 	ft_lstclear(&c->tokens, &free_tokens);
 
 }

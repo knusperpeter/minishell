@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/02 00:35:55 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/02 16:11:07 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ void	init_loop_data(t_common *c){
 	c->tokens = NULL;
 	c->cmd_struct = NULL;
 	c->envp = NULL;
-	c->old_pipe.pipes[0] = -1;
-	c->old_pipe.pipes[1] = -1;
+	*c->old_pipe.read_fd = -1;
+	*c->old_pipe.write_fd = -1;
+	*c->new_pipe.read_fd = -1;
+	*c->new_pipe.write_fd = -1;
 }
 
 int	ft_loop(t_common *c)

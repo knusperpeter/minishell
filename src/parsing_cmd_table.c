@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/01 22:22:51 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/02 20:40:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,18 @@ char	*join_path(char *cmd, char *path)
 	return (fullpath);
 }
 
+int	is_dir(char *file)
+{
+	struct stat	s;
+	
+	if (stat(file, &s) == 0)
+	{
+		if (S_ISDIR(s.st_mode))
+			return (1);
+	}
+	return (0);
+}
+
 int	add_path(t_cmd_table *cmd, char **paths)
 {
 	char	*path;
@@ -191,7 +203,7 @@ int	add_path(t_cmd_table *cmd, char **paths)
 			path = join_path(cmd->str[0], paths[i++]);
 			if (!path)
 				return (EXIT_FAILURE);
-			if (!access(path, F_OK | X_OK | R_OK))
+			if (!access(path, F_OK | X_OK | R_OK) && !is_dir(path))
 				return (cmd->exec_path = path, EXIT_SUCCESS);
 			free(path);
 		}
@@ -201,7 +213,7 @@ int	add_path(t_cmd_table *cmd, char **paths)
 
 void	create_paths(t_common *c, char **paths)
 {
-	t_list	*tmp;
+	t_list_d	*tmp;
 	int		ret;
 
 	tmp = c->cmd_struct;
@@ -226,12 +238,12 @@ int	get_cmd_paths(t_common *c)
 
 int	ft_parsing(t_common *c)
 {
-	t_list	*tmp_tok;
-	t_list	*tmp_cmd;
-	char	**arr;
-	char	**sub_arr;
-	int		i;
-	int		size;
+	t_list		*tmp_tok;
+	t_list_d	*tmp_cmd;
+	char		**arr;
+	char		**sub_arr;
+	int			i;
+	int			size;
 
 	size = count_pipes(c->raw_prompt);
 	arr = tokenize_one(c->raw_prompt, size);
@@ -247,17 +259,17 @@ int	ft_parsing(t_common *c)
 //		printf("\n");
     }                             
 	tmp_tok = c->tokens;
-	tmp_cmd = ft_lstnew(malloc(sizeof(t_cmd_table *)));
+	tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
 	if (!tmp_cmd || !tmp_cmd->content)
 		return (perror("Error initializing cmd_struct\n"), 1);
 	while (tmp_tok)
 	{
 		printf("!!!!");
 		token_to_struct(tmp_tok->content, tmp_cmd->content);
-		ft_lstadd_back(&c->cmd_struct, tmp_cmd);
+		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		if (tmp_tok->next)
 		{
-			tmp_cmd = ft_lstnew(malloc(sizeof(t_cmd_table *)));
+			tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
 			if (!tmp_cmd || !tmp_cmd->content)
 				return (perror("Error initializing cmd_struct\n"), 1);
 		}

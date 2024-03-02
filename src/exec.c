@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/02 00:52:50 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/02 20:53:59 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,37 +61,53 @@ int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 	return (EXIT_SUCCESS);
 } */
 
-//this function is probably not needed, since execve will create an error.
-int	check_if_dir(t_io_red *io)
+void	safe_close(int *fd)
 {
-	struct stat	s;
+	if (*fd > 2)
+		close(*fd);
+	*fd = -1;
+}
 
-	if (io->type == REDIR_IN || io->type == HEREDOC)
-	{
-		if (stat(io->infile, &s) == 0)
-		{
-			if (S_ISDIR(s.st_mode))//check if this is allowed
-				return (1);
-		}
-		return (0);
-	}
-	else if (io->type == REDIR_OUT || io->type == APPEND)
-	{
-		if (stat(io->outfile, &s) == 0)
-		{
-			if (S_ISDIR(s.st_mode))//check if this is allowed
-				return (1);
-			else
-				return (0);
-		}
-	}
-	return (-1);
+void	replace_fd(int *fd1, int *fd2)
+{
+	if (*fd1 == -1)
+		return;
+	safe_close(fd1);
+	*fd2 = *fd1;
+	*fd1 = -1;
+}
+
+void	safe_close_pipe(t_pipe *pipe)
+{
+	safe_close(pipe->read_fd);
+	safe_close(pipe->write_fd);
+}
+
+void	handle_pipes_child(t_pipe *new, t_pipe *old)
+{
+	safe_close(new->read_fd);
+	replace_fd(new->read_fd, old->read_fd);
+}
+
+void	handle_pipes_parent(t_pipe *new, t_pipe *old)
+{
+	safe_close(new->read_fd);
+	replace_fd(new->read_fd, old->read_fd);
+}
+
+void	close_all_pipes(t_common *c)
+{
+	safe_close_pipe(&c->old_pipe);
+	safe_close_pipe(&c->new_pipe);
 }
 
 int	create_pipe(t_pipe *new)
 {
-	if (new->read_fd != -1 || new->write_fd != -1)
-		printf("Pipe not empty");
+	if (*new->read_fd != -1 || *new->write_fd != -1)
+	{
+		safe_close_pipe(new);
+	//	printf("Pipe not empty");
+	}
 	if (pipe(new->pipes) == -1)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
@@ -155,7 +171,7 @@ char	**get_envp(t_env *env)
 	return (ret);
 }
 
-void ft_preexec(t_list *cmd_table, t_cmd_table *cmd, t_common *c)
+void ft_preexec(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 {
 	cmd = cmd_table->content;
 	if (cmd->read_fd != 0 && c->old_pipe.pipes[0] == -1)
@@ -179,10 +195,10 @@ void ft_preexec(t_list *cmd_table, t_cmd_table *cmd, t_common *c)
 			ft_printerrno(strerror(errno));
 	}
 	close_fds(c, cmd);
-	get_envp(c);
+	c->envp = get_envp(c->env);
 }
 
-int	ft_exec_cmd(t_common *c, t_list *cmd_table)
+int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 {
 	t_cmd_table	*cmd;
 
@@ -200,12 +216,26 @@ int	ft_exec_cmd(t_common *c, t_list *cmd_table)
 	return (EXIT_SUCCESS);
 }
 
+void	wait_all_childs(t_common *c)
+{
+	t_list_d	*tmp;
+	t_cmd_table	*curr;
+	
+	tmp = ft_lstlast_d(c->cmd_struct);
+	while (tmp)
+	{
+		curr = tmp->content;
+		waitpid(curr->id, NULL, 0);
+		tmp = tmp->prev;
+	}
+}
+
 // wenn mehrere infiles, muss es das letzte sein. aber es muss erst gecheckt werden ob beide exisiteren.
 int	ft_execute(t_common *c)
 {
-	t_list		*curr_cmd;
-	t_cmd_table	*curr_cmd_table;
-	int			pipes;
+	t_list_d		*curr_cmd;
+	t_cmd_table		*curr_cmd_table;
+	int				pipes;
 
 	pipes = -1;
 	curr_cmd = c->cmd_struct;
@@ -217,7 +247,10 @@ int	ft_execute(t_common *c)
 		curr_cmd = curr_cmd->next;
 	}
 	if (pipes >  0)
-		create_pipe(&c->new_pipe);
+	{
+		if (create_pipe(&c->new_pipe))
+			ft_printerrno("pipe :");
+	}
 	curr_cmd = c->cmd_struct;
 	while (curr_cmd)
 	{
@@ -225,7 +258,12 @@ int	ft_execute(t_common *c)
 		if (curr_cmd_table->exec_path)
 			ft_exec_cmd(c, curr_cmd);
 		curr_cmd = curr_cmd->next;
+//		if (curr_cmd->next)
+//			create_pipe(&c->new_pipe);
 	}
+	close_all_pipes(c);
+	wait_all_childs(c);
+//	ft_clean_and_exit(); HIER MACHMA WEITER
 	return (EXIT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/02 00:17:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/02 20:47:14 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ typedef struct s_cmd_table
 typedef struct	s_pipe
 {
 	int				pipes[2];
-	int				read_fd;
-	int				write_fd;
+	int				*read_fd;
+	int				*write_fd;
 }	t_pipe;
 
 // Common struct
@@ -116,7 +116,7 @@ typedef struct common_data
 {
 	t_env				*env;
 	char				**envp;
-	t_list				*cmd_struct;
+	t_list_d			*cmd_struct;
 	t_list				*tokens; //t_token
 	unsigned int		exitstatus;
 	char				*raw_prompt;
@@ -144,6 +144,11 @@ int		count_pipes(char *input);
 char	**tokenize_one(char *input, int pipe);
 char    **prep_input(char *input);
 void	add_to_list(char **token, t_list *lst);
+t_list_d	*ft_lstnew_d(void *content);
+t_list_d	*ft_lstlast_d(t_list_d *lst);
+void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
+void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
+void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 
 // builtins
 int		ft_pwd(void);
