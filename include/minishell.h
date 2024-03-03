@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/02 20:47:14 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/03 22:07:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ typedef struct common_data
 	t_env				*env;
 	char				**envp;
 	t_list_d			*cmd_struct;
-	t_list				*tokens; //t_token
+	t_list				*tokens;
 	unsigned int		exitstatus;
 	char				*raw_prompt;
 	t_pipe				new_pipe;

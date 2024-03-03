@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/02 20:53:59 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/03 16:59:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,8 @@ void ft_preexec(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 	}
 	close_fds(c, cmd);
 	c->envp = get_envp(c->env);
+	if (!c->envp)
+		ft_printerrno("c->envp :");
 }
 
 int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
@@ -263,7 +265,6 @@ int	ft_execute(t_common *c)
 	}
 	close_all_pipes(c);
 	wait_all_childs(c);
-//	ft_clean_and_exit(); HIER MACHMA WEITER
 	return (EXIT_SUCCESS);
 }
 

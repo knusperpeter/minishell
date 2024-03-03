@@ -98,19 +98,31 @@ int	add_token(t_token **lst, char **value, int i)
 	if (!token)
 		return (-1);
 	if (!value[i])
+	{
+		free(token);
 		return (-1);
+	}
 	token->type = check_token(value[i]);
 	if (token->type >= 1 && token->type <= 4)
 	{
 		if (value[i + 1])
-			token->data = value[i];//increment in parent function
+		{
+			token->data = ft_strdup(value[i + 1]);//increment in parent function
+			if (!token->data)
+				ft_putstr_fd("malloc token->data error", 1);
+		}
 		else
+		{
 			printf("minishell: syntax error");
+			free(token);
+			return (-1);
+		}
 		ret = 1;
 	}
 	else
 		token->data = value[i];
-//	printf("%s ", token->data);
+//	ft_putstr_fd(token->data, 1);
+//	ft_putchar_fd('\n', 1);
 	token->next = NULL;
 	if (!*lst)
 		*lst = token;
@@ -129,17 +141,29 @@ int	add_token(t_token **lst, char **value, int i)
 void add_to_list(char **token, t_list *lst)
 {
 	t_token	*tmp;
+	t_token	*last;
 	int 	index;
 
-	tmp = lst->content;
 	index = 0;
+	last = NULL;
 	while (token[index])
 	{
+		ft_putstr_fd(token[index], 1);
+		ft_putchar_fd('\n', 1);
 		if (add_token(&tmp, token, index) == 1)
 			index += 2;
 		else if (token[index])
 			index++;
+		if (last == NULL)
+			lst->content = tmp;
+		else
+			last->next = tmp;
+		last = tmp;
+//		ft_putstr_fd(last->data, 1);
+//		ft_putchar_fd('\n', 1);
 	}
+	if (last != NULL)
+		last->next = NULL;
 }
 
 char    **tokenize_input(char *input)
@@ -148,8 +172,11 @@ char    **tokenize_input(char *input)
 	char *token;
 	int index = 0;
 
+//	ft_putstr_fd(input, 1);
+//	ft_putchar_fd('\n', 1);
 	token = ft_strtok(input, " ");
-	while (token != NULL) {
+	while (token != NULL)
+	{
 		result = realloc(result, (index + 2) * sizeof(char *));
 		if (result == NULL) {
 			fprintf(stderr, "Memory allocation failed\n");
@@ -240,7 +267,7 @@ char **set_up_array(int wc, int cc, char *input)
 		}
 	}
 	new_string[j] = '\0';
-	return (tokenize_input(&new_string[0]));
+	return (tokenize_input(new_string));
 //	free(new_string);
 }
 
@@ -318,6 +345,7 @@ char    **tokenize_one(char *input, int pipe)
 		result[index++] = ft_strdup(token);
 		token = ft_strtok(NULL, "|");
 	}
+	result[index] = NULL;
 	return (result);
 //caigner
 /* 

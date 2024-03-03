@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/02 20:40:28 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/03 23:14:08 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,11 @@ char	**setup_env(t_env *env)
 
 int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 {
-	int	i;
-	t_token *tmp;
+	int			i;
+	t_token		*tmp;
+	t_cmd_table *cmd_tmp;
 
+	cmd_tmp = cmd_node;
 	tmp = token;
 	i = 0;
 	while (tmp)
@@ -59,17 +61,17 @@ int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 			i++;
 		tmp = tmp->next;
 	}
-	cmd_node->str = malloc(sizeof(char*) * (i + 1));
-	if (!cmd_node->str)
+	cmd_tmp->str = malloc(sizeof(char*) * (i + 1));
+	if (!cmd_tmp->str)
 		return (perror("Error initializing str in cmd_to_node\n"), 1);
 	i = 0;
 	while (token)
 	{
 		if (token->type == VOID)
-			cmd_node->str[i++] = token->data;
+			cmd_tmp->str[i++] = token->data;
 		token = token->next;
 	}
-	cmd_node->str[i] = NULL;
+	cmd_tmp->str[i] = NULL;
 	return (EXIT_SUCCESS);
 }
 
@@ -135,7 +137,7 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 	i = 0;
 	tmp = token;
 	init_cmd_table(cmd_node);
-	cmd_to_node(token, cmd_node);
+	cmd_to_node(tmp, cmd_node);
 	while (tmp)
 	{
 		if (tmp->type == REDIR_IN || tmp->type == REDIR_OUT
@@ -214,7 +216,6 @@ int	add_path(t_cmd_table *cmd, char **paths)
 void	create_paths(t_common *c, char **paths)
 {
 	t_list_d	*tmp;
-	int		ret;
 
 	tmp = c->cmd_struct;
 	while (tmp)
@@ -246,9 +247,9 @@ int	ft_parsing(t_common *c)
 	int			size;
 
 	size = count_pipes(c->raw_prompt);
-	arr = tokenize_one(c->raw_prompt, size);
+	arr = tokenize_one(c->raw_prompt, size + 1);
 	i = 0;
-    while (i <= size)
+    while (arr[i])
     {
         sub_arr = prep_input(arr[i++]);
 		tmp_tok = ft_lstnew(NULL);
@@ -256,15 +257,15 @@ int	ft_parsing(t_common *c)
 			return (EXIT_FAILURE);
 		add_to_list(sub_arr, tmp_tok);
 		ft_lstadd_back(&c->tokens, tmp_tok);
-//		printf("\n");
-    }                             
+		free_2d(sub_arr);
+		//free sub_arr, therefore strdup each str?
+	}
 	tmp_tok = c->tokens;
 	tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
 	if (!tmp_cmd || !tmp_cmd->content)
 		return (perror("Error initializing cmd_struct\n"), 1);
 	while (tmp_tok)
 	{
-		printf("!!!!");
 		token_to_struct(tmp_tok->content, tmp_cmd->content);
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		if (tmp_tok->next)
