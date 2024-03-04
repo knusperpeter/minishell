@@ -236,56 +236,58 @@ char **set_up_array(int wc, int cc, char *input)
 
 char    **prep_input(char *input)
 {
-	int wc = 0;
-	int cc = 0;
-	char *string;
+	int wc;
+	int cc;
+    int i;
 
-	string = input;
-	if (check_char(input) == 1)
+    wc = 0;
+    cc = 0;
+    i = 0;
+    if (check_char(input[0]) == 1)
 		wc--;
-	while (*input)
+	while (input[i])
 	{
-		while (*input == ' ')
-			input++;
-		if (*input != ' ')
+		while (input[i] == ' ')
+			i++;
+		if (input[i] != ' ')
 		{
-			if (*input == '\0')
+			if (input[i] == '\0')
 				break;
 			wc++;
 		}
-		while (*input && *input != ' ')
+		while (input[i] && input[i] != ' ' && i > 0)
 		{
-			if (check_char(input) == 1 && ((*(input - 1) == ' ') || (*(input - 1) == *input)))
+			if (check_char(input[i]) == 1 && ((input[i - 1]) == ' ') || (input[i - 1]) == input[i])
 				cc++;
-			else if (check_char(input) == 1 && *(input - 1) != ' ')
+			else if (check_char(input[i]) == 1 && input[i - 1] != ' ')
 			{
 				wc++;
 				cc++;
 			}
-			else if (check_char(input) == 0 && (check_char(input - 1) == 1 || check_char(input - 1) == 2))
+			else if (check_char(input[i]) == 0 && (check_char(input[i - 1]) == 1 || check_char(input[i - 1]) == 2))
 			{
 				wc++;
 				cc++;
 			}
-			else if (check_char(input) == 0 && (check_char(input - 1) != 1))
+			else if (check_char(input[i]) == 0 && (check_char(input[i - 1]) != 1))
 				cc++;
 			else
 			{
-				if (*(input - 1) != ' ')
+				if (input[i - 1] != ' ')
 					wc++;
 				cc++;
-				input++;
-				while (check_char(input) != 2 && *input)
+				i++;
+				while (check_char(input[i]) != 2 && input[i])
 				{
 					cc++;
-					input++;
+					i++;
 				}
 				cc++;
 			}
-			input++;
+			i++;
 		}
 	}
-	return (set_up_array(wc, cc, string));
+	return (set_up_array(wc, cc, input[0]));
 }
 
 /*tokenize the input the first time using the "|" as an delimiter*/
