@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_cmd_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/05 17:17:29 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/05 20:10:02 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,12 @@ int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 	while (tmp_tok)
 	{
 		if (tmp_tok->type == VOID)
-			cmd_tmp->str[i++] = tmp_tok->data;//Machter ned
+		{
+			cmd_tmp->str[i] = ft_strdup(tmp_tok->data);//Machter ned
+			if (!cmd_tmp->str[i])
+				printf("FIX, cmd_to_node");
+			i++;
+		}
 		tmp_tok = tmp_tok->next;
 	}
 	cmd_tmp->str[i] = NULL;
@@ -129,9 +134,7 @@ void	init_cmd_table(t_cmd_table *node)
 	node->write_fd = 1;
 	node->io_red = NULL;
 	node->heredoc_name = NULL;
-	node->str = malloc(sizeof(char *));
-	if (!node->str)
-		printf("malloc error init_cmd_table");
+	node->str =	NULL;
 	node->exec_path = NULL;
 }
 
@@ -297,19 +300,7 @@ int	t_lst_to_struct(t_common *c)
 		}
 		tmp_tok = tmp_tok->next;
 	}
-	return (EXIT_SUCCESS);
-}
-
-int	ft_parsing(t_common *c)
-{
-	t_cmd_table *test;
-	
-	if (tokenize(c) == EXIT_FAILURE)
-		printf("Tokenize error");
-	if (t_lst_to_struct(c))
-		printf("Token_to_struct error");
-
-//test
+/* 	t_cmd_table *test;
 	for (t_list_d *p = c->cmd_struct; p; p = p->next)
 	{
 		int i = 0;
@@ -319,9 +310,16 @@ int	ft_parsing(t_common *c)
 			printf("cmd_str->str[%d]: %s\n", i, test->str[i]);
 			i++;
 		}
-	}
+	} */
+	return (EXIT_SUCCESS);
+}
 
-	
+int	ft_parsing(t_common *c)
+{
+	if (tokenize(c) == EXIT_FAILURE)
+		printf("Tokenize error");
+	if (t_lst_to_struct(c))
+		printf("Token_to_struct error");
 	//ft_expansion(c->cmd_struct);
 	//rm_quotes(c->cmd_struct);
 	get_cmd_paths(c);
