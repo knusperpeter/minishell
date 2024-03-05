@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_cmd_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/05 15:29:52 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/05 17:17:29 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,10 +137,8 @@ void	init_cmd_table(t_cmd_table *node)
 
 void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 {
-	static int	i;
 	t_token	*tmp;
 
-	i = 0;
 	tmp = token;
 	init_cmd_table(cmd_node);
 	cmd_to_node(tmp, cmd_node);
@@ -279,7 +277,7 @@ int	t_lst_to_struct(t_common *c)
 	tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
 	if (!tmp_cmd || !tmp_cmd->content)
 	{
-		if (!tmp_cmd->content)
+		if (tmp_cmd)
 			free(tmp_cmd);
 		return (perror("Error initializing cmd_struct\n"), 1);
 	}
@@ -291,7 +289,11 @@ int	t_lst_to_struct(t_common *c)
 		{
 			tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
 			if (!tmp_cmd || !tmp_cmd->content)
+			{
+				if (tmp_cmd)
+					free(tmp_cmd);
 				return (perror("Error initializing cmd_struct\n"), 1);
+			}
 		}
 		tmp_tok = tmp_tok->next;
 	}
@@ -310,8 +312,13 @@ int	ft_parsing(t_common *c)
 //test
 	for (t_list_d *p = c->cmd_struct; p; p = p->next)
 	{
-		test = c->cmd_struct->content;
-		printf("%s\n", test->str[0]);
+		int i = 0;
+		test = p->content;
+		while (test->str[i])
+		{
+			printf("cmd_str->str[%d]: %s\n", i, test->str[i]);
+			i++;
+		}
 	}
 
 	

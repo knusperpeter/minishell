@@ -18,12 +18,10 @@
 int check_token(char *token)
 {
 	int len;
-	int i;
 
 	if (!token)
 		return (-1);
 	len = ft_strlen(token);
-	i = 0;
 	if (token[0] == '<' && len == 1)
 		return (1);
 	if (token[0] == '>' && len == 1)
