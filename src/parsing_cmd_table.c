@@ -6,13 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/03 23:14:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/05 15:29:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdlib.h>
-#include <unistd.h>
+#include <stdio.h>
 
 char	**setup_env(t_env *env)
 {
@@ -49,27 +48,28 @@ char	**setup_env(t_env *env)
 int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 {
 	int			i;
-	t_token		*tmp;
+	t_token		*tmp_tok;
 	t_cmd_table *cmd_tmp;
 
 	cmd_tmp = cmd_node;
-	tmp = token;
+	tmp_tok = token;
 	i = 0;
-	while (tmp)
+	while (tmp_tok)
 	{
-		if (tmp->type == VOID)
+		if (tmp_tok->type == VOID)
 			i++;
-		tmp = tmp->next;
+		tmp_tok = tmp_tok->next;
 	}
 	cmd_tmp->str = malloc(sizeof(char*) * (i + 1));
 	if (!cmd_tmp->str)
 		return (perror("Error initializing str in cmd_to_node\n"), 1);
 	i = 0;
-	while (token)
+	tmp_tok = token;
+	while (tmp_tok)
 	{
-		if (token->type == VOID)
-			cmd_tmp->str[i++] = token->data;
-		token = token->next;
+		if (tmp_tok->type == VOID)
+			cmd_tmp->str[i++] = tmp_tok->data;//Machter ned
+		tmp_tok = tmp_tok->next;
 	}
 	cmd_tmp->str[i] = NULL;
 	return (EXIT_SUCCESS);
@@ -106,7 +106,11 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 
 	red_node = ft_lstnew(malloc(sizeof(t_io_red *)));
 	if (!node->io_red || !node->io_red->content)
+	{
+		if (node)
+			free(node);
 		return (perror("Error initializing t_list in red_to_node\n"), 1);
+	}
 	tmp = red_node->content;
 	if(token->type == REDIR_IN || token->type == HEREDOC)
 		input_to_node(token, tmp, node);
@@ -125,7 +129,9 @@ void	init_cmd_table(t_cmd_table *node)
 	node->write_fd = 1;
 	node->io_red = NULL;
 	node->heredoc_name = NULL;
-	node->str = NULL;
+	node->str = malloc(sizeof(char *));
+	if (!node->str)
+		printf("malloc error init_cmd_table");
 	node->exec_path = NULL;
 }
 
@@ -140,8 +146,7 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 	cmd_to_node(tmp, cmd_node);
 	while (tmp)
 	{
-		if (tmp->type == REDIR_IN || tmp->type == REDIR_OUT
-				|| tmp->type == APPEND || tmp->type == HEREDOC)
+		if (tmp->type >= 1 && tmp->type <= 4)
 			red_to_node(tmp, cmd_node);
 		tmp = tmp->next;
 	}
@@ -196,9 +201,12 @@ int	add_path(t_cmd_table *cmd, char **paths)
 	int		i;
 	
 	i = 0;
-	if (!access(cmd->str[0], F_OK | X_OK | R_OK))
-		return (cmd->exec_path = cmd->str[0], EXIT_SUCCESS);
-	else
+	if (cmd->str)
+	{
+		if (access(cmd->str[0], F_OK | X_OK | R_OK) == 0)
+			return (cmd->exec_path = cmd->str[0], EXIT_SUCCESS);
+	}
+	else if (cmd->str && cmd->str[0] && paths)
 	{
 		while (paths[i])
 		{
@@ -237,14 +245,13 @@ int	get_cmd_paths(t_common *c)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_parsing(t_common *c)
+int	tokenize(t_common *c)
 {
-	t_list		*tmp_tok;
-	t_list_d	*tmp_cmd;
-	char		**arr;
-	char		**sub_arr;
-	int			i;
-	int			size;
+	t_list	*tmp_tok;
+	char	**arr;
+	char	**sub_arr;
+	int		i;
+	int		size;
 
 	size = count_pipes(c->raw_prompt);
 	arr = tokenize_one(c->raw_prompt, size + 1);
@@ -258,12 +265,24 @@ int	ft_parsing(t_common *c)
 		add_to_list(sub_arr, tmp_tok);
 		ft_lstadd_back(&c->tokens, tmp_tok);
 		free_2d(sub_arr);
-		//free sub_arr, therefore strdup each str?
 	}
+	free_2d(arr);
+	return (EXIT_SUCCESS);
+}
+
+int	t_lst_to_struct(t_common *c)
+{
+	t_list		*tmp_tok;
+	t_list_d	*tmp_cmd;
+	
 	tmp_tok = c->tokens;
 	tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
 	if (!tmp_cmd || !tmp_cmd->content)
+	{
+		if (!tmp_cmd->content)
+			free(tmp_cmd);
 		return (perror("Error initializing cmd_struct\n"), 1);
+	}
 	while (tmp_tok)
 	{
 		token_to_struct(tmp_tok->content, tmp_cmd->content);
@@ -276,6 +295,26 @@ int	ft_parsing(t_common *c)
 		}
 		tmp_tok = tmp_tok->next;
 	}
+	return (EXIT_SUCCESS);
+}
+
+int	ft_parsing(t_common *c)
+{
+	t_cmd_table *test;
+	
+	if (tokenize(c) == EXIT_FAILURE)
+		printf("Tokenize error");
+	if (t_lst_to_struct(c))
+		printf("Token_to_struct error");
+
+//test
+	for (t_list_d *p = c->cmd_struct; p; p = p->next)
+	{
+		test = c->cmd_struct->content;
+		printf("%s\n", test->str[0]);
+	}
+
+	
 	//ft_expansion(c->cmd_struct);
 	//rm_quotes(c->cmd_struct);
 	get_cmd_paths(c);

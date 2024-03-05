@@ -6,15 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/01 19:56:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/04 18:04:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 void	ft_printerrno(char *s)
 {
@@ -23,7 +19,7 @@ void	ft_printerrno(char *s)
 		ft_putstr_fd(s, 2);
 	ft_putstr_fd(strerror(errno), 2);
 }
-
+//hier kommt es nicht in die history...
 void	here_doc(char *limiter, t_cmd_table *cmd_table)
 {
 	char		*buf;

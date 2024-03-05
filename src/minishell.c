@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/03 17:36:51 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/05 15:12:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	init_loop_data(t_common *c){
 
 int	ft_loop(t_common *c)
 {
+	//ft_signal();
 	init_loop_data(c);
 	c->raw_prompt = prompt();
 	if (c->raw_prompt[0])

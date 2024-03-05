@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/03 16:59:19 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/04 16:29:26 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,19 +252,27 @@ int	ft_execute(t_common *c)
 	{
 		if (create_pipe(&c->new_pipe))
 			ft_printerrno("pipe :");
+		curr_cmd = c->cmd_struct;
+		while (curr_cmd)
+		{
+			curr_cmd_table = curr_cmd->content;
+			if (curr_cmd_table->exec_path)
+				ft_exec_cmd(c, curr_cmd);
+			curr_cmd = curr_cmd->next;
+//			if (curr_cmd->next)
+//				create_pipe(&c->new_pipe);
+		}
+		close_all_pipes(c);
+		wait_all_childs(c);
 	}
-	curr_cmd = c->cmd_struct;
-	while (curr_cmd)
+	else if ( pipes == 0)
 	{
-		curr_cmd_table = curr_cmd->content;
+		curr_cmd_table = c->cmd_struct->content;
 		if (curr_cmd_table->exec_path)
-			ft_exec_cmd(c, curr_cmd);
-		curr_cmd = curr_cmd->next;
-//		if (curr_cmd->next)
-//			create_pipe(&c->new_pipe);
+			ft_exec_cmd(c, c->cmd_struct);
+		
 	}
-	close_all_pipes(c);
-	wait_all_childs(c);
+
 	return (EXIT_SUCCESS);
 }
 

@@ -87,12 +87,12 @@ char    *ft_strtok(char *s1, const char *delim)
 	return (start);
 }
 
-int	add_token(t_token **lst, char **value, int i)
+int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 {
 	t_token	*token;
-	t_token	*tmp;
 	int		ret;
 
+	(void) lst;
 	ret = 0;
 	token = malloc(sizeof(t_token));
 	if (!token)
@@ -107,7 +107,7 @@ int	add_token(t_token **lst, char **value, int i)
 	{
 		if (value[i + 1])
 		{
-			token->data = ft_strdup(value[i + 1]);//increment in parent function
+			token->data = ft_strdup(value[i + 1]);
 			if (!token->data)
 				ft_putstr_fd("malloc token->data error", 1);
 		}
@@ -120,21 +120,23 @@ int	add_token(t_token **lst, char **value, int i)
 		ret = 1;
 	}
 	else
-		token->data = value[i];
+		token->data = ft_strdup(value[i]);
+	*tmp = token;
 //	ft_putstr_fd(token->data, 1);
 //	ft_putchar_fd('\n', 1);
-	token->next = NULL;
+/* 	token->next = NULL;
 	if (!*lst)
 		*lst = token;
 	else
 	{
 		tmp = *lst;
+				input++;
 		while (tmp->next)
 		{
 			tmp = tmp->next;
 		}
 		tmp->next = token;
-	}
+	} */
 	return (ret);
 }
 
@@ -143,24 +145,23 @@ void add_to_list(char **token, t_list *lst)
 	t_token	*tmp;
 	t_token	*last;
 	int 	index;
+	int		status;
 
 	index = 0;
 	last = NULL;
+	tmp = NULL;
 	while (token[index])
 	{
-		ft_putstr_fd(token[index], 1);
-		ft_putchar_fd('\n', 1);
-		if (add_token(&tmp, token, index) == 1)
+		status = add_token(lst->content, token, index, &tmp);
+		if (status == 1)
 			index += 2;
-		else if (token[index])
+		else if (status == 0)
 			index++;
 		if (last == NULL)
 			lst->content = tmp;
 		else
 			last->next = tmp;
 		last = tmp;
-//		ft_putstr_fd(last->data, 1);
-//		ft_putchar_fd('\n', 1);
 	}
 	if (last != NULL)
 		last->next = NULL;
@@ -292,6 +293,7 @@ char    **prep_input(char *input)
 		}
 		while (*input && *input != ' ')
 		{
+			//if input[0] und input - 1 ->> Umfalll
 			if (check_char(input) == 1 && ((*(input - 1) == ' ') || (*(input - 1) == *input)))
 				cc++;
 			else if (check_char(input) == 1 && *(input - 1) != ' ')
