@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/24 15:08:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/03 17:01:13 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,21 @@ void	free_cmd_table(void *content)
 	if (table->io_red)
 		ft_lstclear(&table->io_red, &free_io_red);
 	if (table->heredoc_name)
+	{
 		unlink(table->heredoc_name);
+		free(table->heredoc_name);
+	}
 }
 
 void	ft_cleanup_loop(t_common *c)
 {
-	ft_lstclear(&c->cmd_struct, &free_cmd_table);
+	ft_lst_d_clear(&c->cmd_struct, &free_cmd_table);
 	ft_lstclear(&c->tokens, &free_tokens);
-
+	if (c->envp)
+	{
+		free_2d(c->envp);
+		c->envp = NULL;
+	}
 }
 
 void	free_all(t_common *c, t_cmd_table *cmds)

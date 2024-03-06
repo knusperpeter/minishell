@@ -6,15 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/28 17:08:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/06 13:11:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 void	ft_printerrno(char *s)
 {
@@ -23,7 +19,7 @@ void	ft_printerrno(char *s)
 		ft_putstr_fd(s, 2);
 	ft_putstr_fd(strerror(errno), 2);
 }
-
+//hier kommt es nicht in die history...
 void	here_doc(char *limiter, t_cmd_table *cmd_table)
 {
 	char		*buf;
@@ -86,13 +82,19 @@ int	open_file(t_io_red *io, t_cmd_table *cmd_node)
 	return (EXIT_SUCCESS);
 }
 
+void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich einfach in cleanup machen, oder?
+{
+	if (io->type == HEREDOC)
+		unlink(cmd->heredoc_name);
+}
+
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 {
-	if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
-		close(cmd_node->read_fd);
-	else if ((io->type == REDIR_OUT || io->type == APPEND)
-			&& cmd_node->write_fd != 1)
-		close(cmd_node->write_fd);	
+		if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
+			safe_close(&cmd_node->read_fd);
+		else if ((io->type == REDIR_OUT || io->type == APPEND)
+				&& cmd_node->write_fd != 1)
+			safe_close(&cmd_node->write_fd);	
 }
 
 int	open_io(t_list *io, t_cmd_table *cmd_node)
@@ -106,12 +108,13 @@ int	open_io(t_list *io, t_cmd_table *cmd_node)
 	{
 		ft_close_old_fd(cmd_node, tmp->content);
 		if (open_file(tmp->content, cmd_node) == EXIT_FAILURE)
+		{
+			unlink_heredoc(io->content, cmd_node);
 			status = EXIT_FAILURE;
-//if multiplel infiles -> just take the last one. This should happen already in open_file
+		}
+//if multiple infiles -> just take the last one. This should happen already in open_file
 		tmp = tmp->next;
 	}
-	if (status == EXIT_FAILURE && cmd_node->heredoc_name)
-		unlink(cmd_node->heredoc_name);
 	return (status);
 }
 

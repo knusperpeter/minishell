@@ -11,28 +11,23 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <stdlib.h>
 
 /*checks token for <, >, >>, <<!*/
 int check_token(char *token)
 {
 	int len;
-	int i;
 
 	if (!token)
 		return (-1);
 	len = ft_strlen(token);
-	i = 0;
-    if (token[0] == '>' && len >= 3)
-        error_lexer(">", len);
-    else if (token[0] == '<' && len >= 3)
-        error_lexer("<", len);
-    else if (token[0] == '<' && len == 1)
+	if (token[0] == '<' && len == 1)
 		return (1);
-    else if (token[0] == '>' && token[1] == '<' && len == 2)
+	if (token[0] == '>' && len == 1)
 		return (2);
-    else if (token[0] == '>' && len == 1)
+	if (token[0] == '>' && token[1] == '>' && len == 2)
 		return (3);
-    else if (token[0] == '>' && token[1] == '>' && len == 2)
+	if (token[0] == '<' && token[1] == '<' && len == 2)
 		return (4);
 	return (0);
 }
@@ -75,7 +70,7 @@ char    *ft_strtok(char *s1, const char *delim)
 	in_quotes = 0;
 	while (*str)
 	{
-		if (*str == '\"' || *str == '\'')
+		if (*str == '"' || *str == '\'')
 			in_quotes = !in_quotes;
 		if (!in_quotes && ft_strchr(delim, *str))
 			break;
@@ -91,51 +86,84 @@ char    *ft_strtok(char *s1, const char *delim)
 	return (start);
 }
 
-void	add_token(t_token **lst, char **value, int *i)
+int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 {
 	t_token	*token;
-	t_token	*tmp;
+	int		ret;
 
+	(void) lst;
+	ret = 0;
 	token = malloc(sizeof(t_token));
 	if (!token)
-		return ;
-	token->type = check_token(value[*i]);
+		return (-1);
+	if (!value[i])
+	{
+		free(token);
+		return (-1);
+	}
+	token->type = check_token(value[i]);
 	if (token->type >= 1 && token->type <= 4)
 	{
-		if (value[*i + 1])
-			token->data = value[++(*i)];
+		if (value[i + 1])
+		{
+			token->data = ft_strdup(value[i + 1]);
+			if (!token->data)
+				ft_putstr_fd("malloc token->data error", 1);
+		}
 		else
+		{
 			printf("minishell: syntax error");
+			free(token);
+			return (-1);
+		}
+		ret = 1;
 	}
 	else
-		token->data = value[*i];
-	printf("%s ", token->data);
-	token->next = NULL;
+		token->data = ft_strdup(value[i]);
+	*tmp = token;
+//	ft_putstr_fd(token->data, 1);
+//	ft_putchar_fd('\n', 1);
+/* 	token->next = NULL;
 	if (!*lst)
 		*lst = token;
 	else
 	{
 		tmp = *lst;
+				input++;
 		while (tmp->next)
 		{
 			tmp = tmp->next;
 		}
 		tmp->next = token;
-	}
+	} */
+	return (ret);
 }
 
 void add_to_list(char **token, t_list *lst)
 {
 	t_token	*tmp;
+	t_token	*last;
 	int 	index;
+	int		status;
 
-	tmp = lst->content;
 	index = 0;
+	last = NULL;
+	tmp = NULL;
 	while (token[index])
 	{
-		add_token(&tmp, token, &index);
-		index++;
+		status = add_token(lst->content, token, index, &tmp);
+		if (status == 1)
+			index += 2;
+		else if (status == 0)
+			index++;
+		if (last == NULL)
+			lst->content = tmp;
+		else
+			last->next = tmp;
+		last = tmp;
 	}
+	if (last != NULL)
+		last->next = NULL;
 }
 
 char    **tokenize_input(char *input)
@@ -144,9 +172,12 @@ char    **tokenize_input(char *input)
 	char *token;
 	int index = 0;
 
+//	ft_putstr_fd(input, 1);
+//	ft_putchar_fd('\n', 1);
 	token = ft_strtok(input, " ");
-	while (token != NULL) {
-		result = realloc(result, (index + 1) * sizeof(char *));
+	while (token != NULL)
+	{
+		result = realloc(result, (index + 2) * sizeof(char *));
 		if (result == NULL) {
 			fprintf(stderr, "Memory allocation failed\n");
 			return (NULL);
@@ -154,6 +185,7 @@ char    **tokenize_input(char *input)
 		result[index++] = ft_strdup(token);
 		token = ft_strtok(NULL, " ");
 	}
+	result[index] = NULL;
 	return (result);
 //caigner
 //	free(result); // Free array of tokens
@@ -187,13 +219,13 @@ char **set_up_array(int wc, int cc, char *input)
 				new_string[j] = input[i];
 				i++;
 				j++;
-				while (check_char(&input[i]) != 2)
+				while (input[i] && check_char(&input[i]) != 2 )
 				{
 					new_string[j] = input[i];
 					i++;
 					j++;
 				}
-				if (check_char(&input[i]) == 2)
+				if (input[i] && check_char(&input[i]) == 2 )
 				{
 					new_string[j] = input[i];
 					j++;
@@ -207,7 +239,7 @@ char **set_up_array(int wc, int cc, char *input)
 					}
 				}
 			}
-			if (check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
+			if (i > 0 && check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
 			{
 				new_string[j] = ' ';
 				j++;
@@ -235,24 +267,20 @@ char **set_up_array(int wc, int cc, char *input)
 		}
 	}
 	new_string[j] = '\0';
-	return (tokenize_input(&new_string[0]));
+	return (tokenize_input(new_string));
 //	free(new_string);
 }
 
 char    **prep_input(char *input)
 {
-	int wc;
-	int cc;
-    int i;
-
-    wc = 0;
-    cc = 0;
-    i = 0;
-    if (check_char(input[0]) == 1)
+	int wc = 0;
+	int cc = 0;
+	int	i = 0;
+	if (check_char(&input[i]) == 1)
 		wc--;
 	while (input[i])
 	{
-		while (input[i] == ' ')
+		while (input[i] && input[i] == ' ')
 			i++;
 		if (input[i] != ' ')
 		{
@@ -260,39 +288,40 @@ char    **prep_input(char *input)
 				break;
 			wc++;
 		}
-		while (input[i] && input[i] != ' ' && i > 0)
+		while (input[i] && input[i] != ' ')
 		{
-			if (check_char(input[i]) == 1 && ((input[i - 1]) == ' ') || (input[i - 1]) == input[i])
+			if (i > 0 && check_char(&input[i]) == 1 && ((input[i - 1] == ' ') || (input[i - 1] == input[i])))
 				cc++;
-			else if (check_char(input[i]) == 1 && input[i - 1] != ' ')
+			else if (i > 0 && check_char(&input[i]) == 1 && *(input - 1) != ' ')
 			{
 				wc++;
 				cc++;
 			}
-			else if (check_char(input[i]) == 0 && (check_char(input[i - 1]) == 1 || check_char(input[i - 1]) == 2))
+			else if (i > 0 && check_char(&input[i]) == 0 && (check_char(&input[i - 1]) == 1 || check_char(&input[i - 1]) == 2))
 			{
 				wc++;
 				cc++;
 			}
-			else if (check_char(input[i]) == 0 && (check_char(input[i - 1]) != 1))
+			else if (i > 0 && check_char(&input[i]) == 0 && (check_char(&input[i - 1]) != 1))
 				cc++;
 			else
 			{
-				if (input[i - 1] != ' ')
+				if (i > 0 && input[i - 1] != ' ')
 					wc++;
 				cc++;
 				i++;
-				while (check_char(input[i]) != 2 && input[i])
+				while (check_char(&input[i]) != 2 && input[i])
 				{
 					cc++;
 					i++;
 				}
 				cc++;
 			}
-			i++;
+			if (input[i] != 0)
+				i++;
 		}
 	}
-	return (set_up_array(wc, cc, input[0]));
+	return (set_up_array(wc, cc, input));
 }
 
 /*tokenize the input the first time using the "|" as an delimiter*/
@@ -310,11 +339,12 @@ char    **tokenize_one(char *input, int pipe)
 	}
 	token = ft_strtok(input, "|");
 	index = 0;
-	while (token != NULL && index <= pipe + 1)
+	while (token != NULL && index < pipe)
 	{
 		result[index++] = ft_strdup(token);
 		token = ft_strtok(NULL, "|");
 	}
+	result[index] = NULL;
 	return (result);
 //caigner
 /* 

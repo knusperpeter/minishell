@@ -8,21 +8,22 @@ HDRS	= include/minishell.h
 LIBFT	= libft
 LIBFT_LIB	= libft.a
 
-SOURCES	=	src/minishell.c \
-			src/init_env.c \
-			src/free.c \
-			src/parsing_cmd_table.c \
-			src/open_io.c \
-			src/exec.c \
-			src/lexer_new.c \
-			src/builtins/ft_echo.c	\
+SOURCES	=	src/builtins/ft_echo.c	\
 			src/builtins/ft_env.c \
 			src/builtins/ft_exit.c \
 			src/builtins/ft_export.c \
 			src/builtins/ft_pwd.c \
 			src/builtins/ft_unset.c \
 			src/builtins/ft_cd_1.c \
-			src/builtins/ft_cd_2.c
+			src/builtins/ft_cd_2.c \
+			src/minishell.c \
+			src/init_env.c \
+			src/lexer_new.c \
+			src/parsing_cmd_table.c \
+			src/open_io.c \
+			src/exec.c \
+			src/utils_1.c \
+			src/free.c 			
 
 OBJECTS = $(SOURCES:.c=.o)
 
