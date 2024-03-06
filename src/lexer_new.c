@@ -1,4 +1,3 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -40,8 +39,8 @@ int check_char(char *character)
 	int     i;
 
 	i = 0;
-	special = "*?[]()<>#\"";
-	if (*character == '.' || *character == '\'' || *character == '\"')
+	special = "*?[]()<>#\""
+	if (*character == '\'' || *character == '\"')
 		return (2);
 	while (i < 10)
 	{
@@ -75,6 +74,8 @@ char    *ft_strtok(char *s1, const char *delim)
 			in_quotes = !in_quotes;
 		if (!in_quotes && ft_strchr(delim, *str))
 			break;
+        if (!in_quotes && *str == '\0')
+            error_lexer("\"", 5);
 		str++;
 	}
 	if (*str != '\0')
@@ -369,14 +370,18 @@ int    count_pipes(char *input)
 
 	while (input[i])
 	{
-		if (input[i] == '.')
+		if (input[i] == '\"' || input[i] == '\'')
 		{
 			i++;
-			while (input[i] != '.')
+			while (input[i] != '\"' || input[i] == '\'')
 				i++;
 		}
 		while (input[i] == '|' && input[i + 1] != '|')
 		{
+            if (input[i + 1] == '|')
+            {
+                printf("minishell: syntax error near unexpected token `|'\n");
+                exit (2);
 			pipe += 1;
 			i++;
 		}
