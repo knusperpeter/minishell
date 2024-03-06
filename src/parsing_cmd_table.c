@@ -6,12 +6,13 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/05 20:10:02 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/06 17:13:10 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 char	**setup_env(t_env *env)
 {
@@ -63,8 +64,8 @@ int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 	cmd_tmp->str = malloc(sizeof(char*) * (i + 1));
 	if (!cmd_tmp->str)
 		return (perror("Error initializing str in cmd_to_node\n"), 1);
-	i = 0;
 	tmp_tok = token;
+	i = 0;
 	while (tmp_tok)
 	{
 		if (tmp_tok->type == VOID)
@@ -72,6 +73,8 @@ int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 			cmd_tmp->str[i] = ft_strdup(tmp_tok->data);//Machter ned
 			if (!cmd_tmp->str[i])
 				printf("FIX, cmd_to_node");
+//			ft_putstr_fd(cmd_tmp->str[i], 1);
+//			ft_putstr_fd("->cmd\n", 1);
 			i++;
 		}
 		tmp_tok = tmp_tok->next;
@@ -110,11 +113,11 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 	t_io_red	*tmp;
 
 	red_node = ft_lstnew(malloc(sizeof(t_io_red *)));
-	if (!node->io_red || !node->io_red->content)
+	if (!red_node || !red_node->content)
 	{
-		if (node)
-			free(node);
-		return (perror("Error initializing t_list in red_to_node\n"), 1);
+		if (red_node)
+			free(red_node);
+		return (ft_putstr_fd("Error initializing t_list in red_to_node\n", 1), 1);
 	}
 	tmp = red_node->content;
 	if(token->type == REDIR_IN || token->type == HEREDOC)
@@ -132,6 +135,7 @@ void	init_cmd_table(t_cmd_table *node)
 {
 	node->read_fd = 0;
 	node->write_fd = 1;
+	node->id = -1;
 	node->io_red = NULL;
 	node->heredoc_name = NULL;
 	node->str =	NULL;
@@ -202,21 +206,21 @@ int	add_path(t_cmd_table *cmd, char **paths)
 	int		i;
 	
 	i = 0;
-	if (cmd->str)
+	if (cmd && cmd->str && cmd->str[0])
 	{
 		if (access(cmd->str[0], F_OK | X_OK | R_OK) == 0)
 			return (cmd->exec_path = cmd->str[0], EXIT_SUCCESS);
-	}
-	else if (cmd->str && cmd->str[0] && paths)
-	{
-		while (paths[i])
+		else if (cmd->str && cmd->str[0] && paths)
 		{
-			path = join_path(cmd->str[0], paths[i++]);
-			if (!path)
-				return (EXIT_FAILURE);
-			if (!access(path, F_OK | X_OK | R_OK) && !is_dir(path))
-				return (cmd->exec_path = path, EXIT_SUCCESS);
-			free(path);
+			while (paths[i])
+			{
+				path = join_path(cmd->str[0], paths[i++]);
+				if (!path)
+					return (EXIT_FAILURE);
+				if (!access(path, F_OK | X_OK | R_OK) && !is_dir(path))
+					return (cmd->exec_path = path, EXIT_SUCCESS);
+				free(path);
+			}
 		}
 	}
 	return (EXIT_FAILURE);
@@ -225,10 +229,12 @@ int	add_path(t_cmd_table *cmd, char **paths)
 void	create_paths(t_common *c, char **paths)
 {
 	t_list_d	*tmp;
+	t_cmd_table	*cmd_tmp;
 
 	tmp = c->cmd_struct;
 	while (tmp)
 	{
+		cmd_tmp = tmp->content;
 		add_path(tmp->content, paths);
 		tmp = tmp->next;
 	}
@@ -260,9 +266,13 @@ int	tokenize(t_common *c)
     while (arr[i])
     {
         sub_arr = prep_input(arr[i++]);
-		tmp_tok = ft_lstnew(NULL);
-		if (!tmp_tok)
+		tmp_tok = ft_lstnew(malloc(sizeof(t_token *)));
+		if (!tmp_tok || !tmp_tok->content)
+		{
+			if (tmp_tok)
+				free(tmp_tok);
 			return (EXIT_FAILURE);
+		}
 		add_to_list(sub_arr, tmp_tok);
 		ft_lstadd_back(&c->tokens, tmp_tok);
 		free_2d(sub_arr);
@@ -275,15 +285,15 @@ int	t_lst_to_struct(t_common *c)
 {
 	t_list		*tmp_tok;
 	t_list_d	*tmp_cmd;
-	
-	tmp_tok = c->tokens;
-	tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
+
+	tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
 	if (!tmp_cmd || !tmp_cmd->content)
 	{
 		if (tmp_cmd)
 			free(tmp_cmd);
 		return (perror("Error initializing cmd_struct\n"), 1);
 	}
+	tmp_tok = c->tokens;
 	while (tmp_tok)
 	{
 		token_to_struct(tmp_tok->content, tmp_cmd->content);
@@ -305,10 +315,12 @@ int	t_lst_to_struct(t_common *c)
 	{
 		int i = 0;
 		test = p->content;
-		while (test->str[i])
-		{
-			printf("cmd_str->str[%d]: %s\n", i, test->str[i]);
-			i++;
+		if (test && test->str){
+			while (test->str[i])
+			{
+				printf("cmd_str->str[%d]: %s\n", i, test->str[i]);
+				i++;
+			}
 		}
 	} */
 	return (EXIT_SUCCESS);

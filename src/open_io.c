@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/04 18:04:41 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/06 13:11:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,11 @@ void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich e
 
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 {
-	if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
-		close(cmd_node->read_fd);
-	else if ((io->type == REDIR_OUT || io->type == APPEND)
-			&& cmd_node->write_fd != 1)
-		close(cmd_node->write_fd);	
+		if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
+			safe_close(&cmd_node->read_fd);
+		else if ((io->type == REDIR_OUT || io->type == APPEND)
+				&& cmd_node->write_fd != 1)
+			safe_close(&cmd_node->write_fd);	
 }
 
 int	open_io(t_list *io, t_cmd_table *cmd_node)

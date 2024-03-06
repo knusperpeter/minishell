@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 20:33:37 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/04 20:26:41 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/06 15:22:51 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,19 @@ t_list_d	*ft_lstnew_d(void *content)
 
 t_list_d	*ft_lstlast_d(t_list_d *lst)
 {
-	if (!lst)
+	t_list_d	*tmp;
+
+	tmp = lst;
+	
+	if (!tmp)
 		return (NULL);
-	while (lst)
+	while (tmp)
 	{
-		if (lst->next == NULL)
-			return (lst);
-		lst = lst->next;
+		if (tmp->next == NULL)
+			return (tmp);
+		tmp = tmp->next;
 	}
-	return (lst);
+	return (tmp);
 }
 
 void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu)
@@ -47,8 +51,8 @@ void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu)
 	else
 	{
 		last = ft_lstlast_d(*lst);
-		neu->prev = last;
 		last->next = neu;
+		neu->prev = last;
 	}
 }
 

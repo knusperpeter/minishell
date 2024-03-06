@@ -71,7 +71,7 @@ char    *ft_strtok(char *s1, const char *delim)
 	in_quotes = 0;
 	while (*str)
 	{
-		if (*str == '.')
+		if (*str == '"' || *str == '\'')
 			in_quotes = !in_quotes;
 		if (!in_quotes && ft_strchr(delim, *str))
 			break;
@@ -218,13 +218,13 @@ char **set_up_array(int wc, int cc, char *input)
 				new_string[j] = input[i];
 				i++;
 				j++;
-				while (check_char(&input[i]) != 2)
+				while (input[i] && check_char(&input[i]) != 2 )
 				{
 					new_string[j] = input[i];
 					i++;
 					j++;
 				}
-				if (check_char(&input[i]) == 2)
+				if (input[i] && check_char(&input[i]) == 2 )
 				{
 					new_string[j] = input[i];
 					j++;
@@ -238,7 +238,7 @@ char **set_up_array(int wc, int cc, char *input)
 					}
 				}
 			}
-			if (check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
+			if (i > 0 && check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
 			{
 				new_string[j] = ' ';
 				j++;
@@ -274,55 +274,53 @@ char    **prep_input(char *input)
 {
 	int wc = 0;
 	int cc = 0;
-	char *string;
-
-	string = input;
-	if (check_char(input) == 1)
+	int	i = 0;
+	if (check_char(&input[i]) == 1)
 		wc--;
-	while (*input)
+	while (input[i])
 	{
-		while (*input == ' ')
-			input++;
-		if (*input != ' ')
+		while (input[i] && input[i] == ' ')
+			i++;
+		if (input[i] != ' ')
 		{
-			if (*input == '\0')
+			if (input[i] == '\0')
 				break;
 			wc++;
 		}
-		while (*input && *input != ' ')
+		while (input[i] && input[i] != ' ')
 		{
-			//if input[0] und input - 1 ->> Umfalll
-			if (check_char(input) == 1 && ((*(input - 1) == ' ') || (*(input - 1) == *input)))
+			if (i > 0 && check_char(&input[i]) == 1 && ((input[i - 1] == ' ') || (input[i - 1] == input[i])))
 				cc++;
-			else if (check_char(input) == 1 && *(input - 1) != ' ')
+			else if (i > 0 && check_char(&input[i]) == 1 && *(input - 1) != ' ')
 			{
 				wc++;
 				cc++;
 			}
-			else if (check_char(input) == 0 && (check_char(input - 1) == 1 || check_char(input - 1) == 2))
+			else if (i > 0 && check_char(&input[i]) == 0 && (check_char(&input[i - 1]) == 1 || check_char(&input[i - 1]) == 2))
 			{
 				wc++;
 				cc++;
 			}
-			else if (check_char(input) == 0 && (check_char(input - 1) != 1))
+			else if (i > 0 && check_char(&input[i]) == 0 && (check_char(&input[i - 1]) != 1))
 				cc++;
 			else
 			{
-				if (*(input - 1) != ' ')
+				if (i > 0 && input[i - 1] != ' ')
 					wc++;
 				cc++;
-				input++;
-				while (check_char(input) != 2 && *input)
+				i++;
+				while (check_char(&input[i]) != 2 && input[i])
 				{
 					cc++;
-					input++;
+					i++;
 				}
 				cc++;
 			}
-			input++;
+			if (input[i] != 0)
+				i++;
 		}
 	}
-	return (set_up_array(wc, cc, string));
+	return (set_up_array(wc, cc, input));
 }
 
 /*tokenize the input the first time using the "|" as an delimiter*/
@@ -340,7 +338,7 @@ char    **tokenize_one(char *input, int pipe)
 	}
 	token = ft_strtok(input, "|");
 	index = 0;
-	while (token != NULL && index <= pipe + 1)
+	while (token != NULL && index < pipe)
 	{
 		result[index++] = ft_strdup(token);
 		token = ft_strtok(NULL, "|");

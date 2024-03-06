@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/05 15:21:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/06 13:10:54 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,8 @@ t_list_d	*ft_lstlast_d(t_list_d *lst);
 void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
+void	safe_close(int *fd);
+
 
 // builtins
 int		ft_pwd(void);
