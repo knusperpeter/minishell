@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   lexer_new.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/02/06 21:14:34 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/06 17:23:57 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int check_char(char *character)
 	int     i;
 
 	i = 0;
-	special = "*?[]()<>#\""
+	special = "*?[]()<>#\"";
 	if (*character == '\'' || *character == '\"')
 		return (2);
 	while (i < 10)
@@ -384,10 +384,12 @@ int    count_pipes(char *input)
                 exit (2);
 			pipe += 1;
 			i++;
-		}
+			}
 		i++;
-	}
+		}
 //	printf("pipes: %d\n", pipe);
 	return (pipe);
 //    tokenize_one(input, pipe); caigner
+	}
+	return (-1);
 }

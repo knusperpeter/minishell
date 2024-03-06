@@ -23,7 +23,8 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/open_io.c \
 			src/exec.c \
 			src/utils_1.c \
-			src/free.c 			
+			src/free.c \
+			src/lexer_error.c
 
 OBJECTS = $(SOURCES:.c=.o)
 
