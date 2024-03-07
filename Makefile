@@ -33,6 +33,7 @@ all		: $(NAME)
 $(NAME)	: $(OBJECTS) $(HDRS)
 	make --no-print-directory all -C $(LIBFT)
 	$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) -o $(NAME) -L$(LIBFT) -lft
+	@if [ $$? -eq 0 ]; then echo "\033[1;32mminishell [OK]\033[0m"; else echo "\033[1;31mminishell [KO]\033[0m"; fi
 
 %.o		: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
