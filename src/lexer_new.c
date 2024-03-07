@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/07 14:47:11 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/07 15:05:49 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,14 +347,7 @@ char    **tokenize_one(char *input, int pipe)
 	result[index] = NULL;
 	return (result);
 //caigner
-/*
-	i = 0;
-	while (i < pipe + 1)
-	{
-		prep_input(result[i]);
-		i++;
-	}
-	for (i = 0; i < index; i++)                         //loop for testing only
+/*	for (i = 0; i < index; i++)      //loop for testing only
 	{
 		printf("result[%d]: ___%s___\n", i, result[i]);
 		free(result[i]);
@@ -385,9 +378,11 @@ int    count_pipes(char *input)
 		if (input[i] == '|')
 		{
 			i++;
+			if (input [i] == '\0')
+				error_lexer("|", 2);
 			while (input[i] && input[i] == ' ')
 			{
-				if (input[i] == '\0')
+				if (input[i] == ' ' && input[i + 1] == '\0')
 					error_lexer("|", 2);
 				i++;
 			}
