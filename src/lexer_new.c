@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_new.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/06 17:23:57 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/07 14:47:11 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,13 +347,13 @@ char    **tokenize_one(char *input, int pipe)
 	result[index] = NULL;
 	return (result);
 //caigner
-/* 
+/*
 	i = 0;
 	while (i < pipe + 1)
 	{
 		prep_input(result[i]);
 		i++;
-	}                                   
+	}
 	for (i = 0; i < index; i++)                         //loop for testing only
 	{
 		printf("result[%d]: ___%s___\n", i, result[i]);
@@ -365,9 +365,15 @@ char    **tokenize_one(char *input, int pipe)
 /*count "|"-sections within the input. used for allocating memory*/
 int    count_pipes(char *input)
 {
-	int i = 0;
-	int pipe = 0;
+	int i;
+	int pipe;
 
+	i = 0;
+	pipe = 0;
+	while (input[i] && input[i] == ' ')
+		i++;
+	if (input[i] == '|')
+		error_lexer("|", 3);
 	while (input[i])
 	{
 		if (input[i] == '\"' || input[i] == '\'')
@@ -376,20 +382,23 @@ int    count_pipes(char *input)
 			while (input[i] != '\"' || input[i] == '\'')
 				i++;
 		}
-		while (input[i] == '|' && input[i + 1] != '|')
+		if (input[i] == '|')
 		{
-            if (input[i + 1] == '|')
-            {
-                printf("minishell: syntax error near unexpected token `|'\n");
-                exit (2);
-			pipe += 1;
 			i++;
+			while (input[i] && input[i] == ' ')
+			{
+				if (input[i] == '\0')
+					error_lexer("|", 2);
+				i++;
 			}
-		i++;
+			if (input[i] == '|')
+				error_lexer("|", 2);
+			else
+				pipe += 1;
 		}
-//	printf("pipes: %d\n", pipe);
-	return (pipe);
-//    tokenize_one(input, pipe); caigner
+		if (input[i])
+			i++;
 	}
-	return (-1);
+	printf("pipes: %d\n", pipe);
+	return (pipe);
 }
