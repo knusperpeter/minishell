@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/06 17:13:10 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/07 15:34:02 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,8 @@ int	tokenize(t_common *c)
 	int		size;
 
 	size = count_pipes(c->raw_prompt);
+	ft_putnbr_fd(size, 1);
+	ft_putchar_fd('\n', 1);
 	arr = tokenize_one(c->raw_prompt, size + 1);
 	i = 0;
     while (arr[i])
@@ -300,7 +302,7 @@ int	t_lst_to_struct(t_common *c)
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		if (tmp_tok->next)
 		{
-			tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
+			tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
 			if (!tmp_cmd || !tmp_cmd->content)
 			{
 				if (tmp_cmd)

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/03 17:01:13 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/07 15:59:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_2d(char **str)
 	int	i;
 
 	i = 0;
-	while (str && str[i])
+	while (str && *str && str[i])
 	{
 		free(str[i]);
 		str[i] = NULL;
