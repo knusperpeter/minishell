@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/07 14:34:02 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/07 14:47:11 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -396,7 +396,8 @@ int    count_pipes(char *input)
 			else
 				pipe += 1;
 		}
-		i++;
+		if (input[i])
+			i++;
 	}
 	printf("pipes: %d\n", pipe);
 	return (pipe);
