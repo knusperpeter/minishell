@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/08 22:06:29 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 22:28:15 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,5 +239,10 @@ int	ft_parsing(t_common *c)
 		printf("Token_to_struct error");
 	ft_expansion(c->env, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
+	
+	t_cmd_table	*cmd;
+	cmd = c->cmd_struct->content;
+	for (int i = 0; cmd->str[i]; i++)
+		printf("%s\n", cmd->str[i]);
 	return (EXIT_SUCCESS);
 }

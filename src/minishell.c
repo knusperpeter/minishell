@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/08 22:03:59 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 22:17:38 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,16 +74,6 @@ void	init_minishell(t_common *c, char **envp)
 		return (perror("Error initializing environment\n"));
 }
 
-int	init_loop(t_common *c)
-{
-//protect that shit, also maybe make a function, that will init t_list and subs
-//	c->tokens = ft_lstnew(malloc (sizeof(t_token)));
-//	if (!c->tokens || !c->tokens->content)
-//		return (perror("Error initializing tokens\n"), 1);
-	ft_loop(c);
-	return (EXIT_SUCCESS);
-}
-
 int	main(int ac, char **av, char **envp)
 {
 	t_common	c;
@@ -93,7 +83,7 @@ int	main(int ac, char **av, char **envp)
 	(void)		av;
 	
 	init_minishell(&c, envp);
-	init_loop(&c);
+	ft_loop(&c);
 	free_all(&c);
 	return (0);
 }

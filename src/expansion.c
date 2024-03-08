@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/08 21:55:35 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 23:25:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,11 @@ char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
 
 	tmp = NULL;
 	value = NULL;
-	ft_strlcpy(value, str, *i - 1);
-	free(str);
+	value = ft_substr(str, *i + 1, var_len);
 	tmp = ft_strjoin(value, env_value);
 	free(value);
 	value = ft_strjoin(tmp, &str[*i + var_len + 1]);
-	*i += ft_strlen(env_value);
+	*i += ft_strlen(env_value) + 1;
 	free(str);
 	free(tmp);
 	return (value);
@@ -47,11 +46,11 @@ char	*ft_replace_var(t_env *env, char *str, int *i)
 	tmp = NULL;
 	value = NULL;
 	var_len = 1;
-	while (str[*i + var_len] && str[*i + var_len] != ' ')
+	while (str[*i + var_len] && str[*i + var_len + 1] != ' ')
 		var_len++;
-	ft_strlcpy(tmp, &str[*i + 1], var_len);
+	tmp = ft_substr(str, *i + 1, var_len);
 	if (!tmp)
-		return (/* ft_printerrno("expansion: "),  */NULL);
+		return (ft_printerrno("expansion: "), NULL);
 	while (env)
 	{
 		if (!ft_strncmp(env->variable, tmp, var_len + 1))
@@ -128,12 +127,12 @@ void	ft_expansion(t_env *env, t_list_d *cmds)//$? "|" ">" ...
 	}
 }
 
-char	*ft_str_wo_quotes(char *str, int size)
+char	*ft_str_wo_quotes(char *str)
 {
 	char	*value;
 
 	value = NULL;
-	ft_strlcpy(value, str, size);
+	value = ft_strdup(str);
 	return (value);
 }
 
@@ -145,10 +144,11 @@ char	*ft_rm_quotes_str(char *str)
 	ret = NULL;
 	if (!str)
 		return (NULL);
-	i = ft_strlen(str) - 1;
+	i = ft_strlen(str);
 	if ((str[0] == '\'' && str[i] != '\'') || (str[0] == '"' && str[i] != '"'))
 	{
-		ret = ft_str_wo_quotes(&str[1], i - 1);
+		str[i - 1] = 0;
+		ret = ft_str_wo_quotes(&str[1]);
 		free(str);
 	}
 	return (ret);
@@ -158,8 +158,8 @@ void	ft_rm_quotes_io(t_io_red *io)
 {
 	if (!io)
 		return ;
-	io->infile = ft_rm_quotes_str( io->infile);
-	io->outfile = ft_rm_quotes_str( io->outfile);
+	io->infile = ft_rm_quotes_str(io->infile);
+	io->outfile = ft_rm_quotes_str(io->outfile);
 }
 
 void	ft_rm_in_cmd(t_cmd_table *cmd)
