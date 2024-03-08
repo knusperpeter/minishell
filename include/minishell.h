@@ -149,6 +149,8 @@ void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	safe_close(int *fd);
+void	rm_quotes(t_list_d *cmd_struct);
+
 
 //lexer
 void    error_lexer(char *s, int i);
