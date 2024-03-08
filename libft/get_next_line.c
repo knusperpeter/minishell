@@ -6,11 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 13:44:08 by codespace         #+#    #+#             */
-/*   Updated: 2024/01/22 19:55:42 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 18:58:33 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
 int	some_error(char *str)
 {

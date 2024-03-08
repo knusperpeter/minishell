@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/06 17:13:10 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 19:23:30 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,99 +157,6 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 	}
 }
 
-char	**ft_get_paths(t_env *env)
-{
-	t_env	*tmp;
-	char	**paths;
-
-	tmp = env;
-	while (tmp && ft_strncmp(tmp->variable, "PATH", 5))
-		tmp = tmp->next;
-	paths = ft_split(tmp->value, ':');
-	if (!paths)
-		return (NULL);
-	return (paths);
-}
-
-char	*join_path(char *cmd, char *path)
-{
-	char	*prepath;
-	char	*fullpath;
-
-	if (cmd[0] == '/')
-		return (NULL);
-	prepath = ft_strjoin(path, "/");
-	if (!prepath)
-		return (NULL);
-	fullpath = ft_strjoin(prepath, cmd);
-	free(prepath);
-	if (!fullpath)
-		return (NULL);
-	return (fullpath);
-}
-
-int	is_dir(char *file)
-{
-	struct stat	s;
-	
-	if (stat(file, &s) == 0)
-	{
-		if (S_ISDIR(s.st_mode))
-			return (1);
-	}
-	return (0);
-}
-
-int	add_path(t_cmd_table *cmd, char **paths)
-{
-	char	*path;
-	int		i;
-	
-	i = 0;
-	if (cmd && cmd->str && cmd->str[0])
-	{
-		if (access(cmd->str[0], F_OK | X_OK | R_OK) == 0)
-			return (cmd->exec_path = cmd->str[0], EXIT_SUCCESS);
-		else if (cmd->str && cmd->str[0] && paths)
-		{
-			while (paths[i])
-			{
-				path = join_path(cmd->str[0], paths[i++]);
-				if (!path)
-					return (EXIT_FAILURE);
-				if (!access(path, F_OK | X_OK | R_OK) && !is_dir(path))
-					return (cmd->exec_path = path, EXIT_SUCCESS);
-				free(path);
-			}
-		}
-	}
-	return (EXIT_FAILURE);
-}
-
-void	create_paths(t_common *c, char **paths)
-{
-	t_list_d	*tmp;
-
-	tmp = c->cmd_struct;
-	while (tmp)
-	{
-		add_path(tmp->content, paths);
-		tmp = tmp->next;
-	}
-}
-
-int	get_cmd_paths(t_common *c)
-{
-	char	**paths;
-
-	paths = ft_get_paths(c->env);
-	if (!paths)
-		return (EXIT_FAILURE);
-	create_paths(c, paths);
-	free_2d(paths);
-	return (EXIT_SUCCESS);
-}
-
 int	tokenize(t_common *c)
 {
 	t_list	*tmp_tok;
@@ -330,8 +237,7 @@ int	ft_parsing(t_common *c)
 		printf("Tokenize error");
 	if (t_lst_to_struct(c))
 		printf("Token_to_struct error");
-	//ft_expansion(c->cmd_struct);
+	ft_expansion(c->env, c->cmd_struct);
 	//rm_quotes(c->cmd_struct);
-	get_cmd_paths(c);
 	return (EXIT_SUCCESS);
 }

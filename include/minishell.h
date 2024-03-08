@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/06 17:23:16 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 19:19:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,8 @@ void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	safe_close(int *fd);
 void    error_lexer(char *s, int i);
+int		get_cmd_path(t_common *c, t_cmd_table *cmd);
+void	ft_expansion(t_env *env, t_list_d *cmds);
 
 // builtins
 int		ft_pwd(void);

@@ -20,7 +20,9 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/init_env.c \
 			src/lexer_new.c \
 			src/parsing_cmd_table.c \
+			src/expansion.c \
 			src/open_io.c \
+			src/get_cmd_path.c \
 			src/exec.c \
 			src/utils_1.c \
 			src/free.c \

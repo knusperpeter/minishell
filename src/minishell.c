@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/06 13:27:11 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 17:39:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,14 @@ int	ft_loop(t_common *c)
 {
 	while (1)
 	{
-		//ft_signal();
 		init_loop_data(c);
+		//interactive_mode();
 		c->raw_prompt = prompt();
+//		if (!c->raw_prompt[0])
+//			break ;
 		if (c->raw_prompt[0])
 		{
+			//non_interactive();
 			ft_parsing(c);
 			ft_execute(c);
 			ft_cleanup_loop(c);

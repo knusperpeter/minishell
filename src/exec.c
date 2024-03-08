@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/04 16:29:26 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 14:43:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 	return (1);
 }
 
-/* int	ft_execute_builtins(t_cmd_table *cmd, t_common *c)
+int	ft_builtins(t_cmd_table *cmd, t_common *c)
 {
 	t_cmd_table	*tmp;
 
@@ -57,9 +57,10 @@ int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 		ft_echo(tmp->str);
 	else if (check_cmd("cd", cmd))
 		ft_cd(tmp->str, c);
-	free(c->raw_prompt);
-	return (EXIT_SUCCESS);
-} */
+	else
+	 	return (0);
+	return (1);
+}
 
 void	safe_close(int *fd)
 {
@@ -218,6 +219,14 @@ void ft_preexec(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 	close_fds(c, cmd);
 }
 
+int	ft_exec_builtins(t_common *c, t_cmd_table *cmd)
+{
+	if (ft_builtins(cmd, c))
+		return (1);
+	else
+		return (0);
+}
+
 int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 {
 	t_cmd_table	*cmd;
@@ -230,7 +239,11 @@ int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 	if (cmd->id == 0)
 	{
 		ft_preexec(cmd_table, cmd, c);
-		execve(cmd->exec_path, cmd->str, c->envp);
+		if (!ft_exec_builtins(c, cmd))
+		{
+			get_cmd_path(c, cmd);
+			execve(cmd->exec_path, cmd->str, c->envp);
+		}
 	}
 //	if (c->envp)
 //		free_2d(c->envp);
