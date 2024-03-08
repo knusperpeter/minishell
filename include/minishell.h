@@ -134,7 +134,7 @@ void	free_2d(char **str);
 void	free_env_nodes(t_env *start);
 void	free_cmd_table(void *content);
 void	ft_cleanup_loop(t_common *c);
-void	free_all(t_common *c, t_cmd_table *cmds);
+void	free_all(t_common *c);
 int		ft_loop(t_common *c);
 int		ft_parsing(t_common *c);
 int		open_io(t_list *io, t_cmd_table *cmd_node);

@@ -103,31 +103,33 @@ void	close_all_pipes(t_common *c)
 
 int	create_pipe(t_pipe *new)
 {
-	if (*new->read_fd != -1 || *new->write_fd != -1)
+	if (new->pipes[0] != -1 || new->pipes[1] != -1)
 	{
 		safe_close_pipe(new);
 	//	printf("Pipe not empty");
 	}
 	if (pipe(new->pipes) == -1)
 		return (EXIT_FAILURE);
+	new->read_fd = &new->pipes[0];
+	new->write_fd = &new->pipes[1];
 	return (EXIT_SUCCESS);
 }
 
 void	close_fds(t_common *c, t_cmd_table *cmd)
 {
 	if (cmd->read_fd != -1)
-		close(cmd->read_fd);
+		safe_close(&cmd->read_fd);
 	if (cmd->write_fd != -1)
-		close(cmd->write_fd);
+		safe_close(&cmd->write_fd);
 	if (c->old_pipe.pipes[0] != -1)
 	{
-		close(c->old_pipe.pipes[1]);
-		close(c->old_pipe.pipes[0]);
+		safe_close(&c->old_pipe.pipes[1]);
+		safe_close(&c->old_pipe.pipes[0]);
 	}
 	if (c->new_pipe.pipes[0] != -1)
 	{
-		close(c->new_pipe.pipes[1]);
-		close(c->new_pipe.pipes[0]);
+		safe_close(&c->new_pipe.pipes[1]);
+		safe_close(&c->new_pipe.pipes[0]);
 	}
 }
 
@@ -144,29 +146,48 @@ int	get_env_size(t_env *env)
 	return (size);
 }
 
+char	**env_to_arr(int size, t_env *env)
+{
+	char	**ret;
+	char	*s;
+	int		i;
+
+	ret = malloc(sizeof(char *) * (size + 1));
+	if (!ret)
+		return (ft_printerrno(NULL), NULL);
+	i = 0;
+	while (i < size)
+	{
+		s = ft_strjoin(env->variable, "=");
+		if (!s)
+			return (ft_printerrno(NULL), NULL);
+		ret[i] = ft_strjoin(s, env->value);
+		free(s);
+		if (!ret[i])
+		{
+			free_2d(ret);
+			return (ft_printerrno(NULL), NULL);
+		}
+		i++;
+		env = env->next;
+	}
+	ret[i] = NULL;
+	return (ret);
+}
+
 char	**get_envp(t_env *env)
 {
 	int		size;
-	char	*s;
 	char	**ret;
 	t_env	*tmp;
 
+	ret = NULL;
 	tmp = env;
 	size = get_env_size(tmp);
-	ret = malloc(sizeof (char *) * (size + 1));
-	if (!ret)
-		return (ft_printerrno(NULL), NULL);
-	ret[size--] = NULL;
-	while (tmp)
+	tmp = env;
+	if (size > 0)
 	{
-		s = ft_strjoin(tmp->variable, "=");
-		if (!s)
-			return (ft_printerrno(NULL), NULL);
-		ret[size] = ft_strjoin(s, tmp->value);
-		free(s);
-		if (!ret[size--])
-			return (ft_printerrno(NULL), NULL);
-		tmp = tmp->prev;
+		ret = env_to_arr(size, env);
 	}
 	return (ret);
 }
@@ -195,9 +216,6 @@ void ft_preexec(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 			ft_printerrno(strerror(errno));
 	}
 	close_fds(c, cmd);
-	c->envp = get_envp(c->env);
-	if (!c->envp)
-		ft_printerrno("c->envp :");
 }
 
 int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
@@ -205,16 +223,21 @@ int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 	t_cmd_table	*cmd;
 
 	cmd = cmd_table->content;
+	c->envp = get_envp(c->env);
+	if (!c->envp)
+		ft_printerrno("c->envp: ");
 	cmd->id = fork();
 	if (cmd->id == 0)
 	{
 		ft_preexec(cmd_table, cmd, c);
 		execve(cmd->exec_path, cmd->str, c->envp);
 	}
+//	if (c->envp)
+//		free_2d(c->envp);
 	if (cmd_table->next)
-		close(c->new_pipe.pipes[1]);
+		safe_close(&c->new_pipe.pipes[1]);
 	else
-		close(cmd->write_fd);
+		safe_close(&cmd->write_fd);
 	return (EXIT_SUCCESS);
 }
 
@@ -256,7 +279,7 @@ int	ft_execute(t_common *c)
 		while (curr_cmd)
 		{
 			curr_cmd_table = curr_cmd->content;
-			if (curr_cmd_table->exec_path)
+			if (curr_cmd_table->str[0])
 				ft_exec_cmd(c, curr_cmd);
 			curr_cmd = curr_cmd->next;
 //			if (curr_cmd->next)
@@ -268,7 +291,7 @@ int	ft_execute(t_common *c)
 	else if ( pipes == 0)
 	{
 		curr_cmd_table = c->cmd_struct->content;
-		if (curr_cmd_table->exec_path)
+		if (curr_cmd_table->str[0])
 			ft_exec_cmd(c, c->cmd_struct);
 		
 	}

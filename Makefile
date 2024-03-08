@@ -2,7 +2,7 @@ NAME = minishell
 CC		= cc
 AR		= ar
 RM		= rm
-CFLAGS	= -Wall -Wextra -Werror -Ofast -march=native -g
+CFLAGS	= -Wall -Wextra -Werror -Wno-unused-result -Ofast -march=native -g
 LFLAGS	= -lreadline
 HDRS	= include/minishell.h
 LIBFT	= libft
