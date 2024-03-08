@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/08 19:19:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 22:03:04 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ typedef struct common_data
 	char				*raw_prompt;
 	t_pipe				new_pipe;
 	t_pipe				old_pipe;
-		
+
 //	t_final_cmd_table	*final_cmd;
 }	t_common;
 
@@ -140,7 +140,6 @@ int		ft_parsing(t_common *c);
 int		open_io(t_list *io, t_cmd_table *cmd_node);
 int		ft_execute(t_common *c);
 void	ft_printerrno(char *s);
-int		count_pipes(char *input);
 char	**tokenize_one(char *input, int pipe);
 char    **prep_input(char *input);
 void	add_to_list(char **token, t_list *lst);
@@ -150,6 +149,10 @@ void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	safe_close(int *fd);
+void	rm_quotes(t_list_d *cmd_struct);
+
+
+//lexer
 void    error_lexer(char *s, int i);
 int		get_cmd_path(t_common *c, t_cmd_table *cmd);
 void	ft_expansion(t_env *env, t_list_d *cmds);
