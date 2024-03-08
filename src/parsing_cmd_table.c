@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_cmd_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/06 17:13:10 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/08 14:50:24 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ char	*join_path(char *cmd, char *path)
 int	is_dir(char *file)
 {
 	struct stat	s;
-	
+
 	if (stat(file, &s) == 0)
 	{
 		if (S_ISDIR(s.st_mode))
@@ -204,7 +204,7 @@ int	add_path(t_cmd_table *cmd, char **paths)
 {
 	char	*path;
 	int		i;
-	
+
 	i = 0;
 	if (cmd && cmd->str && cmd->str[0])
 	{
@@ -333,7 +333,7 @@ int	ft_parsing(t_common *c)
 	if (t_lst_to_struct(c))
 		printf("Token_to_struct error");
 	//ft_expansion(c->cmd_struct);
-	//rm_quotes(c->cmd_struct);
+	rm_quotes(c->cmd_struct);
 	get_cmd_paths(c);
 	return (EXIT_SUCCESS);
 }
