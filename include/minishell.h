@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/08 14:55:58 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:39:00 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void	free_2d(char **str);
 void	free_env_nodes(t_env *start);
 void	free_cmd_table(void *content);
 void	ft_cleanup_loop(t_common *c);
-void	free_all(t_common *c, t_cmd_table *cmds);
+void	free_all(t_common *c);
 int		ft_loop(t_common *c);
 int		ft_parsing(t_common *c);
 int		open_io(t_list *io, t_cmd_table *cmd_node);
@@ -150,6 +150,7 @@ void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	safe_close(int *fd);
 void	rm_quotes(t_list_d *cmd_struct);
+
 
 //lexer
 void    error_lexer(char *s, int i);
