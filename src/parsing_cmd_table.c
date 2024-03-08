@@ -112,7 +112,7 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 	t_list		*red_node;
 	t_io_red	*tmp;
 
-	red_node = ft_lstnew(malloc(sizeof(t_io_red *)));
+	red_node = ft_lstnew(malloc(sizeof(t_io_red)));
 	if (!red_node || !red_node->content)
 	{
 		if (red_node)
@@ -229,12 +229,10 @@ int	add_path(t_cmd_table *cmd, char **paths)
 void	create_paths(t_common *c, char **paths)
 {
 	t_list_d	*tmp;
-	t_cmd_table	*cmd_tmp;
 
 	tmp = c->cmd_struct;
 	while (tmp)
 	{
-		cmd_tmp = tmp->content;
 		add_path(tmp->content, paths);
 		tmp = tmp->next;
 	}
@@ -266,7 +264,7 @@ int	tokenize(t_common *c)
     while (arr[i])
     {
         sub_arr = prep_input(arr[i++]);
-		tmp_tok = ft_lstnew(malloc(sizeof(t_token *)));
+		tmp_tok = ft_lstnew(malloc(sizeof(t_token)));
 		if (!tmp_tok || !tmp_tok->content)
 		{
 			if (tmp_tok)
@@ -300,7 +298,7 @@ int	t_lst_to_struct(t_common *c)
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		if (tmp_tok->next)
 		{
-			tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table *)));
+			tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
 			if (!tmp_cmd || !tmp_cmd->content)
 			{
 				if (tmp_cmd)

@@ -99,19 +99,13 @@ void	ft_cleanup_loop(t_common *c)
 	}
 }
 
-void	free_all(t_common *c, t_cmd_table *cmds)
+void	free_all(t_common *c)
 {
 //	t_env	*node;
 	//rl_clear_history();
 	if (c)
 	{
 		free_env_nodes(c->env);
-		if (c->cmd_struct)
-		{
-			if (cmds->str)
-				free_2d(cmds->str);
-			free(c->cmd_struct);
-		}
 		free(c);
 	}
 }

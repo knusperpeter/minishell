@@ -30,28 +30,31 @@ void	init_loop_data(t_common *c){
 	c->new_pipe = (t_pipe)
 	{
 		.pipes = {-1, -1},
-		.read_fd = NULL,
-		.write_fd = NULL
+		.read_fd = &c->old_pipe.pipes[0],
+		.write_fd = &c->new_pipe.pipes[1],
 	};
 	c->old_pipe = (t_pipe)
 	{
 		.pipes = {-1, -1},
-		.read_fd = NULL,
-		.write_fd = NULL
+		.read_fd = &c->old_pipe.pipes[0],
+		.write_fd = &c->new_pipe.pipes[1],
 	};
 }
 
 int	ft_loop(t_common *c)
 {
-	//ft_signal();
-	init_loop_data(c);
-	c->raw_prompt = prompt();
-	if (c->raw_prompt[0])
+	while (1)
 	{
-		ft_parsing(c);
-		ft_execute(c);
-		ft_cleanup_loop(c);
-		//ft_execute_builtins(c->cmd_struct->content, c);
+		//ft_signal();
+		init_loop_data(c);
+		c->raw_prompt = prompt();
+		if (c->raw_prompt[0])
+		{
+			ft_parsing(c);
+			ft_execute(c);
+			ft_cleanup_loop(c);
+			//ft_execute_builtins(c->cmd_struct->content, c);
+		}
 	}
 	return (0);
 }
@@ -71,13 +74,11 @@ void	init_minishell(t_common *c, char **envp)
 int	init_loop(t_common *c)
 {
 //protect that shit, also maybe make a function, that will init t_list and subs
-	c->tokens = ft_lstnew(malloc (sizeof(t_token *)));
-	if (!c->tokens || !c->tokens->content)
-		return (perror("Error initializing tokens\n"), 1);
-	while (1)
-	{
-		ft_loop(c);
-	}
+//	c->tokens = ft_lstnew(malloc (sizeof(t_token)));
+//	if (!c->tokens || !c->tokens->content)
+//		return (perror("Error initializing tokens\n"), 1);
+	ft_loop(c);
+	return (EXIT_SUCCESS);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -90,6 +91,6 @@ int	main(int ac, char **av, char **envp)
 	
 	init_minishell(&c, envp);
 	init_loop(&c);
-	free_all(&c, c.cmd_struct->content);
+	free_all(&c);
 	return (0);
 }
