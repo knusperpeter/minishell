@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/08 22:03:59 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 13:40:28 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	ft_loop(t_common *c)
 {
 	while (1)
 	{
+	//	interactive();
 		init_loop_data(c);
 		//interactive_mode();
 		c->raw_prompt = prompt();
@@ -91,7 +92,7 @@ int	main(int ac, char **av, char **envp)
 	// should be validated or bounded checked before allocating memory to avoid potential integer overflows.
 	(void)		ac;
 	(void)		av;
-	
+
 	init_minishell(&c, envp);
 	init_loop(&c);
 	free_all(&c);
