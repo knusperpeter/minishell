@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 13:37:36 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 13:41:39 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,6 @@ void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	safe_close(int *fd);
 void	ft_rm_quotes(t_list_d *cmds);
-
 
 //lexer
 void    error_lexer(char *s, int i);
