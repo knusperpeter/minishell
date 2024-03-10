@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 17:17:03 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 19:36:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,38 +53,34 @@ char	**setup_env(t_env *env)
 
 
 
-int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
+int	cmd_to_node(t_cmd_table *cmd_node)
 {
 	int			i;
-	t_token		*tmp_tok;
+	t_list		*cmd_tok;
 	t_cmd_table *cmd_tmp;
 
 	cmd_tmp = cmd_node;
-	tmp_tok = token;
+	cmd_tok = cmd_tmp->cmds;
 	i = 0;
-	while (tmp_tok)
+	while (cmd_tok)
 	{
-		if (tmp_tok->type == VOID)
-			i++;
-		tmp_tok = tmp_tok->next;
+		i++;
+		cmd_tok = cmd_tok->next;
 	}
 	cmd_tmp->str = malloc(sizeof(char*) * (i + 1));
 	if (!cmd_tmp->str)
 		return (perror("Error initializing str in cmd_to_node\n"), 1);
-	tmp_tok = token;
+	cmd_tok = cmd_tmp->cmds;
 	i = 0;
-	while (tmp_tok)
+	while (cmd_tok)
 	{
-		if (tmp_tok->type == VOID)
-		{
-			cmd_tmp->str[i] = ft_strdup(tmp_tok->data);//Machter ned
-			if (!cmd_tmp->str[i])
-				printf("FIX, cmd_to_node");
-//			ft_putstr_fd(cmd_tmp->str[i], 1);
-//			ft_putstr_fd("->cmd\n", 1);
-			i++;
-		}
-		tmp_tok = tmp_tok->next;
+		cmd_tmp->str[i] = ft_strdup(cmd_tok->content);//Machter ned
+		if (!cmd_tmp->str[i])
+			printf("FIX, cmd_to_node");
+//		ft_putstr_fd(cmd_tmp->str[i], 1);
+//		ft_putstr_fd("->cmd\n", 1);
+		i++;
+		cmd_tok = cmd_tok->next;
 	}
 	cmd_tmp->str[i] = NULL;
 	return (EXIT_SUCCESS);
@@ -150,10 +146,33 @@ void	init_cmd_table(t_cmd_table *node)
 	node->read_fd = 0;
 	node->write_fd = 1;
 	node->id = -1;
+	node->cmds = NULL;
 	node->io_red = NULL;
 	node->heredoc_name = NULL;
 	node->str =	NULL;
 	node->exec_path = NULL;
+}
+
+void	cmdtok_to_node(t_token *tok, t_cmd_table *cmd)
+{
+	t_list	*cmd_list;
+	t_token	*tmp;
+
+	tmp = tok;
+	while (tmp)
+	{
+		if (tmp->type == 0)
+		{
+			cmd_list = ft_lstnew(tmp->data);
+			if (!cmd_list)
+			{
+				ft_printerrno("cmdtok_to_node: ");
+				return ;
+			}
+			ft_lstadd_back(&cmd->cmds, cmd_list);
+		}
+		tmp = tmp->next;
+	}
 }
 
 void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
@@ -162,7 +181,8 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 
 	tmp = token;
 	init_cmd_table(cmd_node);
-	cmd_to_node(tmp, cmd_node);
+	cmdtok_to_node(tmp, cmd_node);
+//	cmd_to_node(tmp, cmd_node);
 	while (tmp)
 	{
 		if (tmp->type >= 1 && tmp->type <= 4)
@@ -173,7 +193,7 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 
 int	tokenize(t_common *c)
 {
-	t_list	*tmp_tok;
+	t_list	*cmd_tok;
 	char	**arr;
 	char	**sub_arr;
 	int		i;
@@ -185,15 +205,15 @@ int	tokenize(t_common *c)
     while (arr[i])
     {
         sub_arr = prep_input(arr[i++]);
-		tmp_tok = ft_lstnew(malloc(sizeof(t_token)));
-		if (!tmp_tok || !tmp_tok->content)
+		cmd_tok = ft_lstnew(malloc(sizeof(t_token)));
+		if (!cmd_tok || !cmd_tok->content)
 		{
-			if (tmp_tok)
-				free(tmp_tok);
+			if (cmd_tok)
+				free(cmd_tok);
 			return (EXIT_FAILURE);
 		}
-		add_to_list(sub_arr, tmp_tok);
-		ft_lstadd_back(&c->tokens, tmp_tok);
+		add_to_list(sub_arr, cmd_tok);
+		ft_lstadd_back(&c->tokens, cmd_tok);
 		free_2d(sub_arr);
 	}
 	free_2d(arr);
@@ -202,7 +222,7 @@ int	tokenize(t_common *c)
 
 int	t_lst_to_struct(t_common *c)
 {
-	t_list		*tmp_tok;
+	t_list		*cmd_tok;
 	t_list_d	*tmp_cmd;
 
 	tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
@@ -212,12 +232,12 @@ int	t_lst_to_struct(t_common *c)
 			free(tmp_cmd);
 		return (perror("Error initializing cmd_struct\n"), 1);
 	}
-	tmp_tok = c->tokens;
-	while (tmp_tok)
+	cmd_tok = c->tokens;
+	while (cmd_tok)
 	{
-		token_to_struct(tmp_tok->content, tmp_cmd->content);
+		token_to_struct(cmd_tok->content, tmp_cmd->content);
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
-		if (tmp_tok->next)
+		if (cmd_tok->next)
 		{
 			tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
 			if (!tmp_cmd || !tmp_cmd->content)
@@ -227,7 +247,7 @@ int	t_lst_to_struct(t_common *c)
 				return (perror("Error initializing cmd_struct\n"), 1);
 			}
 		}
-		tmp_tok = tmp_tok->next;
+		cmd_tok = cmd_tok->next;
 	}
 /* 	t_cmd_table *test;
 	for (t_list_d *p = c->cmd_struct; p; p = p->next)
@@ -245,6 +265,18 @@ int	t_lst_to_struct(t_common *c)
 	return (EXIT_SUCCESS);
 }
 
+void	ft_cmd_args_to_2d(t_list_d *cmd_table)
+{
+	t_list_d	*tmp;
+
+	tmp = cmd_table;
+	while (tmp)
+	{
+		cmd_to_node(tmp->content);
+		tmp = tmp->next;
+	}
+}
+
 int	ft_parsing(t_common *c)
 {
 	if (tokenize(c) == EXIT_FAILURE)
@@ -253,7 +285,7 @@ int	ft_parsing(t_common *c)
 		printf("Token_to_struct error");
 	ft_expansion(c->env, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
-	
+	ft_cmd_args_to_2d(c->cmd_struct);
 //	t_cmd_table	*cmd;
 //	cmd = c->cmd_struct->content;
 //	for (int i = 0; cmd->str[i]; i++)
