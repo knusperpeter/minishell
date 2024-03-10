@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 17:42:13 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 19:58:58 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct s_cmd_table
 	int					read_fd;
 	int					write_fd;
 	t_list				*io_red;
+	t_list				*cmds;
 	char				*heredoc_name;
 	char				**str;
 	char				*exec_path;
@@ -120,6 +121,7 @@ typedef struct common_data
 	char				**envp;
 	t_list_d			*cmd_struct;
 	t_list				*tokens;
+	t_list				*cmd_tokens;
 	unsigned int		exitstatus;
 	char				*raw_prompt;
 	t_pipe				new_pipe;

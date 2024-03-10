@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 17:15:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 19:50:54 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*ft_substitute(t_env *env, char *str)
 	if (!str)
 		return (NULL);
 	if (ft_single_quotes(str))
-		return (str);
+		return (str);NULL
 	i = 0;
 	while (str[i])
 	{
@@ -100,22 +100,22 @@ void	ft_expand_red(t_env *env, t_io_red *io)
 
 void	ft_expand_cmd(t_env *env, t_cmd_table *cmd)
 {
-	int		i;
-	t_list	*tmp;
+	t_list	*tmp_io;
+	t_list	*tmp_cmd;
 
 	if (!cmd)
 		return ;
-	tmp = cmd->io_red;
-	i = 0;
-	while (cmd->str[i])
+	tmp_cmd = cmd->cmds;
+	while (tmp_cmd)
 	{
-		cmd->str[i] = ft_substitute(env, cmd->str[i]);
-		i++;
+		tmp_cmd->content = ft_substitute(env, tmp_cmd->content);
+		tmp_cmd = tmp_cmd->next;
 	}
-	while (tmp)
+	tmp_io = cmd->io_red;
+	while (tmp_io)
 	{
-		ft_expand_red(env, tmp->content);
-		tmp = tmp->next;
+		ft_expand_red(env, tmp_io->content);
+		tmp_io = tmp_io->next;
 	}
 }
 
@@ -170,22 +170,22 @@ void	ft_rm_quotes_io(t_io_red *io)
 
 void	ft_rm_in_cmd(t_cmd_table *cmd)
 {
-	int		i;
-	t_list	*tmp;
+	t_list	*tmp_cmd;
+	t_list	*tmp_io;
 
 	if (!cmd)
 		return ;
-	tmp = cmd->io_red;
-	i = 0;
-	while (cmd->str[i])
+	tmp_cmd = cmd->cmds;
+	while (tmp_cmd)
 	{
-		cmd->str[i] = ft_rm_quotes_str(cmd->str[i]);
-		i++;
+		tmp_cmd->content = ft_rm_quotes_str(tmp_cmd->content);
+		tmp_cmd = tmp_cmd->next;
 	}
-	while (tmp)
+	tmp_io = cmd->io_red;
+	while (tmp_io)
 	{
-		ft_rm_quotes_io(tmp->content);
-		tmp = tmp->next;
+		ft_rm_quotes_io(tmp_io->content);
+		tmp_io = tmp_io->next;
 	}
 }
 
