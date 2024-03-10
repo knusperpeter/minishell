@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/07 16:39:00 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/09 16:53:27 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+
+int	g_signal = 0;
 
 // enum can be used anywhere. VOID == 0, PIPE == 1, STRING == 2, ...
 // https://www.programiz.com/c-programming/c-enumeration

@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/08 14:50:24 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/08 21:20:29 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,7 +331,7 @@ int	ft_parsing(t_common *c)
 	if (t_lst_to_struct(c))
 		printf("Token_to_struct error");
 	//ft_expansion(c->cmd_struct);
-	rm_quotes(c->cmd_struct);
+	//rm_quotes(c->cmd_struct);
 	get_cmd_paths(c);
 	return (EXIT_SUCCESS);
 }
