@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/03 17:01:13 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 19:45:17 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,10 @@ void	free_cmd_table(void *content)
 		free(table->exec_path);
 	if (table->io_red)
 		ft_lstclear(&table->io_red, &free_io_red);
+	//CHECK IF THIS WORKS
+	if (table->cmds)
+		ft_lstclear(&table->cmds, &free);
+	//!!!!!!!!!!!!!!!!!!!
 	if (table->heredoc_name)
 	{
 		unlink(table->heredoc_name);
