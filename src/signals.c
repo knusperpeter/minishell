@@ -6,11 +6,11 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 21:22:44 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/09 16:54:35 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 13:47:18 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+/*
 #include <readline/readline.h>
 
 void    ignore_signal(int signum)
@@ -76,3 +76,4 @@ void    non_interactive(void)
     signal.sa_sigaction = &signal_bs_nonia;
     sigaction(SIGQUIT, &signal, NULL);
 }
+*/
