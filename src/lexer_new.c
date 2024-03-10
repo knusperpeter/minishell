@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/10 17:19:35 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 19:15:21 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char    *ft_strtok(char *s1, const char *delim)
 	in_quotes = 0;
 	while (*str)
 	{
-		if (*str == '"' || *str == '\'')
+		if (*str == '\"' || *str == '\'')
 			in_quotes = !in_quotes;
 		if (!in_quotes && ft_strchr(delim, *str))
 			break;
@@ -122,21 +122,6 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 	else
 		token->data = ft_strdup(value[i]);
 	*tmp = token;
-//	ft_putstr_fd(token->data, 1);
-//	ft_putchar_fd('\n', 1);
-/* 	token->next = NULL;
-	if (!*lst)
-		*lst = token;
-	else
-	{
-		tmp = *lst;
-				input++;
-		while (tmp->next)
-		{
-			tmp = tmp->next;
-		}
-		tmp->next = token;
-	} */
 	return (ret);
 }
 
@@ -188,8 +173,6 @@ char    **tokenize_input(char *input)
 	}
 	result[index] = NULL;
 	return (result);
-//caigner
-//	free(result); // Free array of tokens
 }
 
 char **set_up_array(int wc, int cc, char *input)
@@ -213,10 +196,7 @@ char **set_up_array(int wc, int cc, char *input)
 			if (check_char(&input[i]) == 2)
 			{
 				if (i > 0 && input[i - 1] != ' ')
-				{
-					new_string[j] = ' ';
-					j++;
-				}
+					new_string[j++] = ' ';
 				new_string[j++] = input[i++];
 				while (input[i] && check_char(&input[i]) != 2 )
 					new_string[j++] = input[i++];
@@ -313,13 +293,6 @@ char    **tokenize_one(char *input, int pipe)
 	}
 	result[index] = NULL;
 	return (result);
-//caigner
-/*	for (i = 0; i < index; i++)      //loop for testing only
-	{
-		printf("result[%d]: ___%s___\n", i, result[i]);
-		free(result[i]);
-	}
-	free(result); */
 }
 
 /*count "|"-sections within the input. used for allocating memory*/
@@ -339,7 +312,7 @@ int    count_pipes(char *input)
 		if (input[i] == '\"' || input[i] == '\'')
 		{
 			i++;
-			while (input[i] != '\"' || input[i] == '\'')
+			while (input[i] != '\"' && input[i] == '\'')
 				i++;
 		}
 		if (input[i] == '|')
