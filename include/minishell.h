@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/09 16:53:27 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 13:37:36 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,12 +151,14 @@ void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	safe_close(int *fd);
-void	rm_quotes(t_list_d *cmd_struct);
+void	ft_rm_quotes(t_list_d *cmds);
 
 
 //lexer
 void    error_lexer(char *s, int i);
-int		count_pipes(char *input);
+int		get_cmd_path(t_common *c, t_cmd_table *cmd);
+void	ft_expansion(t_env *env, t_list_d *cmds);
+int    count_pipes(char *input);
 
 // builtins
 int		ft_pwd(void);
