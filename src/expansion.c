@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/08 23:25:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 16:49:46 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,15 @@ char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
 
 	tmp = NULL;
 	value = NULL;
-	value = ft_substr(str, *i + 1, var_len);
+	value = ft_substr(str, 0, *i);
 	tmp = ft_strjoin(value, env_value);
 	free(value);
-	value = ft_strjoin(tmp, &str[*i + var_len + 1]);
-	*i += ft_strlen(env_value) + 1;
-	free(str);
+	if (*i + var_len + 1 < (int)ft_strlen(str))
+		value = ft_strjoin(tmp, &str[*i + var_len + 1]);
+	else
+		value = ft_strdup(tmp);
+	if (env_value)
+		*i += var_len;
 	free(tmp);
 	return (value);
 }
@@ -45,8 +48,8 @@ char	*ft_replace_var(t_env *env, char *str, int *i)
 
 	tmp = NULL;
 	value = NULL;
-	var_len = 1;
-	while (str[*i + var_len] && str[*i + var_len + 1] != ' ')
+	var_len = 0;
+	while (str[*i + 1 + var_len] && (ft_isalnum(str[*i + 1 + var_len]) || str[*i + 1 + var_len] == '_'))
 		var_len++;
 	tmp = ft_substr(str, *i + 1, var_len);
 	if (!tmp)
@@ -72,16 +75,17 @@ char	*ft_substitute(t_env *env, char *str)
 	if (ft_single_quotes(str))
 		return (str);
 	i = 0;
-	while (str[i] && str[i + 1])
+	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] != ' ')
+		if (str[i] == '$' && str[i + 1] && str[i + 1] != ' ')
 		{
 			tmp = env;
 			ret = ft_replace_var(tmp, str, &i);
 			free(str);
 			str = ret;
 		}
-		i++;	
+		else
+			i++;	
 	}
 	return (str);
 }
@@ -141,16 +145,18 @@ char	*ft_rm_quotes_str(char *str)
 	int		i;
 	char	*ret;
 
-	ret = NULL;
+	ret = str;
 	if (!str)
 		return (NULL);
+	printf("%s\n", str);
 	i = ft_strlen(str);
-	if ((str[0] == '\'' && str[i] != '\'') || (str[0] == '"' && str[i] != '"'))
+	if ((str[0] == '\'' && str[i - 1] == '\'') || (str[0] == '"' && str[i - 1] == '"'))
 	{
 		str[i - 1] = 0;
 		ret = ft_str_wo_quotes(&str[1]);
-		free(str);
+		//free(str);
 	}
+	printf("%s\n", ret);
 	return (ret);
 }
 
