@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 19:58:40 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 20:06:18 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,11 +285,7 @@ int	ft_parsing(t_common *c)
 		printf("Token_to_struct error");
 	ft_expansion(c->env, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
-<<<<<<< HEAD
-
-=======
 	ft_cmd_args_to_2d(c->cmd_struct);
->>>>>>> b25e9fed3ffc8c0389b73bb4018b2799f9a387f5
 //	t_cmd_table	*cmd;
 //	cmd = c->cmd_struct->content;
 //	for (int i = 0; cmd->str[i]; i++)

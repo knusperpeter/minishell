@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 19:50:54 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 20:06:40 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*ft_substitute(t_env *env, char *str)
 	if (!str)
 		return (NULL);
 	if (ft_single_quotes(str))
-		return (str);NULL
+		return (str);
 	i = 0;
 	while (str[i])
 	{
@@ -85,7 +85,7 @@ char	*ft_substitute(t_env *env, char *str)
 			str = ret;
 		}
 		else
-			i++;	
+			i++;
 	}
 	return (str);
 }

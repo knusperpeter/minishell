@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/10 19:15:21 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 21:08:32 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ char **set_up_array(int wc, int cc, char *input)
 				new_string[j++] = ' ';
 			new_string[j++] = input[i++];
 		}
-		while (input[i] == ' ')
+		while (input[i] && input[i] == ' ')
 			i++;
 		if (input[i - 1] == ' ' && input[i] != '\0')
 			new_string[j++] = ' ';
