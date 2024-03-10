@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/08 22:03:44 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 17:16:07 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,8 +295,6 @@ int	ft_execute(t_common *c)
 			if (curr_cmd_table->str[0])
 				ft_exec_cmd(c, curr_cmd);
 			curr_cmd = curr_cmd->next;
-//			if (curr_cmd->next)
-//				create_pipe(&c->new_pipe);
 		}
 		close_all_pipes(c);
 		wait_all_childs(c);
@@ -308,7 +306,6 @@ int	ft_execute(t_common *c)
 			ft_exec_cmd(c, c->cmd_struct);
 		
 	}
-
 	return (EXIT_SUCCESS);
 }
 

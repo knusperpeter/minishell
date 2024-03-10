@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 13:53:08 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 17:18:36 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	ft_rm_quotes(t_list_d *cmds);
 void    error_lexer(char *s, int i);
 int		get_cmd_path(t_common *c, t_cmd_table *cmd);
 void	ft_expansion(t_env *env, t_list_d *cmds);
-int		count_pipes(char *input);
+int    count_pipes(char *input);
 
 // builtins
 int		ft_pwd(void);

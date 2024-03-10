@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_cmd_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 13:56:48 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 17:17:03 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,13 @@ char	**setup_env(t_env *env)
 	return (p);
 }
 
+
+
+//this will not create a 2d-array. it should only make a list of void-type tokens inbetween pipes
+
+
+
+
 int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 {
 	int			i;
@@ -82,6 +89,13 @@ int	cmd_to_node(t_token *token, t_cmd_table *cmd_node)
 	cmd_tmp->str[i] = NULL;
 	return (EXIT_SUCCESS);
 }
+
+
+
+//!!!!!!!!!!!!!!!!!!!!
+
+
+
 
 int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 {
@@ -239,5 +253,10 @@ int	ft_parsing(t_common *c)
 		printf("Token_to_struct error");
 	ft_expansion(c->env, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
+	
+//	t_cmd_table	*cmd;
+//	cmd = c->cmd_struct->content;
+//	for (int i = 0; cmd->str[i]; i++)
+//		printf("%s\n", cmd->str[i]);
 	return (EXIT_SUCCESS);
 }
