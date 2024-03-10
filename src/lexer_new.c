@@ -6,11 +6,12 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/07 15:05:49 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 17:19:35 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <readline/readline.h>
 #include <stdlib.h>
 
 /*checks token for <, >, >>, <<!*/
@@ -39,7 +40,7 @@ int check_char(char *character)
 	int     i;
 
 	i = 0;
-	special = "*?[]()<>#\"";
+	special = "*?[]()<>#";
 	if (*character == '\'' || *character == '\"')
 		return (2);
 	while (i < 10)
@@ -211,64 +212,35 @@ char **set_up_array(int wc, int cc, char *input)
 		{
 			if (check_char(&input[i]) == 2)
 			{
-				if (input[i - 1] != ' ' && i > 0)
+				if (i > 0 && input[i - 1] != ' ')
 				{
 					new_string[j] = ' ';
 					j++;
 				}
-				new_string[j] = input[i];
-				i++;
-				j++;
+				new_string[j++] = input[i++];
 				while (input[i] && check_char(&input[i]) != 2 )
-				{
-					new_string[j] = input[i];
-					i++;
-					j++;
-				}
+					new_string[j++] = input[i++];
 				if (input[i] && check_char(&input[i]) == 2 )
 				{
-					new_string[j] = input[i];
-					j++;
-					i++;
+					new_string[j++] = input[i++];
 					if (input[i] == ' ')
 						break;
 					if (input[i] != ' ' && input[i] != '\0')
-					{
-						new_string[j] = ' ';
-						j++;
-					}
+						new_string[j++] = ' ';
 				}
 			}
-			if (i > 0 && check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1)
-			{
-				new_string[j] = ' ';
-				j++;
-			}
-			if (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 0 && input[i - 1] != ' ' && i > 0)
-			{
-				new_string[j] = ' ';
-				j++;
-			}
-			if (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 1 && input[i] != input[i - 1])
-			{
-				new_string[j] = ' ';
-				j++;
-			}
-			new_string[j] = input[i];
-			i++;
-			j++;
+			if ((i > 0 && check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1) || (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 0 && input[i - 1] != ' ') || (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 1 && input[i] != input[i - 1]))
+				new_string[j++] = ' ';
+			new_string[j++] = input[i++];
 		}
 		while (input[i] == ' ')
 			i++;
 		if (input[i - 1] == ' ' && input[i] != '\0')
-		{
-			new_string[j] = ' ';
-			j++;
-		}
+			new_string[j++] = ' ';
 	}
 	new_string[j] = '\0';
+	printf("___%s___\n", new_string);
 	return (tokenize_input(new_string));
-//	free(new_string);
 }
 
 char    **prep_input(char *input)
@@ -292,12 +264,7 @@ char    **prep_input(char *input)
 		{
 			if (i > 0 && check_char(&input[i]) == 1 && ((input[i - 1] == ' ') || (input[i - 1] == input[i])))
 				cc++;
-			else if (i > 0 && check_char(&input[i]) == 1 && *(input - 1) != ' ')
-			{
-				wc++;
-				cc++;
-			}
-			else if (i > 0 && check_char(&input[i]) == 0 && (check_char(&input[i - 1]) == 1 || check_char(&input[i - 1]) == 2))
+			else if ((check_char(&input[i]) == 1 && *(input - 1) != ' ') || (i > 0 && check_char(&input[i]) == 0 && (check_char(&input[i - 1]) == 1 || check_char(&input[i - 1]) == 2)))
 			{
 				wc++;
 				cc++;
@@ -394,6 +361,5 @@ int    count_pipes(char *input)
 		if (input[i])
 			i++;
 	}
-	printf("pipes: %d\n", pipe);
 	return (pipe);
 }
