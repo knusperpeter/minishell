@@ -1,51 +1,79 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/08 21:22:44 by miheider          #+#    #+#             */
+/*   Updated: 2024/03/10 13:47:18 by miheider         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+/*
+#include <readline/readline.h>
 
-
-/*function that handles the cmd+c (SIGINT) signal*/
-void signal_cmd_c(int signal, siginfo_t *info, void *ucontent)
+void    ignore_signal(int signum)
 {
-    (void)ucontext;
-    (void)info;
-    ////give the promt back!!!
-    return (130);
+    signal(signum, SIG_IGN);
 }
 
-/*function that handles the cmd+d (SIGTERM) signal*/
-void signal_cmd_d(int signal, siginfo_t *info, void *ucontent)
-{
-    (void)ucontext;
-    (void)info;
-    printf("exit\n");                           //original funnction
-    exit (0);
 
+void signal_cmd_c_ia(int signum)
+{
+//    (void)info;
+//    (void)ucontent;
+    write(1, "^C\n", 3);
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
 }
 
-/*function that handles the cmd+\ (SIGQUIT) signal*/
-void signal_cmd_bs(int signal, siginfo_t *info, void *ucontent)
+void signal_cmd_c_nonia(int signum)
 {
-    (void)ucontext;
-    (void)info;
-
-    printf("Quit (core dumped)\n");
-    return (131);
+//    (void)info;
+//    (void)ucontent;
+    g_signal = 2;
+    write(1, "^C\n", 3);
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
 }
 
-int main(void)
+void    signal_bs_nonia(int signum)
 {
-    struct sigaction    shell;
-    
-    shell.sa_flags = SA_SIGINFO;
-    shell.sa_sigaction = &signal_cmd_c;
-    sigemptyset(&shell.sa_mask);
-    sigaction(SIGINT, &shell, NULL);
-
-    shell.sa_sigaction = &signal_cmd_d;
-    sigaction(SIGTERM, &shell, NULL);
-
-    shell.sa_sigaction = &signal_cmd_bs;
-    sigaction(SIGQUIT, &shell, NULL);
-
-    while (1)
-        sleep(1);
-    return (0);
+//    (void)info;
+//    (void)ucontent;
+    g_signal = 3;
+    write(1, "\n^\\ Quit (core dumped)\n", 23);
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
 }
+
+
+void    interactive(void)
+{
+    struct sigaction    signal;
+
+    signal.sa_flags = 0;
+    signal.sa_sigaction = &signal_cmd_c_ia;
+    sigemptyset(&signal.sa_mask);
+    sigaction(SIGINT, &signal, NULL);
+
+    signal.sa_sigaction = &ignore_signal;
+    sigaction(SIGQUIT, &signal, NULL);
+}
+void    non_interactive(void)
+{
+    struct sigaction    signal;
+
+    signal.sa_flags = 0;
+    signal.sa_sigaction = &signal_cmd_c_nonia;
+    sigemptyset(&signal.sa_mask);
+    sigaction(SIGINT, &signal, NULL);
+
+    signal.sa_sigaction = &signal_bs_nonia;
+    sigaction(SIGQUIT, &signal, NULL);
+}
+*/

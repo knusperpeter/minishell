@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/08 22:17:38 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 17:17:29 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	main(int ac, char **av, char **envp)
 	// should be validated or bounded checked before allocating memory to avoid potential integer overflows.
 	(void)		ac;
 	(void)		av;
-	
+
 	init_minishell(&c, envp);
 	ft_loop(&c);
 	free_all(&c);

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/09 15:16:06 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 17:18:36 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+
+//int	g_signal = 0;
 
 // enum can be used anywhere. VOID == 0, PIPE == 1, STRING == 2, ...
 // https://www.programiz.com/c-programming/c-enumeration
@@ -150,7 +152,6 @@ void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	safe_close(int *fd);
 void	ft_rm_quotes(t_list_d *cmds);
-
 
 //lexer
 void    error_lexer(char *s, int i);
