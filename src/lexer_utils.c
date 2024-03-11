@@ -6,7 +6,11 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 16:23:20 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/07 16:23:21 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/11 13:30:54 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../include/minishell.h"
+#include <readline/readline.h>
+#include <stdlib.h>
 

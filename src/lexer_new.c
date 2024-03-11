@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/10 21:08:32 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/10 21:08:32y miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@
 /*checks token for <, >, >>, <<!*/
 int check_token(char *token)
 {
-	int len;
-
-	if (!token)
-		return (-1);
-	len = ft_strlen(token);
-	if (token[0] == '<' && len == 1)
-		return (1);
-	if (token[0] == '>' && len == 1)
-		return (2);
-	if (token[0] == '>' && token[1] == '>' && len == 2)
-		return (3);
-	if (token[0] == '<' && token[1] == '<' && len == 2)
-		return (4);
-	return (0);
+		int len;
+		if (!token)
+			return (-1);
+		len = ft_strlen(token);
+		printf("%c -- %c -- %d\n", token[0], token[1], len);
+		if (token[0] == '<' && len == 1)
+			return (1);
+		if (token[0] == '>' && len == 1)
+			return (2);
+		if (token[0] == '>' && token[1] == '>' && len >= 2)
+			return (3);
+		if (token[0] == '<' && token[1] == '<' && len >= 2)
+			return (4);
+		return (0);
 }
 
 /*this function checks for special characters, except for pipes*/
@@ -152,35 +152,63 @@ void add_to_list(char **token, t_list *lst)
 		last->next = NULL;
 }
 
+/*counts the spaces of a token, used to allocate memory in function tokenize_input*/
+int		check_tokens(char *input)
+{
+	int	i;
+	int	space;
+
+	i = 0;
+	space = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'' || input[i] == '\"')
+		{
+			i++;
+			while (input[i] != '\'' && input[i] != '\"')
+				i++;
+		}
+		if (input[i] == ' ')
+			space++;
+		i++;
+	}
+	printf("%d\n", space);
+	return (space);
+}
+
+/*tokenizes the tokens, stores it in the result array and returns it*/
 char    **tokenize_input(char *input)
 {
-	char **result = NULL;
-	char *token;
-	int index = 0;
+	char	**result = NULL;
+	char	*token;
+	int		index;
+	int		tok;
 
-//	ft_putstr_fd(input, 1);
-//	ft_putchar_fd('\n', 1);
+	tok = check_tokens(input);
+	result = malloc(sizeof(char *) * (tok + 2));
+	if (!result)
+	{
+		printf("Error - malloc - tokenize_one\n");
+		return (NULL);
+	}
 	token = ft_strtok(input, " ");
+	index = 0;
 	while (token != NULL)
 	{
-		result = realloc(result, (index + 2) * sizeof(char *));
-		if (result == NULL) {
-			fprintf(stderr, "Memory allocation failed\n");
-			return (NULL);
-		}
 		result[index++] = ft_strdup(token);
 		token = ft_strtok(NULL, " ");
 	}
 	result[index] = NULL;
 	return (result);
 }
-
+/*this function is preparing the tokenized input line by line */
 char **set_up_array(int wc, int cc, char *input)
 {
 	char *new_string;
 	int i = 0;
 	int j = 0;
 
+	printf("wc:%d\ncc:%d\n", wc, cc);
 	new_string = (char *)malloc(sizeof(char) * (wc + cc));
 	if (!new_string)
 	{
@@ -223,6 +251,7 @@ char **set_up_array(int wc, int cc, char *input)
 	return (tokenize_input(new_string));
 }
 
+/*counting the words (wc) and characters (cc) from input and taking care of quotes. This is used for mallocing memory in the 'set_up_array' function.*/
 char    **prep_input(char *input)
 {
 	int wc = 0;
@@ -268,6 +297,7 @@ char    **prep_input(char *input)
 				i++;
 		}
 	}
+	printf("wc: %d\ncc: %d\n", wc, cc);
 	return (set_up_array(wc, cc, input));
 }
 
