@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 19:45:17 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/11 13:14:01 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	free_cmd_table(void *content)
 		free(table->heredoc_name);
 	}
 }
-
+//Check here, since it fails
 void	ft_cleanup_loop(t_common *c)
 {
 	ft_lst_d_clear(&c->cmd_struct, &free_cmd_table);
