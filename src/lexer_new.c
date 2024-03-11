@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/08 22:18:36 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/11 12:59:34 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,11 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 		{
 			token->data = ft_strdup(value[i + 1]);
 			if (!token->data)
-				ft_putstr_fd("malloc token->data error", 1);
+				ft_putstr_fd("malloc token->data error\n", 1);
 		}
 		else
 		{
-			printf("minishell: syntax error");
+			printf("minishell❌: syntax error\n");
 			free(token);
 			return (-1);
 		}
@@ -121,21 +121,6 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 	else
 		token->data = ft_strdup(value[i]);
 	*tmp = token;
-//	ft_putstr_fd(token->data, 1);
-//	ft_putchar_fd('\n', 1);
-/* 	token->next = NULL;
-	if (!*lst)
-		*lst = token;
-	else
-	{
-		tmp = *lst;
-				input++;
-		while (tmp->next)
-		{
-			tmp = tmp->next;
-		}
-		tmp->next = token;
-	} */
 	return (ret);
 }
 
@@ -154,7 +139,7 @@ void add_to_list(char **token, t_list *lst)
 		status = add_token(lst->content, token, index, &tmp);
 		if (status == 1)
 			index += 2;
-		else if (status == 0)
+		else if (status <= 0)
 			index++;
 		if (last == NULL)
 			lst->content = tmp;

@@ -6,11 +6,13 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 20:33:37 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/06 15:22:51 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/11 15:41:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 t_list_d	*ft_lstnew_d(void *content)
 {
