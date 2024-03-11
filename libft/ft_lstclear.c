@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 17:45:34 by miheider          #+#    #+#             */
-/*   Updated: 2023/09/23 10:04:09 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/11 16:11:38 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,5 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 		ft_lstdelone (*lst, del);
 		*lst = save;
 	}
-	free(*lst);
+	*lst = NULL;
 }

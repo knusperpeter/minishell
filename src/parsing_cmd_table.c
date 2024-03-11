@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/11 13:08:18 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/11 16:34:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 	}
 	else
 		tmp->infile = token->data;
+	tmp->outfile = NULL;
 	tmp->type = token->type;
 	return (EXIT_SUCCESS);
 }
@@ -120,6 +121,7 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 	{
 		tmp->type = token->type;
 		tmp->outfile = token->data;
+		tmp->infile = NULL;
 	}
 	ft_lstadd_back(&node->io_red, red_node);
 	return (EXIT_SUCCESS);
