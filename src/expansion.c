@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/12 19:12:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 19:21:22 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,8 @@ char	*ft_replace_var(t_env *env, char *str, int *i)
 {
 	int		var_len;
 	char	*tmp;
-	char	*value;
 
 	tmp = NULL;
-	value = NULL;
 	var_len = 0;
 	while (str[*i + 1 + var_len] && (ft_isalnum(str[*i + 1 + var_len]) || str[*i + 1 + var_len] == '_'))
 		var_len++;
