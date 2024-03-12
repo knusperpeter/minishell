@@ -6,13 +6,13 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/12 19:21:22 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 23:39:03 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdio.h>
-
+//	wenn quotes in doublequotes, dann quotes nicht removen
+//	wenn doublequotes in quotes, dann nichts expanden
 int	ft_single_quotes(char *str)
 {
 	if (str[0] == '\'' && str[ft_strlen(str) - 1] == '\'')
