@@ -6,22 +6,32 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/11 17:15:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 16:25:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+/**
+ * Function: prompt
+ * Description: Displays a prompt and reads a line of input from the user.
+ * Returns: The line of input from the user.
+ */
 char	*prompt(void)
 {
 	char	*line;
 
 	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
-	if (ft_strlen(line) > 0)
+	
+	if (line && *line)
 		add_history(line);
 	return (line);
 }
-
+/**
+ * Function: init_loop_data
+ * Description: Initializes the data for the main loop of the shell.
+ * Parameter: c - The common structure containing the shell data.
+ */
 void	init_loop_data(t_common *c){
 	c->raw_prompt = NULL;
 	c->tokens = NULL;
@@ -40,7 +50,12 @@ void	init_loop_data(t_common *c){
 		.write_fd = &c->new_pipe.pipes[1],
 	};
 }
-
+/**
+ * Function: ft_loop
+ * Description: The main loop of the shell. It reads input, parses it, executes it, and cleans up.
+ * Parameter: c - The common structure containing the shell data.
+ * Returns: 0 when the loop ends.
+ */
 int	ft_loop(t_common *c)
 {
 	while (1)
@@ -48,6 +63,7 @@ int	ft_loop(t_common *c)
 		init_loop_data(c);
 		//interactive_mode();
 		c->raw_prompt = prompt();
+		ft_putstr_fd(c->raw_prompt, 1);
 //		if (!c->raw_prompt[0])
 //			break ;
 		if (c->raw_prompt[0])
@@ -56,12 +72,17 @@ int	ft_loop(t_common *c)
 			ft_parsing(c);
 			ft_execute(c);
 			ft_cleanup_loop(c);
-			//ft_execute_builtins(c->cmd_struct->content, c);
 		}
 	}
 	return (0);
 }
-
+/**
+ * Function: init_minishell
+ * Description: Initializes the shell.
+ * Parameters: 
+ * - c: The common structure containing the shell data.
+ * - envp: The environment variables.
+ */
 void	init_minishell(t_common *c, char **envp)
 {
 	ft_memset(c, 0, sizeof(t_common));
@@ -73,7 +94,15 @@ void	init_minishell(t_common *c, char **envp)
 	else
 		return (perror("Error initializing environment\n"));
 }
-
+/**
+ * Function: main
+ * Description: The entry point of the program. It initializes the shell, runs the main loop, and cleans up when done.
+ * Parameters: 
+ * - ac: The number of command-line arguments.
+ * - av: The command-line arguments.
+ * - envp: The environment variables.
+ * Returns: 0 when the program ends.
+ */
 int	main(int ac, char **av, char **envp)
 {
 	t_common	c;

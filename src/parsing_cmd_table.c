@@ -6,14 +6,19 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/11 17:03:32 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 13:41:08 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+/**
+ * Function: setup_env
+ * Description: Converts the linked list of environment variables into an array of strings.
+ * Parameter: env - The linked list of environment variables.
+ * Returns: An array of strings representing the environment variables.
+ */
 char	**setup_env(t_env *env)
 {
 	t_env	*tmp;
@@ -45,7 +50,12 @@ char	**setup_env(t_env *env)
 	}
 	return (p);
 }
-
+/**
+ * Function: cmd_to_node
+ * Description: Converts the linked list of commands into an array of strings.
+ * Parameter: cmd_node - The linked list of commands.
+ * Returns: 0 if successful, 1 if an error occurred.
+ */
 int	cmd_to_node(t_cmd_table *cmd_node)
 {
 	int			i;
@@ -76,7 +86,15 @@ int	cmd_to_node(t_cmd_table *cmd_node)
 	cmd_tmp->str[i] = NULL;
 	return (EXIT_SUCCESS);
 }
-
+/**
+ * Function: input_to_node
+ * Description: Handles the input redirection and heredoc tokens.
+ * Parameters: 
+ * - token: The current token.
+ * - tmp: The IO redirection structure.
+ * - node: The command node.
+ * Returns: 0 if successful, 1 if an error occurred.
+ */
 int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 {
 	static int	i;
@@ -85,7 +103,7 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 	i = 0;
 	if (token->type == HEREDOC)
 	{
-		tmp->heredoc_limiter = token->data;
+		tmp->heredoc_limiter = ft_strdup(token->data);
 		if (node->heredoc_name)
 			free(node->heredoc_name);
 		c = ft_itoa(i++);
@@ -96,12 +114,29 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 		tmp->infile = node->heredoc_name; //CHECK IF .heredoc_tmp already EXISTS, IF YES increment i
 	}
 	else
-		tmp->infile = token->data;
-	tmp->outfile = NULL;
+		tmp->infile = ft_strdup(token->data);
 	tmp->type = token->type;
 	return (EXIT_SUCCESS);
 }
-
+/**
+ * Function: init_io
+ * Description: Initializes the IO redirection structure.
+ * Parameter: io - The IO redirection structure to initialize.
+ */
+void	init_io(t_io_red *io)
+{
+	io->heredoc_limiter = NULL;
+	io->infile = NULL;
+	io->outfile = NULL;
+}
+/**
+ * Function: red_to_node
+ * Description: Handles the redirection tokens and adds them to the command node.
+ * Parameters: 
+ * - token: The current token.
+ * - node: The command node.
+ * Returns: 0 if successful, 1 if an error occurred.
+ */
 int	red_to_node(t_token *token, t_cmd_table *node)
 {
 	t_list		*red_node;
@@ -114,19 +149,23 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 			free(red_node);
 		return (ft_putstr_fd("Error initializing t_list in red_to_node\n", 1), 1);
 	}
+	init_io(red_node->content);
 	tmp = red_node->content;
 	if(token->type == REDIR_IN || token->type == HEREDOC)
 		input_to_node(token, tmp, node);
 	else
 	{
 		tmp->type = token->type;
-		tmp->outfile = token->data;
-		tmp->infile = NULL;
+		tmp->outfile = ft_strdup(token->data);
 	}
 	ft_lstadd_back(&node->io_red, red_node);
 	return (EXIT_SUCCESS);
 }
-
+/**
+ * Function: init_cmd_table
+ * Description: Initializes the command table structure.
+ * Parameter: node - The command table structure to initialize.
+ */
 void	init_cmd_table(t_cmd_table *node)
 {
 	node->read_fd = 0;
@@ -138,7 +177,13 @@ void	init_cmd_table(t_cmd_table *node)
 	node->str =	NULL;
 	node->exec_path = NULL;
 }
-
+/**
+ * Function: cmdtok_to_node
+ * Description: Adds command tokens to the command node.
+ * Parameters: 
+ * - tok: The current token.
+ * - cmd: The command node.
+ */
 void	cmdtok_to_node(t_token *tok, t_cmd_table *cmd)
 {
 	t_list	*cmd_list;
@@ -160,7 +205,13 @@ void	cmdtok_to_node(t_token *tok, t_cmd_table *cmd)
 		tmp = tmp->next;
 	}
 }
-
+/**
+ * Function: token_to_struct
+ * Description: Converts the token linked list into a command table structure.
+ * Parameters: 
+ * - token: The linked list of tokens.
+ * - cmd_node: The command table structure.
+ */
 void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 {
 	t_token	*tmp;
@@ -176,7 +227,12 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 		tmp = tmp->next;
 	}
 }
-
+/**
+ * Function: tokenize
+ * Description: Tokenizes the raw input and adds the tokens to a linked list.
+ * Parameter: c - The common structure containing the raw input.
+ * Returns: 0 if successful, 1 if an error occurred.
+ */
 int	tokenize(t_common *c)
 {
 	t_list	*cmd_tok;
@@ -205,7 +261,12 @@ int	tokenize(t_common *c)
 	free_2d(arr);
 	return (EXIT_SUCCESS);
 }
-
+/**
+ * Function: t_lst_to_struct
+ * Description: Converts the token linked list into a command table linked list.
+ * Parameter: c - The common structure containing the token linked list.
+ * Returns: 0 if successful, 1 if an error occurred.
+ */
 int	t_lst_to_struct(t_common *c)
 {
 	t_list		*cmd_tok;
@@ -250,7 +311,11 @@ int	t_lst_to_struct(t_common *c)
 	} */
 	return (EXIT_SUCCESS);
 }
-
+/**
+ * Function: ft_cmd_args_to_2d
+ * Description: Converts the command arguments into a 2D array.
+ * Parameter: cmd_table - The linked list of command tables.
+ */
 void	ft_cmd_args_to_2d(t_list_d *cmd_table)
 {
 	t_list_d	*tmp;
@@ -262,7 +327,12 @@ void	ft_cmd_args_to_2d(t_list_d *cmd_table)
 		tmp = tmp->next;
 	}
 }
-
+/**
+ * Function: ft_parsing
+ * Description: Parses the raw input and converts it into a command table linked list.
+ * Parameter: c - The common structure containing the raw input.
+ * Returns: 0 if successful, 1 if an error occurred.
+ */
 int	ft_parsing(t_common *c)
 {
 	if (tokenize(c) == EXIT_FAILURE)

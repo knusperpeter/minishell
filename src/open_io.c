@@ -6,12 +6,16 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/06 13:11:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 15:36:14 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
+/**
+ * Function: ft_printerrno
+ * Description: Prints the error message associated with the current errno value.
+ * Parameter: s - An optional string to print before the error message.
+ */
 void	ft_printerrno(char *s)
 {
 	ft_putstr_fd("minishell: ", 2);
@@ -19,7 +23,16 @@ void	ft_printerrno(char *s)
 		ft_putstr_fd(s, 2);
 	ft_putstr_fd(strerror(errno), 2);
 }
+
 //hier kommt es nicht in die history...
+
+/**
+ * Function: here_doc
+ * Description: Implements the here document (heredoc) feature of the shell.
+ * Parameters: 
+ * - limiter: The delimiter string for the heredoc.
+ * - cmd_table: The command table structure.
+ */
 void	here_doc(char *limiter, t_cmd_table *cmd_table)
 {
 	char		*buf;
@@ -47,7 +60,14 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table)
 		unlink(cmd_table->heredoc_name);
 	}
 }
-
+/**
+ * Function: open_infile
+ * Description: Opens the input file for a command.
+ * Parameters: 
+ * - io: The IO redirection structure.
+ * - cmd_node: The command table node.
+ * Returns: 0 if successful, EXIT_FAILURE if an error occurred.
+ */
 int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 {
 	if (io->type == HEREDOC)
@@ -62,6 +82,14 @@ int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 		return (ft_printerrno(io->infile), EXIT_FAILURE);
 	return (0);
 }
+/**
+ * Function: open_file
+ * Description: Opens the file for IO redirection.
+ * Parameters: 
+ * - io: The IO redirection structure.
+ * - cmd_node: The command table node.
+ * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
+ */
 
 //ACHTUNG: ich kann erst öffnen, wenn expanded wurde!!!
 int	open_file(t_io_red *io, t_cmd_table *cmd_node)
@@ -81,13 +109,25 @@ int	open_file(t_io_red *io, t_cmd_table *cmd_node)
 	}
 	return (EXIT_SUCCESS);
 }
-
+/**
+ * Function: unlink_heredoc
+ * Description: Deletes the temporary file used for a heredoc.
+ * Parameters: 
+ * - io: The IO redirection structure.
+ * - cmd: The command table structure.
+ */
 void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich einfach in cleanup machen, oder?
 {
 	if (io->type == HEREDOC)
 		unlink(cmd->heredoc_name);
 }
-
+/**
+ * Function: ft_close_old_fd
+ * Description: Closes the old file descriptors before opening new ones.
+ * Parameters: 
+ * - cmd_node: The command table node.
+ * - io: The IO redirection structure.
+ */
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 {
 		if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
@@ -96,7 +136,14 @@ void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 				&& cmd_node->write_fd != 1)
 			safe_close(&cmd_node->write_fd);	
 }
-
+/**
+ * Function: open_io
+ * Description: Opens the files for IO redirection for a command.
+ * Parameters: 
+ * - io: The list of IO redirection structures.
+ * - cmd_node: The command table node.
+ * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
+ */
 int	open_io(t_list *io, t_cmd_table *cmd_node)
 {
 	t_list		*tmp;

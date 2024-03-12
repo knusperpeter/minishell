@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/11 16:59:57 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 19:03:48 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,24 +160,28 @@ char	*ft_rm_quotes_str(char *str)
 	ret = str;
 	if (!str)
 		return (NULL);
-	printf("%s\n", str);
 	i = ft_strlen(str);
 	if ((str[0] == '\'' && str[i - 1] == '\'') || (str[0] == '"' && str[i - 1] == '"'))
 	{
 		str[i - 1] = 0;
 		ret = ft_str_wo_quotes(&str[1]);
-		//free(str);
 	}
-	printf("%s\n", ret);
 	return (ret);
 }
 
-void	ft_rm_quotes_io(t_io_red *io)
+void	ft_rm_quotes_io(t_list *io_lst)
 {
-	if (!io)
-		return ;
-	io->infile = ft_rm_quotes_str(io->infile);
-	io->outfile = ft_rm_quotes_str(io->outfile);
+	t_io_red *io;
+
+	while (io_lst)
+	{
+		io = io_lst->content;
+		if (!io)
+			return ;
+		io->infile = ft_rm_quotes_str(io->infile);
+		io->outfile = ft_rm_quotes_str(io->outfile);
+		io_lst = io_lst->next;
+	}
 }
 
 void	ft_rm_in_cmd(t_cmd_table *cmd)
@@ -194,11 +198,7 @@ void	ft_rm_in_cmd(t_cmd_table *cmd)
 		tmp_cmd = tmp_cmd->next;
 	}
 	tmp_io = cmd->io_red;
-	while (tmp_io)
-	{
-		ft_rm_quotes_io(tmp_io->content);
-		tmp_io = tmp_io->next;
-	}
+	ft_rm_quotes_io(tmp_io);
 }
 
 void	ft_rm_quotes(t_list_d *cmds)

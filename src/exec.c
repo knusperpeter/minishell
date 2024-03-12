@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/10 17:16:07 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 15:45:09 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-/*
-if i only have one cmd, do i still need to fork? 
-	->probably yes, so after execve i can free everything, and in case of pipes to close them.
-
-if no output redirect, and only 1 cmd, i need no pipe, right?
-if 
-*/
-
+/**
+ * Function: check_cmd
+ * Description: This function checks if the provided command matches the first string in the command structure.
+ * Parameters: 
+ * - cmd: A pointer to the command string to be checked.
+ * - cmd_struct: A pointer to the command table structure, which contains the command strings.
+ * Returns: 
+ * - 1 if the command matches the first string in the command structure.
+ * - 0 if the command does not match.
+ */
 int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 {
 	int		i;
@@ -35,7 +37,19 @@ int	check_cmd(char *cmd, t_cmd_table *cmd_struct)
 		return (0);
 	return (1);
 }
-
+/**
+ * Function: ft_builtins
+ * Description: This function checks if the command in the command table matches any of the built-in commands 
+ *              ("pwd", "export", "env", "exit", "unset", "echo", "cd"). If a match is found, the corresponding 
+ *              built-in function is called.
+ * Parameters: 
+ * - cmd: A pointer to the command table structure, which contains the command to be executed.
+ * - c: A pointer to the common structure, which contains the shell data.
+ * Returns: 
+ * - 1 if a built-in command was executed.
+ * - 0 if the command does not match any built-in commands.
+ * - EXIT_FAILURE if an error occurred during initialization.
+ */
 int	ft_builtins(t_cmd_table *cmd, t_common *c)
 {
 	t_cmd_table	*tmp;
@@ -101,7 +115,16 @@ void	close_all_pipes(t_common *c)
 	safe_close_pipe(&c->old_pipe);
 	safe_close_pipe(&c->new_pipe);
 }
-
+/**
+ * Function: create_pipe
+ * Description: This function creates a new pipe. If the pipe already exists, it is first closed safely. 
+ *              The file descriptors for reading and writing are then set.
+ * Parameters: 
+ * - new: A pointer to the pipe structure to be created.
+ * Returns: 
+ * - EXIT_SUCCESS if the pipe was successfully created.
+ * - EXIT_FAILURE if an error occurred while creating the pipe.
+ */
 int	create_pipe(t_pipe *new)
 {
 	if (new->pipes[0] != -1 || new->pipes[1] != -1)
@@ -115,7 +138,11 @@ int	create_pipe(t_pipe *new)
 	new->write_fd = &new->pipes[1];
 	return (EXIT_SUCCESS);
 }
-
+/**
+ * Function: close_fds
+ * Description: Safely closes the file descriptors associated with the command and the pipes in the common structure.
+ * Parameters: c - The common structure containing the shell data, cmd - The command table.
+ */
 void	close_fds(t_common *c, t_cmd_table *cmd)
 {
 	if (cmd->read_fd != -1)
@@ -146,7 +173,12 @@ int	get_env_size(t_env *env)
 	}
 	return (size);
 }
-
+/**
+ * Function: env_to_arr
+ * Description: Converts the environment linked list into an array.
+ * Parameters: size - The size of the environment linked list, env - The linked list of environment variables.
+ * Returns: An array of environment variables.
+ */
 char	**env_to_arr(int size, t_env *env)
 {
 	char	**ret;
@@ -192,7 +224,11 @@ char	**get_envp(t_env *env)
 	}
 	return (ret);
 }
-
+/**
+ * Function: ft_preexec
+ * Description: Prepares the execution of a command by setting up the file descriptors.
+ * Parameters: cmd_table - The linked list of command tables, cmd - The command table, c - The common structure containing the shell data.
+ */
 void ft_preexec(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 {
 	cmd = cmd_table->content;
@@ -226,7 +262,12 @@ int	ft_exec_builtins(t_common *c, t_cmd_table *cmd)
 	else
 		return (0);
 }
-
+/**
+ * Function: ft_exec_cmd
+ * Description: Executes a command, handling built-in commands, forking, and setting up pipes.
+ * Parameters: c - The common structure containing the shell data, cmd_table - The linked list of command tables.
+ * Returns: EXIT_SUCCESS upon successful execution.
+ */
 int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 {
 	t_cmd_table	*cmd;
@@ -245,15 +286,18 @@ int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 			execve(cmd->exec_path, cmd->str, c->envp);
 		}
 	}
-//	if (c->envp)
-//		free_2d(c->envp);
 	if (cmd_table->next)
 		safe_close(&c->new_pipe.pipes[1]);
 	else
 		safe_close(&cmd->write_fd);
 	return (EXIT_SUCCESS);
 }
-
+/**
+ * Function: wait_all_childs
+ * Description: Waits for all child processes to finish execution.
+ * Parameters: c - The common structure containing the shell data.
+ * This function iterates over the command structure linked list and waits for each child process.
+ */
 void	wait_all_childs(t_common *c)
 {
 	t_list_d	*tmp;
@@ -267,6 +311,17 @@ void	wait_all_childs(t_common *c)
 		tmp = tmp->prev;
 	}
 }
+
+/**
+ * Function: ft_execute
+ * Description: This function executes all the commands in the command table linked list. It first opens the I/O redirections 
+ *              for each command, then creates a pipe if there are multiple commands. Each command is then executed in order. 
+ *              After all commands have been executed, all pipes are closed and the function waits for all child processes to finish.
+ * Parameters: 
+ * - c: A pointer to the common structure, which contains the shell data.
+ * Returns: 
+ * - EXIT_SUCCESS upon successful execution of all commands.
+ */
 
 // wenn mehrere infiles, muss es das letzte sein. aber es muss erst gecheckt werden ob beide exisiteren.
 int	ft_execute(t_common *c)

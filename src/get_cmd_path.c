@@ -6,12 +6,17 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/11 16:53:04 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 13:52:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
+/**
+ * Function: ft_get_paths
+ * Description: Retrieves the PATH environment variable and splits it into an array of paths.
+ * Parameter: env - The linked list of environment variables.
+ * Returns: An array of paths.
+ */
 char	**ft_get_paths(t_env *env)
 {
 	t_env	*tmp;
@@ -25,7 +30,14 @@ char	**ft_get_paths(t_env *env)
 		return (NULL);
 	return (paths);
 }
-
+/**
+ * Function: join_path
+ * Description: Joins a command and a path into a full path.
+ * Parameters: 
+ * - cmd: The command to join.
+ * - path: The path to join.
+ * Returns: The full path.
+ */
 char	*join_path(char *cmd, char *path)
 {
 	char	*prepath;
@@ -42,7 +54,12 @@ char	*join_path(char *cmd, char *path)
 		return (NULL);
 	return (fullpath);
 }
-
+/**
+ * Function: is_dir
+ * Description: Checks if a file is a directory.
+ * Parameter: file - The file to check.
+ * Returns: 1 if the file is a directory, 0 otherwise.
+ */
 int	is_dir(char *file)
 {
 	struct stat	s;
@@ -54,7 +71,14 @@ int	is_dir(char *file)
 	}
 	return (0);
 }
-
+/**
+ * Function: add_path
+ * Description: Adds the path to the command in the command table.
+ * Parameters: 
+ * - cmd: The command table.
+ * - paths: The array of paths.
+ * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
+ */
 int	add_path(t_cmd_table *cmd, char **paths)
 {
 	char	*path;
@@ -85,7 +109,14 @@ int	add_path(t_cmd_table *cmd, char **paths)
 	}
 	return (EXIT_FAILURE);
 }
-
+/**
+ * Function: get_cmd_path
+ * Description: Gets the full path of the command in the command table.
+ * Parameters: 
+ * - c: The common structure containing the shell data.
+ * - cmd: The command table.
+ * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
+ */
 int	get_cmd_path(t_common *c, t_cmd_table *cmd)
 {
 	char	**paths;
