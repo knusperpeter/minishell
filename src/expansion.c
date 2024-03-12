@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/12 19:03:48 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/12 19:12:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ int	ft_single_quotes(char *str)
 	 	return (0);
 }
 
+/**
+ * Function: ft_create_string
+ * Description: Creates a new string by replacing a variable in the original string with its value from the environment.
+ * Parameters: env_value - The value of the variable in the environment, str - The original string, i - The index of the variable in the string, var_len - The length of the variable.
+ * Returns: The new string with the variable replaced by its value.
+ */
 char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
 {
 	char	*tmp;
@@ -49,6 +55,12 @@ char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
 	return (value);
 }
 
+/**
+ * Function: ft_replace_var
+ * Description: Replaces a variable in a string with its value from the environment.
+ * Parameters: env - The linked list of environment variables, str - The original string, i - The index of the variable in the string.
+ * Returns: The new string with the variable replaced by its value.
+ */
 char	*ft_replace_var(t_env *env, char *str, int *i)
 {
 	int		var_len;
@@ -72,6 +84,12 @@ char	*ft_replace_var(t_env *env, char *str, int *i)
 	return (free(tmp), ft_create_string(NULL, str, i, var_len));
 }
 
+/**
+ * Function: ft_substitute
+ * Description: Substitutes variables in a string with their corresponding values from the environment.
+ * Parameters: env - The linked list of environment variables, str - The original string.
+ * Returns: The new string with all variables replaced by their values.
+ */
 char	*ft_substitute(t_env *env, char *str)
 {
 	int		i;
@@ -102,14 +120,33 @@ char	*ft_substitute(t_env *env, char *str)
 	return (str);
 }
 
-void	ft_expand_red(t_env *env, t_io_red *io)
+/**
+ * Function: ft_expand_red
+ * Description: Expands variables in the input and output filenames of each I/O redirection in the list.
+ * Parameters: env - The linked list of environment variables, io_lst - The linked list of I/O redirections.
+ * This function iterates over the I/O redirection list and substitutes variables in the filenames.
+ */
+void	ft_expand_red(t_env *env, t_list *io_lst)
 {
-	if (!io)
-		return ;
-	io->infile = ft_substitute(env, io->infile);
-	io->outfile = ft_substitute(env, io->outfile);
+	t_io_red	*io;
+	
+	while (io_lst)
+	{
+		io = io_lst->content;
+		if (!io)
+			return ;
+		io->infile = ft_substitute(env, io->infile);
+		io->outfile = ft_substitute(env, io->outfile);
+		io_lst = io_lst->next;
+	}
 }
 
+/**
+ * Function: ft_expand_cmd
+ * Description: Expands variables in the command and I/O redirections of a command table.
+ * Parameters: env - The linked list of environment variables, cmd - The command table.
+ * This function iterates over the command and I/O redirections and substitutes variables.
+ */
 void	ft_expand_cmd(t_env *env, t_cmd_table *cmd)
 {
 	t_list	*tmp_io;
@@ -124,13 +161,15 @@ void	ft_expand_cmd(t_env *env, t_cmd_table *cmd)
 		tmp_cmd = tmp_cmd->next;
 	}
 	tmp_io = cmd->io_red;
-	while (tmp_io)
-	{
-		ft_expand_red(env, tmp_io->content);
-		tmp_io = tmp_io->next;
-	}
+	ft_expand_red(env, tmp_io);
 }
 
+/**
+ * Function: ft_expansion
+ * Description: Expands variables in the commands and I/O redirections of each command table in the list.
+ * Parameters: env - The linked list of environment variables, cmds - The linked list of command tables.
+ * This function iterates over the command tables and expands variables in each one.
+ */
 void	ft_expansion(t_env *env, t_list_d *cmds)//$? "|" ">" ...
 {
 	t_list_d	*tmp;
@@ -143,6 +182,12 @@ void	ft_expansion(t_env *env, t_list_d *cmds)//$? "|" ">" ...
 	}
 }
 
+/**
+ * Function: ft_str_wo_quotes
+ * Description: Creates a duplicate of the input string.
+ * Parameters: str - The original string.
+ * Returns: A new string which is a duplicate of the input string.
+ */
 char	*ft_str_wo_quotes(char *str)
 {
 	char	*value;
@@ -152,6 +197,12 @@ char	*ft_str_wo_quotes(char *str)
 	return (value);
 }
 
+/**
+ * Function: ft_rm_quotes_str
+ * Description: Removes the quotes from the start and end of a string, if present.
+ * Parameters: str - The original string.
+ * Returns: A new string with the quotes removed, or the original string if no quotes were present.
+ */
 char	*ft_rm_quotes_str(char *str)
 {
 	int		i;
@@ -169,6 +220,12 @@ char	*ft_rm_quotes_str(char *str)
 	return (ret);
 }
 
+/**
+ * Function: ft_rm_quotes_io
+ * Description: Removes the quotes from the start and end of the filenames in each I/O redirection in the list.
+ * Parameters: io_lst - The linked list of I/O redirections.
+ * This function iterates over the I/O redirection list and removes quotes from the filenames.
+ */
 void	ft_rm_quotes_io(t_list *io_lst)
 {
 	t_io_red *io;
@@ -184,6 +241,12 @@ void	ft_rm_quotes_io(t_list *io_lst)
 	}
 }
 
+/**
+ * Function: ft_rm_in_cmd
+ * Description: Removes the quotes from the start and end of the commands and filenames in a command table.
+ * Parameters: cmd - The command table.
+ * This function iterates over the commands and I/O redirections in the command table and removes quotes.
+ */
 void	ft_rm_in_cmd(t_cmd_table *cmd)
 {
 	t_list	*tmp_cmd;
@@ -201,6 +264,12 @@ void	ft_rm_in_cmd(t_cmd_table *cmd)
 	ft_rm_quotes_io(tmp_io);
 }
 
+/**
+ * Function: ft_rm_quotes
+ * Description: Removes the quotes from the start and end of the commands and filenames in each command table in the list.
+ * Parameters: cmds - The linked list of command tables.
+ * This function iterates over the command tables and removes quotes in each one.
+ */
 void	ft_rm_quotes(t_list_d *cmds)
 {
 	t_list_d	*tmp;
