@@ -6,11 +6,16 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/03/10 20:06:40 by miheider         ###   ########.fr       */
+=======
+/*   Updated: 2024/03/11 16:59:57 by caigner          ###   ########.fr       */
+>>>>>>> 73f539889e83e2d052db1c12962a91602a5f40ff
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <stdio.h>
 
 int	ft_single_quotes(char *str)
 {
@@ -28,15 +33,23 @@ char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
 	tmp = NULL;
 	value = NULL;
 	value = ft_substr(str, 0, *i);
+	if (!value)
+		return (ft_printerrno("expansion value malloc: "), NULL);
 	tmp = ft_strjoin(value, env_value);
+	if (!tmp)
+		return (ft_printerrno("expansion tmp malloc: "), NULL);
 	free(value);
+	value = NULL;
 	if (*i + var_len + 1 < (int)ft_strlen(str))
 		value = ft_strjoin(tmp, &str[*i + var_len + 1]);
 	else
 		value = ft_strdup(tmp);
+	if (!value)
+		return (ft_printerrno("expansion value malloc: "), NULL);
 	if (env_value)
 		*i += var_len;
 	free(tmp);
+	tmp = NULL;
 	return (value);
 }
 
@@ -70,7 +83,7 @@ char	*ft_substitute(t_env *env, char *str)
 	t_env	*tmp;
 
 	ret = NULL;
-	if (!str)
+	if (!str || !env)
 		return (NULL);
 	if (ft_single_quotes(str))
 		return (str);
@@ -81,7 +94,10 @@ char	*ft_substitute(t_env *env, char *str)
 		{
 			tmp = env;
 			ret = ft_replace_var(tmp, str, &i);
-			free(str);
+			if (!ret)
+				return (ft_printerrno("expansion ret malloc: "), NULL);
+//			free(str);
+//			str = NULL;
 			str = ret;
 		}
 		else

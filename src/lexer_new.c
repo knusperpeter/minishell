@@ -6,7 +6,11 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/03/10 21:08:32y miheider         ###   ########.fr       */
+=======
+/*   Updated: 2024/03/11 12:59:34 by caigner          ###   ########.fr       */
+>>>>>>> 73f539889e83e2d052db1c12962a91602a5f40ff
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,11 +113,11 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 		{
 			token->data = ft_strdup(value[i + 1]);
 			if (!token->data)
-				ft_putstr_fd("malloc token->data error", 1);
+				ft_putstr_fd("malloc token->data error\n", 1);
 		}
 		else
 		{
-			printf("minishell: syntax error");
+			printf("minishell❌: syntax error\n");
 			free(token);
 			return (-1);
 		}
@@ -140,7 +144,7 @@ void add_to_list(char **token, t_list *lst)
 		status = add_token(lst->content, token, index, &tmp);
 		if (status == 1)
 			index += 2;
-		else if (status == 0)
+		else if (status <= 0)
 			index++;
 		if (last == NULL)
 			lst->content = tmp;

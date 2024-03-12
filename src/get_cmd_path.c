@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/08 14:37:09 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/11 16:53:04 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,12 @@ int	add_path(t_cmd_table *cmd, char **paths)
 	if (cmd && cmd->str && cmd->str[0])
 	{
 		if (access(cmd->str[0], F_OK | X_OK | R_OK) == 0)
-			return (cmd->exec_path = cmd->str[0], EXIT_SUCCESS);
+		{
+			cmd->exec_path = ft_strdup(cmd->str[0]);
+			if (!cmd->exec_path)
+				ft_printerrno("allocation failed at exec_path");
+			return (EXIT_SUCCESS);
+		}
 		else if (cmd->str && cmd->str[0] && paths)
 		{
 			while (paths[i])

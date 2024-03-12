@@ -6,7 +6,15 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/03/10 20:06:18 by miheider         ###   ########.fr       */
+=======
+<<<<<<< HEAD
+/*   Updated: 2024/03/11 16:34:58 by caigner          ###   ########.fr       */
+=======
+/*   Updated: 2024/03/10 19:50:46 by caigner          ###   ########.fr       */
+>>>>>>> main
+>>>>>>> 73f539889e83e2d052db1c12962a91602a5f40ff
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +54,6 @@ char	**setup_env(t_env *env)
 	return (p);
 }
 
-
-
-//this will not create a 2d-array. it should only make a list of void-type tokens inbetween pipes
-
-
-
-
 int	cmd_to_node(t_cmd_table *cmd_node)
 {
 	int			i;
@@ -76,22 +77,13 @@ int	cmd_to_node(t_cmd_table *cmd_node)
 	{
 		cmd_tmp->str[i] = ft_strdup(cmd_tok->content);//Machter ned
 		if (!cmd_tmp->str[i])
-			printf("FIX, cmd_to_node");
-//		ft_putstr_fd(cmd_tmp->str[i], 1);
-//		ft_putstr_fd("->cmd\n", 1);
+			printf("FIX, cmd_to_node\n");
 		i++;
 		cmd_tok = cmd_tok->next;
 	}
 	cmd_tmp->str[i] = NULL;
 	return (EXIT_SUCCESS);
 }
-
-
-
-//!!!!!!!!!!!!!!!!!!!!
-
-
-
 
 int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 {
@@ -113,6 +105,7 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 	}
 	else
 		tmp->infile = token->data;
+	tmp->outfile = NULL;
 	tmp->type = token->type;
 	return (EXIT_SUCCESS);
 }
@@ -136,6 +129,7 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 	{
 		tmp->type = token->type;
 		tmp->outfile = token->data;
+		tmp->infile = NULL;
 	}
 	ft_lstadd_back(&node->io_red, red_node);
 	return (EXIT_SUCCESS);
@@ -280,9 +274,9 @@ void	ft_cmd_args_to_2d(t_list_d *cmd_table)
 int	ft_parsing(t_common *c)
 {
 	if (tokenize(c) == EXIT_FAILURE)
-		printf("Tokenize error");
+		printf("Tokenize error\n");
 	if (t_lst_to_struct(c))
-		printf("Token_to_struct error");
+		printf("Token_to_struct error\n");
 	ft_expansion(c->env, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
 	ft_cmd_args_to_2d(c->cmd_struct);
