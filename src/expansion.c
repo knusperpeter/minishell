@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/12 23:39:03 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/13 01:23:56 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,16 +93,31 @@ char	*ft_substitute(t_env *env, char *str)
 	int		i;
 	char	*ret;
 	t_env	*tmp;
+	int		single_quotes;
+	int		double_quotes;
 
 	ret = NULL;
+	single_quotes = 0;
+	double_quotes = 0;
 	if (!str || !env)
 		return (NULL);
-	if (ft_single_quotes(str))
-		return (str);
+//	if (ft_single_quotes(str))
+//		return (str);
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] && str[i + 1] != ' ')
+		if (str[i] == '\'' && !single_quotes && !double_quotes)
+			single_quotes = 1;
+		else if (str[i] == '\'' && single_quotes && !double_quotes)
+			single_quotes = 0;
+		else if (str[i] == '"' && !single_quotes)
+		{
+			if (double_quotes)
+				double_quotes = 0;
+			else
+				double_quotes = 1;
+		}
+		if (str[i] == '$' && str[i + 1] && str[i + 1] != ' ' && !single_quotes)
 		{
 			tmp = env;
 			ret = ft_replace_var(tmp, str, &i);
