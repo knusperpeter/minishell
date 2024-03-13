@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/13 13:18:30 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/13 14:55:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,6 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 	tmp = token;
 	init_cmd_table(cmd_node);
 	cmdtok_to_node(tmp, cmd_node);
-//	cmd_to_node(tmp, cmd_node);
 	while (tmp)
 	{
 		if (tmp->type >= 1 && tmp->type <= 4)
@@ -345,16 +344,12 @@ int	ft_parsing(t_common *c)
 	t_cmd_table *test = cmd_list->content;
 	test->cmds = ft_lstnew(malloc(sizeof(t_list)));
 	t_list		*cmds = test->cmds;
-	cmds->content = "\'\"test$HOME'$HOME'\"\'";
+	cmds->content = "\"'$USER\"''";
 	ft_expansion(c->env, cmd_list);
-	ft_rm_quotes(cmd_list);
-	 */
+	ft_rm_quotes(cmd_list); */
+//END	
 	ft_expansion(c->env, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
 	ft_cmd_args_to_2d(c->cmd_struct);
-//	t_cmd_table	*cmd;
-//	cmd = c->cmd_struct->content;
-//	for (int i = 0; cmd->str[i]; i++)
-//		printf("%s\n", cmd->str[i]);
 	return (EXIT_SUCCESS);
 }

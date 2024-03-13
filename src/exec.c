@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/12 15:45:09 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/13 17:00:20 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,24 +232,24 @@ char	**get_envp(t_env *env)
 void ft_preexec(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 {
 	cmd = cmd_table->content;
-	if (cmd->read_fd != 0 && c->old_pipe.pipes[0] == -1)
+	if (cmd->read_fd != 0 && *c->old_pipe.read_fd == -1)
 	{
 		if (dup2(cmd->read_fd, 0) == -1)
 			ft_printerrno(strerror(errno));
 	}
 	else if (cmd->read_fd != 0)
 	{
-		if (dup2(c->old_pipe.pipes[0], 0) == -1)
+		if (dup2(*c->old_pipe.read_fd, 0) == -1)
 			ft_printerrno(strerror(errno));
 	}
 	if (cmd_table->next && cmd->write_fd != 1)
 	{
-		if (dup2(c->new_pipe.pipes[1], 1) == -1)
+		if (dup2(*c->new_pipe.write_fd, 1) == -1)
 			ft_printerrno(strerror(errno));			
 	}
 	else if (cmd->write_fd != 1)
 	{
-		if (dup2(c->new_pipe.pipes[1], 0) == -1)
+		if (dup2(*c->new_pipe.write_fd, 1) == -1)
 			ft_printerrno(strerror(errno));
 	}
 	close_fds(c, cmd);
@@ -262,6 +262,43 @@ int	ft_exec_builtins(t_common *c, t_cmd_table *cmd)
 	else
 		return (0);
 }
+
+int	is_builtin(char *cmd)
+{
+	int	size;
+	
+	if (!cmd)
+		return (0);
+	size = ft_strlen(cmd);
+	if (ft_strncmp(cmd, "echo", size) == 0 || \
+		ft_strncmp(cmd, "env", size) == 0 || \
+		ft_strncmp(cmd, "unset", size) == 0 || \
+		ft_strncmp(cmd, "export", size) == 0 || \
+		ft_strncmp(cmd, "cd", size) == 0 || \
+		ft_strncmp(cmd, "pwd", size) == 0 || \
+		ft_strncmp(cmd, "exit", size) == 0)
+		return (1);
+	return (0);redirect_io
+}
+
+int	is_cmd_in_pipeline(t_list_d *cmd)
+{
+	t_cmd_table	*tmp;
+	
+	if (!cmd)
+		return 0;
+	if (cmd->prev || cmd->next)
+	{
+		if (cmd->prev)
+			tmp = cmd->prev->content;
+		else
+			tmp = cmd->next->content;
+		if (tmp->str && tmp->str[0])
+			return (1);
+	}
+	return (0);
+}
+
 /**
  * Function: ft_exec_cmd
  * Description: Executes a command, handling built-in commands, forking, and setting up pipes.
@@ -276,20 +313,25 @@ int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 	c->envp = get_envp(c->env);
 	if (!c->envp)
 		ft_printerrno("c->envp: ");
-	cmd->id = fork();
-	if (cmd->id == 0)
-	{
-		ft_preexec(cmd_table, cmd, c);
-		if (!ft_exec_builtins(c, cmd))
-		{
-			get_cmd_path(c, cmd);
-			execve(cmd->exec_path, cmd->str, c->envp);
-		}
-	}
-	if (cmd_table->next)
-		safe_close(&c->new_pipe.pipes[1]);
+	if (is_builtin(cmd->str[0]) && !is_cmd_in_pipeline(cmd_table))
+		ft_exec_builtins(c, cmd);
 	else
-		safe_close(&cmd->write_fd);
+	{
+		cmd->id = fork();
+		if (cmd->id == 0)
+		{
+			ft_preexec(cmd_table, cmd, c);
+			if (!ft_exec_builtins(c, cmd))
+			{
+				get_cmd_path(c, cmd);
+				execve(cmd->exec_path, cmd->str, c->envp);
+			}
+		}
+		if (cmd_table->next)
+			safe_close(&c->new_pipe.pipes[1]);
+		else
+			safe_close(&cmd->write_fd);
+	}
 	return (EXIT_SUCCESS);
 }
 /**
@@ -342,7 +384,7 @@ int	ft_execute(t_common *c)
 	if (pipes >  0)
 	{
 		if (create_pipe(&c->new_pipe))
-			ft_printerrno("pipe :");
+			ft_printerrno("pipe: ");
 		curr_cmd = c->cmd_struct;
 		while (curr_cmd)
 		{

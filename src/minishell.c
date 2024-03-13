@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/13 12:42:49 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/13 15:59:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ void	init_loop_data(t_common *c){
 	c->new_pipe = (t_pipe)
 	{
 		.pipes = {-1, -1},
-		.read_fd = &c->old_pipe.pipes[0],
+		.read_fd = &c->new_pipe.pipes[0],
 		.write_fd = &c->new_pipe.pipes[1],
 	};
 	c->old_pipe = (t_pipe)
 	{
 		.pipes = {-1, -1},
 		.read_fd = &c->old_pipe.pipes[0],
-		.write_fd = &c->new_pipe.pipes[1],
+		.write_fd = &c->old_pipe.pipes[1],
 	};
 }
 /**

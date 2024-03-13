@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/13 13:03:50 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/13 14:50:44 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,16 +252,6 @@ char	*ft_rm_quotes_str(char *str)
 	str[j] = 0;
 	printf("%s\n", str);
 	return (str);
-//late night coding finished here, check if it works
-	
-
-//	i = ft_strlen(str);
-//	if ((str[0] == '\'' && str[i - 1] == '\'') || (str[0] == '"' && str[i - 1] == '"'))
-//	{
-//		str[i - 1] = 0;
-//		ret = ft_str_wo_quotes(&str[1]);
-//	}
-//	return (ret);
 }
 
 /**
