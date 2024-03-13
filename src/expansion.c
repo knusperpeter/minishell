@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/13 01:23:56 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/13 01:56:11 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,18 +219,48 @@ char	*ft_str_wo_quotes(char *str)
 char	*ft_rm_quotes_str(char *str)
 {
 	int		i;
+	int 	j;
+	int		single_quotes;
+	int		double_quotes;
 	char	*ret;
-
+	
 	ret = str;
 	if (!str)
 		return (NULL);
-	i = ft_strlen(str);
-	if ((str[0] == '\'' && str[i - 1] == '\'') || (str[0] == '"' && str[i - 1] == '"'))
+	single_quotes = 0;
+	double_quotes = 0;
+	i = 0;
+	while (str[i])
 	{
-		str[i - 1] = 0;
-		ret = ft_str_wo_quotes(&str[1]);
+		if ((str[i] == '\'' && !double_quotes) || (str[i] == '\"' && !single_quotes))
+		{
+			j = 0;
+			if (str[i] == '\'' && !single_quotes)
+				single_quotes = 1;
+			else if (str[i] == '\'' && single_quotes)
+				single_quotes = 0;
+			else if (str[i] == '"' && !double_quotes)
+				double_quotes = 1;
+			else if (str[i] == '"' && double_quotes)
+				double_quotes = 0;
+			if (str[i + 1] && (single_quotes || double_quotes))
+			{
+				str[i] = str[i + 1];
+			}
+		}
+		i++;
 	}
-	return (ret);
+	str[i] = 0;
+//late night coding finished here, check if it works
+	
+
+//	i = ft_strlen(str);
+//	if ((str[0] == '\'' && str[i - 1] == '\'') || (str[0] == '"' && str[i - 1] == '"'))
+//	{
+//		str[i - 1] = 0;
+//		ret = ft_str_wo_quotes(&str[1]);
+//	}
+//	return (ret);
 }
 
 /**
