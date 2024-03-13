@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/13 01:56:11 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/13 13:03:50 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
 //	wenn quotes in doublequotes, dann quotes nicht removen
 //	wenn doublequotes in quotes, dann nichts expanden
 int	ft_single_quotes(char *str)
@@ -230,11 +231,11 @@ char	*ft_rm_quotes_str(char *str)
 	single_quotes = 0;
 	double_quotes = 0;
 	i = 0;
+	j = 0;
 	while (str[i])
 	{
 		if ((str[i] == '\'' && !double_quotes) || (str[i] == '\"' && !single_quotes))
 		{
-			j = 0;
 			if (str[i] == '\'' && !single_quotes)
 				single_quotes = 1;
 			else if (str[i] == '\'' && single_quotes)
@@ -243,14 +244,14 @@ char	*ft_rm_quotes_str(char *str)
 				double_quotes = 1;
 			else if (str[i] == '"' && double_quotes)
 				double_quotes = 0;
-			if (str[i + 1] && (single_quotes || double_quotes))
-			{
-				str[i] = str[i + 1];
-			}
 		}
+		else
+			str[j++] = str[i];
 		i++;
 	}
-	str[i] = 0;
+	str[j] = 0;
+	printf("%s\n", str);
+	return (str);
 //late night coding finished here, check if it works
 	
 

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/12 13:41:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/13 13:17:38 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,8 +339,18 @@ int	ft_parsing(t_common *c)
 		printf("Tokenize error\n");
 	if (t_lst_to_struct(c))
 		printf("Token_to_struct error\n");
-	ft_expansion(c->env, c->cmd_struct);
-	ft_rm_quotes(c->cmd_struct);
+//TEST
+/* 	t_list_d	*cmd_list = NULL;
+	cmd_list = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
+	t_cmd_table *test = cmd_list->content;
+	test->cmds = ft_lstnew(malloc(sizeof(t_list)));
+	t_list		*cmds = test->cmds;
+	cmds->content = "\'\"test$HOME'$HOME'\"\'";
+	ft_expansion(c->env, cmd_list);
+	ft_rm_quotes(cmd_list);
+	 */
+//	ft_expansion(c->env, c->cmd_struct);
+//	ft_rm_quotes(c->cmd_struct);
 	ft_cmd_args_to_2d(c->cmd_struct);
 //	t_cmd_table	*cmd;
 //	cmd = c->cmd_struct->content;
