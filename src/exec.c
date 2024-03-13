@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/13 17:00:20 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/13 17:10:53 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,7 +278,7 @@ int	is_builtin(char *cmd)
 		ft_strncmp(cmd, "pwd", size) == 0 || \
 		ft_strncmp(cmd, "exit", size) == 0)
 		return (1);
-	return (0);redirect_io
+	return (0);
 }
 
 int	is_cmd_in_pipeline(t_list_d *cmd)
