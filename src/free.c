@@ -6,12 +6,16 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/11 17:01:32 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/14 21:30:20 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
+/**
+ * Function: free_2d
+ * Description: Frees a 2D array of strings.
+ * Parameter: str - The 2D array to free.
+ */
 void	free_2d(char **str)
 {
 	int	i;
@@ -25,7 +29,11 @@ void	free_2d(char **str)
 	}
 	free(str);
 }
-
+/**
+ * Function: free_env_nodes
+ * Description: Frees a linked list of environment variables.
+ * Parameter: start - The start of the linked list to free.
+ */
 void	free_env_nodes(t_env *start)
 {
 	t_env	*tmp;
@@ -41,7 +49,11 @@ void	free_env_nodes(t_env *start)
 		free(tmp);
 	}
 }
-
+/**
+ * Function: free_tokens
+ * Description: Frees a linked list of tokens.
+ * Parameter: content - The linked list to free.
+ */
 void	free_tokens(void *content)
 {
 	t_token	*token;
@@ -56,7 +68,11 @@ void	free_tokens(void *content)
 		free (token);
 	}
 }
-
+/**
+ * Function: free_io_red
+ * Description: Frees an IO redirection structure.
+ * Parameter: content - The IO redirection structure to free.
+ */
 void	free_io_red(void *content)
 {
 	t_io_red	*io;
@@ -69,7 +85,11 @@ void	free_io_red(void *content)
 	if (io->outfile)
 		free(io->outfile);
 }
-
+/**
+ * Function: free_cmd_lst
+ * Description: Frees a linked list of commands.
+ * Parameter: lst - The linked list to free.
+ */
 void	free_cmd_lst(t_list **lst)
 {
 	t_list	*tmp;
@@ -80,7 +100,11 @@ void	free_cmd_lst(t_list **lst)
 		*lst = tmp;
 	}
 }
-
+/**
+ * Function: free_cmd_table
+ * Description: Frees a command table structure.
+ * Parameter: content - The command table structure to free.
+ */
 void	free_cmd_table(void *content)
 {
 	t_cmd_table *table;
@@ -100,7 +124,14 @@ void	free_cmd_table(void *content)
 		free(table->heredoc_name);
 	}
 }
+
 //Check here, since it fails
+
+/**
+ * Function: ft_cleanup_loop
+ * Description: Cleans up after each iteration of the main loop.
+ * Parameter: c - The common structure containing the shell data.
+ */
 void	ft_cleanup_loop(t_common *c)
 {
 	ft_lst_d_clear(&c->cmd_struct, &free_cmd_table);
@@ -110,8 +141,14 @@ void	ft_cleanup_loop(t_common *c)
 		free_2d(c->envp);
 		c->envp = NULL;
 	}
+	free(c->raw_prompt);
+	c->raw_prompt = NULL;
 }
-
+/**
+ * Function: free_all
+ * Description: Frees all allocated memory before the program ends.
+ * Parameter: c - The common structure containing the shell data.
+ */
 void	free_all(t_common *c)
 {
 //	t_env	*node;
