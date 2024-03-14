@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/10 17:17:29 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/10 17:42:43 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_loop(t_common *c)
 	while (1)
 	{
 		init_loop_data(c);
-		//interactive_mode();
+	//	interactive();
 		c->raw_prompt = prompt();
 //		if (!c->raw_prompt[0])
 //			break ;

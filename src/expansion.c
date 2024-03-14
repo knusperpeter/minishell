@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2024/03/10 20:06:40 by miheider         ###   ########.fr       */
+=======
 /*   Updated: 2024/03/11 16:59:57 by caigner          ###   ########.fr       */
+>>>>>>> 73f539889e83e2d052db1c12962a91602a5f40ff
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +101,7 @@ char	*ft_substitute(t_env *env, char *str)
 			str = ret;
 		}
 		else
-			i++;	
+			i++;
 	}
 	return (str);
 }

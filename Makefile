@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: miheider <miheider@42>                     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
+#    Updated: 2024/03/10 20:04:50 by miheider         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = minishell
 CC		= cc
 AR		= ar
@@ -28,6 +40,7 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/utils_1.c \
 			src/free.c \
 			src/lexer_error.c \
+#			src/signals.c \
 
 OBJECTS = $(SOURCES:.c=.o)
 
