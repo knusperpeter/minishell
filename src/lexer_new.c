@@ -6,11 +6,7 @@
 /*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2024/03/10 21:08:32y miheider         ###   ########.fr       */
-=======
-/*   Updated: 2024/03/11 12:59:34 by caigner          ###   ########.fr       */
->>>>>>> 73f539889e83e2d052db1c12962a91602a5f40ff
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,14 +202,13 @@ char    **tokenize_input(char *input)
 	return (result);
 }
 /*this function is preparing the tokenized input line by line */
-char **set_up_array(int wc, int cc, char *input)
+char **set_up_array(int cc, char *input)
 {
 	char *new_string;
 	int i = 0;
 	int j = 0;
 
-	printf("wc:%d\ncc:%d\n", wc, cc);
-	new_string = (char *)malloc(sizeof(char) * (wc + cc));
+	new_string = (char *)malloc(sizeof(char) * (cc + 1));
 	if (!new_string)
 	{
 		printf("Memory allocation failed!\n");
@@ -227,8 +222,6 @@ char **set_up_array(int wc, int cc, char *input)
 		{
 			if (check_char(&input[i]) == 2)
 			{
-				if (i > 0 && input[i - 1] != ' ')
-					new_string[j++] = ' ';
 				new_string[j++] = input[i++];
 				while (input[i] && check_char(&input[i]) != 2 )
 					new_string[j++] = input[i++];
@@ -241,7 +234,13 @@ char **set_up_array(int wc, int cc, char *input)
 						new_string[j++] = ' ';
 				}
 			}
-			if ((i > 0 && check_char(&input[i]) == 0 && check_char(&input[i - 1]) == 1) || (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 0 && input[i - 1] != ' ') || (check_char(&input[i]) == 1 && check_char(&input[i - 1]) == 1 && input[i] != input[i - 1]))
+			if ((i > 0 && check_char(&input[i]) == 0 &&
+				check_char(&input[i - 1]) == 1) ||
+				(check_char(&input[i]) == 1 &&
+				check_char(&input[i - 1]) == 0 &&
+				input[i - 1] != ' ') || (check_char(&input[i]) == 1
+				&& check_char(&input[i - 1]) == 1 &&
+				input[i] != input[i - 1]))
 				new_string[j++] = ' ';
 			new_string[j++] = input[i++];
 		}
@@ -256,53 +255,60 @@ char **set_up_array(int wc, int cc, char *input)
 }
 
 /*counting the words (wc) and characters (cc) from input and taking care of quotes. This is used for mallocing memory in the 'set_up_array' function.*/
-char    **prep_input(char *input)
+void	count_up(int *i, int *cc)
 {
-	int wc = 0;
-	int cc = 0;
-	int	i = 0;
-	if (check_char(&input[i]) == 1)
-		wc--;
+		(*i)++;
+		(*cc)++;
+}
+
+
+char	**prep_input(char *input)
+{
+	int	i;
+	int	cc;
+
+	i = 0;
+	cc = 0;
+	while (input[i] == ' ')
+		i++;
 	while (input[i])
 	{
-		while (input[i] && input[i] == ' ')
-			i++;
-		if (input[i] != ' ')
+		if (i > 0 && cc != 0 && input[i] == '<' && input[i - 1] != ' ' &&
+			input[i - 1] != '<' && input[i - 1] != '.')
+			cc++;
+		if (input[i] == '<' && input[i + 1] != ' ' && input[i + 1] != '<' &&
+			input[i + 1] != '\0' && input[i] != '.')//ersetzen mit check_char
+			cc++;
+		if (i > 0 && input[i] && input[i] == '.')	//ersetzen mit ' und "
 		{
-			if (input[i] == '\0')
+			if (input[i - 1] != ' ')
+				cc--;
+			count_up(&i, &cc);
+			if (i > 1 && input[i - 2] != ' ')
+				cc++;
+			while (input[i] != '.')
+				count_up(&i, &cc);
+			if (input[i] == '.' && input[i + 1] != ' ' && input[i + 1] != '\0')
+				cc++;
+			else if(input[i + 1] != '\0' || input[i + 1] == ' ')
+				count_up(&i, &cc);
+			else if (input[i + 1] != '\0')
 				break;
-			wc++;
 		}
-		while (input[i] && input[i] != ' ')
-		{
-			if (i > 0 && check_char(&input[i]) == 1 && ((input[i - 1] == ' ') || (input[i - 1] == input[i])))
-				cc++;
-			else if ((check_char(&input[i]) == 1 && *(input - 1) != ' ') || (i > 0 && check_char(&input[i]) == 0 && (check_char(&input[i - 1]) == 1 || check_char(&input[i - 1]) == 2)))
-			{
-				wc++;
-				cc++;
-			}
-			else if (i > 0 && check_char(&input[i]) == 0 && (check_char(&input[i - 1]) != 1))
-				cc++;
-			else
-			{
-				if (i > 0 && input[i - 1] != ' ')
-					wc++;
-				cc++;
-				i++;
-				while (check_char(&input[i]) != 2 && input[i])
-				{
-					cc++;
-					i++;
-				}
-				cc++;
-			}
-			if (input[i] != 0)
-				i++;
-		}
+		if (i > 0 && cc != 0 && input[i] && input[i] != ' ' &&
+			input[i - 1] == ' ' && input[i] != '.')
+			cc++;
+		if (i > 0 && cc != 0 && input[i] && input[i] == ' ' &&
+			input[i + 1] == '.')
+			cc++;
+		if (input[i] && input[i] != ' ')
+			cc++;
+		if (input[i] == '<' && input[i + 1] == '.')
+			cc--;
+		i++;
 	}
-	printf("wc: %d\ncc: %d\n", wc, cc);
-	return (set_up_array(wc, cc, input));
+	printf("cc: %d\n", cc);
+	return (set_up_array(cc, input));
 }
 
 /*tokenize the input the first time using the "|" as an delimiter*/
