@@ -60,8 +60,8 @@ char *set_up_array(int cc, char *input)
 					new_string[j++] = input[i++];
 					if (input[i] == ' ')
 						break;
-					if (input[i] != ' ' && input[i] != '\0')
-						new_string[j++] = ' ';
+//					if (input[i] != ' ' && input[i] != '\0')
+//						new_string[j++] = ' ';
 				}
 			}
 			if ((i > 0 && check_char(&input[i]) == 0 &&
@@ -117,9 +117,9 @@ int	prep_input(char *input)
 				cc++;
 			while (input[i] != '.')
 				count_up(&i, &cc);
-			if (input[i] == '.' && input[i + 1] != ' ' && input[i + 1] != '\0')
-				cc++;
-			else if(input[i + 1] != '\0' || input[i + 1] == ' ')
+//			if (input[i] == '.' && input[i + 1] != ' ' && input[i + 1] != '\0')
+//				cc++;
+			if(input[i + 1] != '\0' || input[i + 1] == ' ')
 				count_up(&i, &cc);
 			else if (input[i + 1] != '\0')
 				break;
@@ -143,7 +143,7 @@ int	prep_input(char *input)
 
 int	main(void)
 {
-	char *a = "    test.hallo. <<me ";
+	char *a = "hallo.mini << fd.shell";
 
 	prep_input(a);
 	return (0);
