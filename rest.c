@@ -80,7 +80,7 @@ char *set_up_array(int cc, char *input)
 			new_string[j++] = ' ';
 	}
 	new_string[j] = '\0';
-	printf("___%s___\n", new_string);
+//	printf("___%s___\n", new_string);
 	return (new_string);
 }
 
@@ -136,7 +136,7 @@ int	prep_input(char *input)
 			cc--;
 		i++;
 	}
-	printf("cc: %d\n", cc);
+//	printf("cc: %d\n", cc);
 	set_up_array(cc, input);
 	return (cc);
 }

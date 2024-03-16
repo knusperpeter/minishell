@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/13 17:10:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/16 23:55:07 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,17 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 void	safe_close(int *fd)
 {
 	if (*fd > 2)
+	{
 		close(*fd);
-	*fd = -1;
+		*fd = -1;
+	}
 }
 
 void	replace_fd(int *fd1, int *fd2)
 {
 	if (*fd1 == -1)
 		return;
-	safe_close(fd1);
+	safe_close(fd2);
 	*fd2 = *fd1;
 	*fd1 = -1;
 }
@@ -101,12 +103,12 @@ void	safe_close_pipe(t_pipe *pipe)
 void	handle_pipes_child(t_pipe *new, t_pipe *old)
 {
 	safe_close(new->read_fd);
-	replace_fd(new->read_fd, old->read_fd);
+	replace_fd(new->write_fd, old->write_fd);
 }
 
 void	handle_pipes_parent(t_pipe *new, t_pipe *old)
 {
-	safe_close(new->read_fd);
+	safe_close(new->write_fd);
 	replace_fd(new->read_fd, old->read_fd);
 }
 
@@ -125,7 +127,7 @@ void	close_all_pipes(t_common *c)
  * - EXIT_SUCCESS if the pipe was successfully created.
  * - EXIT_FAILURE if an error occurred while creating the pipe.
  */
-int	create_pipe(t_pipe *new)
+int	create_pipe(t_pipe *new, t_cmd_table *cmd)
 {
 	if (new->pipes[0] != -1 || new->pipes[1] != -1)
 	{
@@ -136,6 +138,9 @@ int	create_pipe(t_pipe *new)
 		return (EXIT_FAILURE);
 	new->read_fd = &new->pipes[0];
 	new->write_fd = &new->pipes[1];
+	//tryout
+	cmd->read_fd = *new->read_fd;
+	cmd->write_fd = *new->write_fd;
 	return (EXIT_SUCCESS);
 }
 /**
@@ -224,12 +229,27 @@ char	**get_envp(t_env *env)
 	}
 	return (ret);
 }
+
+
+
+
+
+
+
+
+
+//				THIS IS WHERE THE MAGIC WILL HAPPEN :O
+
+
+
+
+
 /**
  * Function: ft_preexec
  * Description: Prepares the execution of a command by setting up the file descriptors.
  * Parameters: cmd_table - The linked list of command tables, cmd - The command table, c - The common structure containing the shell data.
  */
-void ft_preexec(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
+void redirect_io(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 {
 	cmd = cmd_table->content;
 	if (cmd->read_fd != 0 && *c->old_pipe.read_fd == -1)
@@ -254,6 +274,22 @@ void ft_preexec(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 	}
 	close_fds(c, cmd);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int	ft_exec_builtins(t_common *c, t_cmd_table *cmd)
 {
@@ -318,19 +354,20 @@ int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 	else
 	{
 		cmd->id = fork();
+		if (cmd->id < 0)
+			return (EXIT_FAILURE);
 		if (cmd->id == 0)
 		{
-			ft_preexec(cmd_table, cmd, c);
+//			handle_pipes_child(&c->new_pipe, &c->old_pipe);
+			open_io(cmd->io_red, cmd);
+			redirect_io(cmd_table, cmd, c);
 			if (!ft_exec_builtins(c, cmd))
 			{
 				get_cmd_path(c, cmd);
 				execve(cmd->exec_path, cmd->str, c->envp);
 			}
 		}
-		if (cmd_table->next)
-			safe_close(&c->new_pipe.pipes[1]);
-		else
-			safe_close(&cmd->write_fd);
+//		handle_pipes_parent(&c->new_pipe, &c->old_pipe);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -377,20 +414,20 @@ int	ft_execute(t_common *c)
 	while (curr_cmd)
 	{
 		curr_cmd_table = curr_cmd->content;
-		open_io(curr_cmd_table->io_red, curr_cmd_table);
 		pipes += 1;
 		curr_cmd = curr_cmd->next;
 	}
+	curr_cmd = c->cmd_struct;
 	if (pipes >  0)
 	{
-		if (create_pipe(&c->new_pipe))
-			ft_printerrno("pipe: ");
-		curr_cmd = c->cmd_struct;
 		while (curr_cmd)
 		{
 			curr_cmd_table = curr_cmd->content;
+			if (create_pipe(&c->new_pipe, curr_cmd_table))
+				ft_printerrno("pipe: ");
 			if (curr_cmd_table->str[0])
 				ft_exec_cmd(c, curr_cmd);
+			handle_pipes_parent(&c->new_pipe, &c->old_pipe);
 			curr_cmd = curr_cmd->next;
 		}
 		close_all_pipes(c);
@@ -398,10 +435,10 @@ int	ft_execute(t_common *c)
 	}
 	else if ( pipes == 0)
 	{
-		curr_cmd_table = c->cmd_struct->content;
+		curr_cmd_table = curr_cmd->content;
 		if (curr_cmd_table->str[0])
 			ft_exec_cmd(c, c->cmd_struct);
-		
+		wait_all_childs(c);
 	}
 	return (EXIT_SUCCESS);
 }

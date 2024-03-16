@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_new.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/15 23:15:49 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/16 20:30:25 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int check_token(char *token)
 		if (!token)
 			return (-1);
 		len = ft_strlen(token);
-		printf("%c -- %c -- %d\n", token[0], token[1], len);
+//		printf("%c -- %c -- %d\n", token[0], token[1], len);
 		if (token[0] == '<' && len == 1)
 			return (1);
 		if (token[0] == '>' && len == 1)
@@ -174,14 +174,14 @@ int		check_tokens(char *input)
 		if (input[i] == '\'' || input[i] == '\"')
 		{
 			i++;
-			while (input[i] != '\'' && input[i] != '\"')
+			while (input[i] != '\'' && input[i] != '\"') //input[i] sonst segfault wenn unclosed quotes
 				i++;
 		}
 		if (input[i] == ' ')
 			space++;
 		i++;
 	}
-	printf("%d\n", space);
+//	printf("%d\n", space);
 	return (space);
 }
 
@@ -275,7 +275,7 @@ char **set_up_array(int cc, char *input)
 			new_string[j++] = ' ';
 	}
 	new_string[j] = '\0';
-	printf("___%s___\n", new_string);
+//	printf("___%s___\n", new_string);
 	return (tokenize_input(new_string));
 }
 
@@ -344,7 +344,7 @@ char	**prep_input(char *input)
 		prep_input_three(i, &cc, input);
 		i++;
 	}
-	printf("cc: %d\n", cc);
+//	printf("cc: %d\n", cc);
 	return (set_up_array(cc, input));
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/15 13:08:24 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/16 23:53:49 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,26 @@
  * Description: Displays a prompt and reads a line of input from the user.
  * Returns: The line of input from the user.
  */
-char	*prompt(void)
+char	*prompt(t_common *c)
 {
 	char	*line;
 
 	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
-
+	if (line == NULL)
+		ft_exit(c, NULL);
 	if (line && *line)
 		add_history(line);
 	return (line);
 }
+
+void	init_pipe(t_pipe *pipe)
+{
+	pipe->pipes[0] = -1;
+	pipe->pipes[1] = -1;
+	pipe->read_fd = &pipe->pipes[0];
+	pipe->read_fd = &pipe->pipes[1];
+}
+
 /**
  * Function: init_loop_data
  * Description: Initializes the data for the main loop of the shell.
@@ -37,19 +47,10 @@ void	init_loop_data(t_common *c){
 	c->tokens = NULL;
 	c->cmd_struct = NULL;
 	c->envp = NULL;
-	c->new_pipe = (t_pipe)
-	{
-		.pipes = {-1, -1},
-		.read_fd = &c->new_pipe.pipes[0],
-		.write_fd = &c->new_pipe.pipes[1],
-	};
-	c->old_pipe = (t_pipe)
-	{
-		.pipes = {-1, -1},
-		.read_fd = &c->old_pipe.pipes[0],
-		.write_fd = &c->old_pipe.pipes[1],
-	};
+	init_pipe(&c->new_pipe);
+	init_pipe(&c->old_pipe);
 }
+
 /**
  * Function: ft_loop
  * Description: The main loop of the shell. It reads input, parses it, executes it, and cleans up.
@@ -62,7 +63,7 @@ int	ft_loop(t_common *c)
 	{
 		init_loop_data(c);
 	//	interactive();
-		c->raw_prompt = prompt();
+		c->raw_prompt = prompt(c);
 //		ft_putstr_fd(c->raw_prompt, 1);
 //		if (!c->raw_prompt[0])
 //			break ;
@@ -76,6 +77,7 @@ int	ft_loop(t_common *c)
 	}
 	return (0);
 }
+
 /**
  * Function: init_minishell
  * Description: Initializes the shell.
@@ -94,6 +96,7 @@ void	init_minishell(t_common *c, char **envp)
 	else
 		return (perror("Error initializing environment\n"));
 }
+
 /**
  * Function: main
  * Description: The entry point of the program. It initializes the shell, runs the main loop, and cleans up when done.
