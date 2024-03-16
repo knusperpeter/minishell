@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/14 21:30:42 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/15 13:08:24 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*prompt(void)
 	char	*line;
 
 	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
-	
+
 	if (line && *line)
 		add_history(line);
 	return (line);
@@ -79,7 +79,7 @@ int	ft_loop(t_common *c)
 /**
  * Function: init_minishell
  * Description: Initializes the shell.
- * Parameters: 
+ * Parameters:
  * - c: The common structure containing the shell data.
  * - envp: The environment variables.
  */
@@ -97,7 +97,7 @@ void	init_minishell(t_common *c, char **envp)
 /**
  * Function: main
  * Description: The entry point of the program. It initializes the shell, runs the main loop, and cleans up when done.
- * Parameters: 
+ * Parameters:
  * - ac: The number of command-line arguments.
  * - av: The command-line arguments.
  * - envp: The environment variables.

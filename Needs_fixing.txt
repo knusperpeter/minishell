@@ -1,0 +1,12 @@
+echo "hallo'$HOME'"
+exp. output:	hallo'/nfs/homes/caigner'
+output:			hallo' /nfs/homes/caigner"
+
+echo '"$HOME"dksflak'
+exp. output:	"$HOME"dksflak
+output:			" /nfs/homes/caignerdksflak'
+
+>Tokenizing expanded variables still missing
+>Prompt does not show right after executing non-builtins
+
+.ls ./ls ./ ./libft/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/21 13:21:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/14 21:29:57 by caigner          ###   ########.fr       */
+/*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
+/*   Updated: 2024/03/15 13:09:35 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ char	*ft_substitute(t_env *env, char *str)
 void	ft_expand_red(t_env *env, t_list *io_lst)
 {
 	t_io_red	*io;
-	
+
 	while (io_lst)
 	{
 		io = io_lst->content;
@@ -225,7 +225,7 @@ char	*ft_rm_quotes_str(char *str)
 	int		single_quotes;
 	int		double_quotes;
 	char	*ret;
-	
+
 	ret = str;
 	if (!str)
 		return (NULL);

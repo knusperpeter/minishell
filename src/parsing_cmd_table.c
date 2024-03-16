@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_cmd_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/21 15:12:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/14 21:31:12 by caigner          ###   ########.fr       */
+/*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
+/*   Updated: 2024/03/15 13:08:46 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	cmd_to_node(t_cmd_table *cmd_node)
 /**
  * Function: input_to_node
  * Description: Handles the input redirection and heredoc tokens.
- * Parameters: 
+ * Parameters:
  * - token: The current token.
  * - tmp: The IO redirection structure.
  * - node: The command node.
@@ -132,7 +132,7 @@ void	init_io(t_io_red *io)
 /**
  * Function: red_to_node
  * Description: Handles the redirection tokens and adds them to the command node.
- * Parameters: 
+ * Parameters:
  * - token: The current token.
  * - node: The command node.
  * Returns: 0 if successful, 1 if an error occurred.
@@ -180,7 +180,7 @@ void	init_cmd_table(t_cmd_table *node)
 /**
  * Function: cmdtok_to_node
  * Description: Adds command tokens to the command node.
- * Parameters: 
+ * Parameters:
  * - tok: The current token.
  * - cmd: The command node.
  */
@@ -208,7 +208,7 @@ void	cmdtok_to_node(t_token *tok, t_cmd_table *cmd)
 /**
  * Function: token_to_struct
  * Description: Converts the token linked list into a command table structure.
- * Parameters: 
+ * Parameters:
  * - token: The linked list of tokens.
  * - cmd_node: The command table structure.
  */
@@ -347,7 +347,7 @@ int	ft_parsing(t_common *c)
 	cmds->content = "\"'$USER\"''";
 	ft_expansion(c->env, cmd_list);
 	ft_rm_quotes(cmd_list); */
-//END	
+//END
 	ft_expansion(c->env, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
 	ft_cmd_args_to_2d(c->cmd_struct);
