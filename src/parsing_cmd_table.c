@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_cmd_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/15 13:08:46 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/18 20:50:42 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,14 @@ int	cmd_to_node(t_cmd_table *cmd_node)
 		i++;
 		cmd_tok = cmd_tok->next;
 	}
-	cmd_tmp->str = malloc(sizeof(char*) * (i + 1));
+	cmd_tmp->str = malloc(sizeof(char**) * (i + 1));
 	if (!cmd_tmp->str)
 		return (perror("Error initializing str in cmd_to_node\n"), 1);
 	cmd_tok = cmd_tmp->cmds;
 	i = 0;
 	while (cmd_tok)
 	{
-		cmd_tmp->str[i] = ft_strdup(cmd_tok->content);//Machter ned
+		cmd_tmp->str[i] = ft_strdup(cmd_tok->content);
 		if (!cmd_tmp->str[i])
 			printf("FIX, cmd_to_node\n");
 		i++;
@@ -192,7 +192,7 @@ void	cmdtok_to_node(t_token *tok, t_cmd_table *cmd)
 	tmp = tok;
 	while (tmp)
 	{
-		if (tmp->type == 0)
+		if (tmp->type == VOID)
 		{
 			cmd_list = ft_lstnew(tmp->data);
 			if (!cmd_list)
@@ -226,6 +226,7 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 		tmp = tmp->next;
 	}
 }
+
 /**
  * Function: tokenize
  * Description: Tokenizes the raw input and adds the tokens to a linked list.

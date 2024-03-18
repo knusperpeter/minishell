@@ -6,14 +6,11 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/16 20:30:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/18 21:01:02 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <complex.h>
-#include <readline/readline.h>
-#include <stdlib.h>
 
 /*checks token for <, >, >>, <<!*/
 int check_token(char *token)

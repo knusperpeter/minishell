@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/16 23:55:07 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/18 21:08:40 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 
 void	safe_close(int *fd)
 {
+	if (!fd)
+		return;
 	if (*fd > 2)
 	{
 		close(*fd);
@@ -87,6 +89,8 @@ void	safe_close(int *fd)
 
 void	replace_fd(int *fd1, int *fd2)
 {
+	if (!fd1 || !fd2)
+		return;
 	if (*fd1 == -1)
 		return;
 	safe_close(fd2);
@@ -127,8 +131,13 @@ void	close_all_pipes(t_common *c)
  * - EXIT_SUCCESS if the pipe was successfully created.
  * - EXIT_FAILURE if an error occurred while creating the pipe.
  */
-int	create_pipe(t_pipe *new, t_cmd_table *cmd)
+int	create_pipe(t_common *c, t_cmd_table *cmd)
 {
+	t_pipe	*new;
+	t_pipe	*old;
+
+	new = &c->new_pipe;
+	old = &c->old_pipe;
 	if (new->pipes[0] != -1 || new->pipes[1] != -1)
 	{
 		safe_close_pipe(new);
@@ -136,11 +145,13 @@ int	create_pipe(t_pipe *new, t_cmd_table *cmd)
 	}
 	if (pipe(new->pipes) == -1)
 		return (EXIT_FAILURE);
-	new->read_fd = &new->pipes[0];
-	new->write_fd = &new->pipes[1];
-	//tryout
-	cmd->read_fd = *new->read_fd;
-	cmd->write_fd = *new->write_fd;
+	new->read_fd = &(new->pipes[0]);
+	new->write_fd = &(new->pipes[1]);
+	if (*(old->read_fd) == -1)
+		cmd->read_fd = 0;
+	else
+		cmd->read_fd = *(old->read_fd);
+	cmd->write_fd = *(new->write_fd);
 	return (EXIT_SUCCESS);
 }
 /**
@@ -230,20 +241,6 @@ char	**get_envp(t_env *env)
 	return (ret);
 }
 
-
-
-
-
-
-
-
-
-//				THIS IS WHERE THE MAGIC WILL HAPPEN :O
-
-
-
-
-
 /**
  * Function: ft_preexec
  * Description: Prepares the execution of a command by setting up the file descriptors.
@@ -252,44 +249,28 @@ char	**get_envp(t_env *env)
 void redirect_io(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
 {
 	cmd = cmd_table->content;
-	if (cmd->read_fd != 0 && *c->old_pipe.read_fd == -1)
+	if (cmd->read_fd != 0 && *(c->old_pipe.read_fd) == -1)
 	{
 		if (dup2(cmd->read_fd, 0) == -1)
 			ft_printerrno(strerror(errno));
 	}
 	else if (cmd->read_fd != 0)
 	{
-		if (dup2(*c->old_pipe.read_fd, 0) == -1)
+		if (dup2(*(c->old_pipe.read_fd), 0) == -1)
 			ft_printerrno(strerror(errno));
 	}
 	if (cmd_table->next && cmd->write_fd != 1)
 	{
-		if (dup2(*c->new_pipe.write_fd, 1) == -1)
+		if (dup2(*(c->new_pipe.write_fd), 1) == -1)
 			ft_printerrno(strerror(errno));			
 	}
 	else if (cmd->write_fd != 1)
 	{
-		if (dup2(*c->new_pipe.write_fd, 1) == -1)
+		if (dup2(*(c->new_pipe.write_fd), 1) == -1)
 			ft_printerrno(strerror(errno));
 	}
 	close_fds(c, cmd);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 int	ft_exec_builtins(t_common *c, t_cmd_table *cmd)
 {
@@ -358,13 +339,15 @@ int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 			return (EXIT_FAILURE);
 		if (cmd->id == 0)
 		{
-//			handle_pipes_child(&c->new_pipe, &c->old_pipe);
+			handle_pipes_child(&c->new_pipe, &c->old_pipe);
 			open_io(cmd->io_red, cmd);
 			redirect_io(cmd_table, cmd, c);
 			if (!ft_exec_builtins(c, cmd))
 			{
-				get_cmd_path(c, cmd);
-				execve(cmd->exec_path, cmd->str, c->envp);
+				if (!get_cmd_path(c, cmd))
+					printf("%s: command not found\n", cmd->str[0]);
+				else
+					execve(cmd->exec_path, cmd->str, c->envp);
 			}
 		}
 //		handle_pipes_parent(&c->new_pipe, &c->old_pipe);
@@ -386,9 +369,27 @@ void	wait_all_childs(t_common *c)
 	while (tmp)
 	{
 		curr = tmp->content;
-		waitpid(curr->id, NULL, 0);
+		waitpid(-1, NULL, 0);
 		tmp = tmp->prev;
 	}
+}
+
+int	ft_count_pipes(t_list_d *cmd_struct)
+{
+	int		count;
+//	t_cmd_table	*curr;
+	t_list_d	*tmp;
+
+	count = -1;
+	tmp = cmd_struct;
+	while (tmp)
+	{
+//		curr = tmp->content;
+//		if (curr->str && curr->str[0])
+		count++;
+		tmp = tmp->next;
+	}
+	return (count);
 }
 
 /**
@@ -409,21 +410,14 @@ int	ft_execute(t_common *c)
 	t_cmd_table		*curr_cmd_table;
 	int				pipes;
 
-	pipes = -1;
+	pipes = ft_count_pipes(c->cmd_struct);
 	curr_cmd = c->cmd_struct;
-	while (curr_cmd)
-	{
-		curr_cmd_table = curr_cmd->content;
-		pipes += 1;
-		curr_cmd = curr_cmd->next;
-	}
-	curr_cmd = c->cmd_struct;
-	if (pipes >  0)
+	if (pipes > 0)
 	{
 		while (curr_cmd)
 		{
 			curr_cmd_table = curr_cmd->content;
-			if (create_pipe(&c->new_pipe, curr_cmd_table))
+			if (create_pipe(c, curr_cmd_table))
 				ft_printerrno("pipe: ");
 			if (curr_cmd_table->str[0])
 				ft_exec_cmd(c, curr_cmd);
