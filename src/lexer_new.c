@@ -5,15 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/19 15:24:42 by caigner          ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/03/19 15:35:33 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "../include/minishell.h"
-#include <complex.h>
-#include <readline/readline.h>
-#include <stdlib.h>
 
 /*checks token for <, >, >>, <<!*/
 int	check_token(char *token)
@@ -177,14 +175,14 @@ int	check_tokens(char *input)
 		if (input[i] == '\'' || input[i] == '\"')
 		{
 			i++;
-			while (input[i] != '\'' && input[i] != '\"')
+			while (input[i] != '\'' && input[i] != '\"') //input[i] sonst segfault wenn unclosed quotes
 				i++;
 		}
 		if (input[i] == ' ')
 			space++;
 		i++;
 	}
-	printf("%d\n", space);
+//	printf("%d\n", space);
 	return (space);
 }
 
@@ -282,7 +280,7 @@ char	**set_up_array(int cc, char *input)
 			new_string[j++] = ' ';
 	}
 	new_string[j] = '\0';
-	printf("___%s___\n", new_string);
+//	printf("___%s___\n", new_string);
 	return (tokenize_input(new_string));
 }
 
@@ -355,7 +353,7 @@ char	**prep_input(char *input)
 		prep_input_three(i, &cc, input);
 		i++;
 	}
-	printf("cc: %d\n", cc);
+//	printf("cc: %d\n", cc);
 	return (set_up_array(cc, input));
 }
 

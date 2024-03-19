@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/14 21:30:26 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/18 17:39:26 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,12 @@ int	add_path(t_cmd_table *cmd, char **paths)
 	i = 0;
 	if (cmd && cmd->str && cmd->str[0])
 	{
-		if (access(cmd->str[0], F_OK | X_OK | R_OK) == 0)
+		if (access(cmd->str[0], F_OK | X_OK | R_OK) == 0)//!is_dir(...)?
 		{
 			cmd->exec_path = ft_strdup(cmd->str[0]);
 			if (!cmd->exec_path)
 				ft_printerrno("allocation failed at exec_path");
-			return (EXIT_SUCCESS);
+			return (1);
 		}
 		else if (cmd->str && cmd->str[0] && paths)
 		{
@@ -100,14 +100,14 @@ int	add_path(t_cmd_table *cmd, char **paths)
 			{
 				path = join_path(cmd->str[0], paths[i++]);
 				if (!path)
-					return (EXIT_FAILURE);
+					return (0);
 				if (!access(path, F_OK | X_OK | R_OK) && !is_dir(path))
-					return (cmd->exec_path = path, EXIT_SUCCESS);
+					return (cmd->exec_path = path, 1);
 				free(path);
 			}
 		}
 	}
-	return (EXIT_FAILURE);
+	return (0);
 }
 /**
  * Function: get_cmd_path
@@ -123,8 +123,9 @@ int	get_cmd_path(t_common *c, t_cmd_table *cmd)
 
 	paths = ft_get_paths(c->env);
 	if (!paths)
-		return (EXIT_FAILURE);
-	add_path(cmd, paths);
+		return (0);
+	if (!add_path(cmd, paths))
+		return(0);
 	free_2d(paths);
-	return (EXIT_SUCCESS);
+	return (1);
 }

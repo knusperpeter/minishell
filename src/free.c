@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/14 21:30:20 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 14:35:08 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ void	free_cmd_table(void *content)
 	{
 		unlink(table->heredoc_name);
 		free(table->heredoc_name);
+		table->heredoc_name = NULL;
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/15 13:09:35 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/16 21:07:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,35 +103,30 @@ char	*ft_substitute(t_env *env, char *str)
 	double_quotes = 0;
 	if (!str || !env)
 		return (NULL);
-//	if (ft_single_quotes(str))
-//		return (str);
 	i = 0;
 	while (str[i])
-	{
+	{//das gehört in den lexer
 		if (str[i] == '\'' && !single_quotes && !double_quotes)
 			single_quotes = 1;
 		else if (str[i] == '\'' && single_quotes && !double_quotes)
 			single_quotes = 0;
-		else if (str[i] == '"' && !single_quotes)
-		{
-			if (double_quotes)
-				double_quotes = 0;
-			else
-				double_quotes = 1;
-		}
+		else if (str[i] == '\"' && !single_quotes && double_quotes)
+			double_quotes = 0;
+		else if (str[i] == '\"' && !single_quotes && !double_quotes)
+			double_quotes = 1;
 		if (str[i] == '$' && str[i + 1] && str[i + 1] != ' ' && !single_quotes)
 		{
 			tmp = env;
 			ret = ft_replace_var(tmp, str, &i);
 			if (!ret)
 				return (ft_printerrno("expansion ret malloc: "), NULL);
-//			free(str);
-//			str = NULL;
 			str = ret;
 		}
 		else
 			i++;
 	}
+	if (single_quotes || double_quotes)
+		return (printf("Error: unclosed quotes: %s\n", str), NULL); //should we print the right arg?
 	return (str);
 }
 
@@ -251,7 +246,7 @@ char	*ft_rm_quotes_str(char *str)
 		i++;
 	}
 	str[j] = 0;
-	printf("%s\n", str);
+//	printf("%s\n", str);
 	return (str);
 }
 

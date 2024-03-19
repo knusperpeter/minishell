@@ -1,0 +1,4 @@
+>Tokenizing expanded variables still missing
+>Prompt does not show right after executing non-builtins
+
+.ls ./ls ./ ./libft/

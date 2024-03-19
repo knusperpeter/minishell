@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/14 18:30:36 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/19 15:21:11 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,16 @@ int	check_arg(t_common *c, char **arg)
 		if ((!ft_isdigit(arg[1][i]) && arg[1][i] != '-' && arg[1][i] != '+'
 				&& arg[1][i] != ' ') || overflows_ll(c, arg[1]))
 		{
-			perror("minishell: exit: ");
-			perror(arg[1]);
-			perror(": numeric argument required");
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(arg[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
 			return (-1);
 		}
 		i++;
 	}
 	if (arg[2])
 	{
-		return (perror("minishell: exit: too many arguments"), 0);// don't exit in this case
+		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 0);// don't exit in this case
 	}
 	else if (arg[1])
 		c->exitstatus = ft_atoll(arg[1]) % 256;//check if negative nums might appear

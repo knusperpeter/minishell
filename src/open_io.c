@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/13 15:14:17 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 14:54:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table)
 		ft_printerrno(limiter);
 	while (1)
 	{
-		write(1, "minishell heredoc> ", 15);
+		write(1, "heredoc> ", 9);
 		if (get_next_line(0, &buf, 0) < 0)
 			exit (1);
 		if (buf == NULL || *buf == '\0')
 			break ;
-		if (ft_strncmp(limiter, buf, ft_strlen(limiter)) == 0)
+		if (ft_strncmp(limiter, buf, (ft_strlen(buf) - 1)) == 0)
 			break ;
 		write(cmd_table->read_fd, buf, ft_strlen(buf));
 	}
@@ -79,7 +79,7 @@ int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 		cmd_node->read_fd = open(io->infile, O_RDONLY);
 	if (cmd_node->read_fd == -1)
 		return (ft_printerrno(io->infile), EXIT_FAILURE);
-	return (0);
+	return (EXIT_SUCCESS);
 }
 /**
  * Function: open_file
@@ -129,10 +129,9 @@ void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich e
  */
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 {
-		if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
+		if (io->type == HEREDOC || io->type == REDIR_IN)
 			safe_close(&cmd_node->read_fd);
-		else if ((io->type == REDIR_OUT || io->type == APPEND)
-				&& cmd_node->write_fd != 1)
+		else if (io->type == REDIR_OUT || io->type == APPEND)
 			safe_close(&cmd_node->write_fd);	
 }
 /**

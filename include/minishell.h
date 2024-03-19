@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/10 19:58:58 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/18 20:41:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ typedef struct common_data
 	char				**envp;
 	t_list_d			*cmd_struct;
 	t_list				*tokens;
-	t_list				*cmd_tokens;
+//	t_list				*cmd_tokens;
 	unsigned int		exitstatus;
 	char				*raw_prompt;
 	t_pipe				new_pipe;
