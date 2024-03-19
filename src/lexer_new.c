@@ -6,7 +6,11 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/03/19 13:00:28 by miheider         ###   ########.fr       */
+=======
+/*   Updated: 2024/03/15 23:15:49 by miheider         ###   ########.fr       */
+>>>>>>> c299a9e79a51baacc51868b6e13f33b0be404fea
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,12 +231,21 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 		}
 	}
 	if ((i > 0 && check_char(&input[*i]) == 0 &&
+<<<<<<< HEAD
 		check_char(&input[*(i) - 1]) == 1) ||
 		(check_char(&input[*i]) == 1 &&
 		check_char(&input[*(i) - 1]) == 0 &&
 		input[(*i) - 1] != ' ') || (check_char(&input[*i]) == 1 &&
 		check_char(&input[*(i) - 1]) == 1 &&
 		input[*i] != input[*(i) - 1]))
+=======
+		check_char(&input[*(i - 1)]) == 1) ||
+		(check_char(&input[*i]) == 1 &&
+		check_char(&input[*(i - 1)]) == 0 &&
+		input[(*i - 1)] != ' ') || (check_char(&input[*i]) == 1 &&
+		check_char(&input[*(i - 1)]) == 1 &&
+		input[*i] != input[*(i - 1)]))
+>>>>>>> c299a9e79a51baacc51868b6e13f33b0be404fea
 			new_string[(*j)++] = ' ';
 	new_string[(*j)++] = input[(*i)++];
 	return (10);
