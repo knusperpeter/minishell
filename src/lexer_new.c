@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/03/19 15:35:33 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 15:53:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	check_token(char *token)
 	if (!token)
 		return (-1);
 	len = ft_strlen(token);
-	printf("%c -- %c -- %d\n", token[0], token[1], len);
 	if (token[0] == '<' && len == 1)
 		return (1);
 	if (token[0] == '>' && len == 1)
@@ -182,7 +181,6 @@ int	check_tokens(char *input)
 			space++;
 		i++;
 	}
-//	printf("%d\n", space);
 	return (space);
 }
 
@@ -280,7 +278,6 @@ char	**set_up_array(int cc, char *input)
 			new_string[j++] = ' ';
 	}
 	new_string[j] = '\0';
-//	printf("___%s___\n", new_string);
 	return (tokenize_input(new_string));
 }
 
@@ -353,7 +350,6 @@ char	**prep_input(char *input)
 		prep_input_three(i, &cc, input);
 		i++;
 	}
-//	printf("cc: %d\n", cc);
 	return (set_up_array(cc, input));
 }
 
