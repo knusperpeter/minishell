@@ -4,6 +4,18 @@
 .ls ./ls ./ ./libft/
 
 
+heredoc expansion{
+<< 1 cat
+> $x
+> 1
+123
+
+<< "1" cat
+> $x
+> 1
+$x
+}
+
 Lexer:
 export x=""ls -l""      >> valgrind
 export x="ls \"-l\""    >>ms: x=ls \-l\     bash: x=ls "-l"

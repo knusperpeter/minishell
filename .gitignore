@@ -1,5 +1,7 @@
 ./a.out
 *.o
 .nfs*
-.libft/libft.a
-.minishell
+./libft/libft.a
+./minishell
+./out
+./in
