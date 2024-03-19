@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 13:16:33 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/08 18:58:07 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 14:52:34 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <fcntl.h>
 
 # ifndef BUFFER_SIZE 
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 1024
 # endif
 
 typedef struct s_list

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/18 20:50:42 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 14:56:04 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,16 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 	{
 		tmp->heredoc_limiter = ft_strdup(token->data);
 		if (node->heredoc_name)
+		{
 			free(node->heredoc_name);
+			node->heredoc_name = NULL;
+		}
 		c = ft_itoa(i++);
 		node->heredoc_name = ft_strjoin(".heredoc_tmp", c);
 		free(c);
 		if (!node->heredoc_name)
 			return (perror("Error initializing str in input_to_node\n"), 1);
-		tmp->infile = node->heredoc_name; //CHECK IF .heredoc_tmp already EXISTS, IF YES increment i
+		tmp->infile = ft_strdup(node->heredoc_name); //CHECK IF .heredoc_tmp already EXISTS, IF YES increment i
 	}
 	else
 		tmp->infile = ft_strdup(token->data);

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/18 21:08:40 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 14:17:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ int	create_pipe(t_common *c, t_cmd_table *cmd)
 
 	new = &c->new_pipe;
 	old = &c->old_pipe;
-	if (new->pipes[0] != -1 || new->pipes[1] != -1)
+	if (*(new->read_fd) != -1 || *(new->write_fd) != -1)
 	{
 		safe_close_pipe(new);
 	//	printf("Pipe not empty");
@@ -150,7 +150,7 @@ int	create_pipe(t_common *c, t_cmd_table *cmd)
 	if (*(old->read_fd) == -1)
 		cmd->read_fd = 0;
 	else
-		cmd->read_fd = *(old->read_fd);
+		cmd->read_fd = *(old->read_fd);//ist der alte read_fd sicher nicht geschlossen?
 	cmd->write_fd = *(new->write_fd);
 	return (EXIT_SUCCESS);
 }
@@ -417,8 +417,9 @@ int	ft_execute(t_common *c)
 		while (curr_cmd)
 		{
 			curr_cmd_table = curr_cmd->content;
-			if (create_pipe(c, curr_cmd_table))
-				ft_printerrno("pipe: ");
+			if (pipes-- > 0)
+				if (create_pipe(c, curr_cmd_table))
+					ft_printerrno("pipe: ");
 			if (curr_cmd_table->str[0])
 				ft_exec_cmd(c, curr_cmd);
 			handle_pipes_parent(&c->new_pipe, &c->old_pipe);
