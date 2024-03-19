@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/18 20:41:28 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 21:12:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ void	free_env_nodes(t_env *start);
 void	free_cmd_table(void *content);
 void	ft_cleanup_loop(t_common *c);
 void	free_all(t_common *c);
+void	ft_clean_exit(t_common *c, char *msg);
 int		ft_loop(t_common *c);
 int		ft_parsing(t_common *c);
 int		open_io(t_list *io, t_cmd_table *cmd_node);
@@ -153,6 +154,7 @@ void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	safe_close(int *fd);
+void	close_all_pipes(t_common *c);
 void	ft_rm_quotes(t_list_d *cmds);
 
 //lexer

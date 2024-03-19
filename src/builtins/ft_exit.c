@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 15:21:11 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 21:34:05 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,46 +37,39 @@ int	check_arg(t_common *c, char **arg)
 {
 	int	i;
 
+	if (!arg[1])
+		return (c->exitstatus = 0, -1);
 	i = 0;
 	while (arg[1][i])
 	{
 		if ((!ft_isdigit(arg[1][i]) && arg[1][i] != '-' && arg[1][i] != '+'
 				&& arg[1][i] != ' ') || overflows_ll(c, arg[1]))
 		{
-			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd("❌ minishell: exit: ", 2);
 			ft_putstr_fd(arg[1], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
-			return (-1);
+			return (c->exitstatus = 2, 2);
 		}
 		i++;
 	}
 	if (arg[2])
 	{
-		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 0);// don't exit in this case
+		return (ft_putstr_fd("❌ minishell: exit: too many arguments\n", 1), 1);// don't exit in this case
 	}
 	else if (arg[1])
 		c->exitstatus = ft_atoll(arg[1]) % 256;//check if negative nums might appear
-	else
-		c->exitstatus = 0;
-	return (1);
+	return (-1);
 }
 
 //to hand back the exit status from subshell, use waitpid in parent process?
 void	ft_exit(t_common *c, char **cmd)
 {
-	c->exitstatus = 1;
 	printf("exit\n");
 	if (cmd)
-	{
 		if (cmd[1])
-		{
-			if (!check_arg(c, cmd))
-			{
+			if (check_arg(c, cmd) == 1)
 				return ;
-			}
-		}
-	}
-	exit(c->exitstatus);
+	ft_clean_exit(c, NULL);
 }
 
 /* 

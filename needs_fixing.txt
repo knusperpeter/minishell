@@ -5,15 +5,15 @@
 
 
 heredoc expansion{
-<< 1 cat
-> $x
-> 1
-123
-
-<< "1" cat
-> $x
-> 1
-$x
+    << 1 cat
+    > $x
+    > 1
+    123
+    
+    << "1" cat
+    > $x
+    > 1
+    $x
 }
 
 Lexer:
