@@ -6,11 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/03/19 13:00:28 by miheider         ###   ########.fr       */
-=======
-/*   Updated: 2024/03/15 23:15:49 by miheider         ###   ########.fr       */
->>>>>>> c299a9e79a51baacc51868b6e13f33b0be404fea
+/*   Updated: 2024/03/19 14:54:33 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +16,30 @@
 #include <stdlib.h>
 
 /*checks token for <, >, >>, <<!*/
-int check_token(char *token)
+int	check_token(char *token)
 {
-		int len;
-		if (!token)
-			return (-1);
-		len = ft_strlen(token);
-		printf("%c -- %c -- %d\n", token[0], token[1], len);
-		if (token[0] == '<' && len == 1)
-			return (1);
-		if (token[0] == '>' && len == 1)
-			return (2);
-		if (token[0] == '>' && token[1] == '>' && len >= 2)
-			return (3);
-		if (token[0] == '<' && token[1] == '<' && len >= 2)
-			return (4);
-		return (0);
+	int	len;
+
+	if (!token)
+		return (-1);
+	len = ft_strlen(token);
+	printf("%c -- %c -- %d\n", token[0], token[1], len);
+	if (token[0] == '<' && len == 1)
+		return (1);
+	if (token[0] == '>' && len == 1)
+		return (2);
+	if (token[0] == '>' && token[1] == '>' && len >= 2)
+		return (3);
+	if (token[0] == '<' && token[1] == '<' && len >= 2)
+		return (4);
+	return (0);
 }
 
 /*this function checks for special characters, except for pipes*/
-int check_char(char *character)
+int	check_char(char *character)
 {
-	char    *special;
-	int     i;
+	char	*special;
+	int		i;
 
 	i = 0;
 	special = "*?[]()<>#";
@@ -69,18 +66,19 @@ char	*quotes_in_strtok(char *str, const char *delim)
 			in_quotes = !in_quotes;
 		if (!in_quotes && ft_strchr(delim, *str))
 			break ;
-        if (!in_quotes && *str == '\0')
-            error_lexer("\"", 5);
+		if (!in_quotes && *str == '\0')
+			error_lexer("\"", 5);
 		str++;
 	}
 	return (str);
 }
 
-/*tokenizing the input; rebuilt the original function strtok and addes a feature: it is ignoring the delimiter in quotes.*/
-char    *ft_strtok(char *s1, const char *delim)
+/*tokenizing the input; rebuilt the original function strtok and 
+addes a feature: it is ignoring the delimiter in quotes.*/
+char	*ft_strtok(char *s1, const char *delim)
 {
-	static char    *str;
-	char           *start;
+	static char	*str;
+	char		*start;
 
 	if (s1)
 		str = s1;
@@ -138,11 +136,11 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 	return (ret);
 }
 
-void add_to_list(char **token, t_list *lst)
+void	add_to_list(char **token, t_list *lst)
 {
 	t_token	*tmp;
 	t_token	*last;
-	int 	index;
+	int		index;
 	int		status;
 
 	index = 0;
@@ -165,8 +163,9 @@ void add_to_list(char **token, t_list *lst)
 		last->next = NULL;
 }
 
-/*counts the spaces of a token, used to allocate memory in function tokenize_input*/
-int		check_tokens(char *input)
+/*counts the spaces of a token, used to allocate memory in function 
+tokenize_input*/
+int	check_tokens(char *input)
 {
 	int	i;
 	int	space;
@@ -190,9 +189,9 @@ int		check_tokens(char *input)
 }
 
 /*tokenizes the tokens, stores it in the result array and returns it*/
-char    **tokenize_input(char *input)
+char	**tokenize_input(char *input)
 {
-	char	**result = NULL;
+	char	**result;
 	char	*token;
 	int		index;
 	int		tok;
@@ -215,38 +214,31 @@ char    **tokenize_input(char *input)
 	return (result);
 }
 
-/*this is the inner while loop of the set_up_array function. The first if statement is handling quotes, the second one is handling different situations to inpute a space to new_string*/
+/*this is the inner while loop of the set_up_array function. The first 
+if statement is handling quotes, the second one is handling different 
+situations to inpute a space to new_string*/
 int	no_space_array(int *i, int *j, char *input, char *new_string)
 {
 	if (check_char(&input[*i]) == 2)
 	{
 		new_string[(*j)++] = input[(*i)++];
-		while (input[*i] && check_char(&input[*i]) != 2 )
+		while (input[*i] && check_char(&input[*i]) != 2)
 			new_string[(*j)++] = input[(*i)++];
-		if (input[*i] && check_char(&input[*i]) == 2 )
+		if (input[*i] && check_char(&input[*i]) == 2)
 		{
 			new_string[(*j)++] = input[(*i)++];
 			if (input[*i] == ' ')
 				return (-10);
 		}
 	}
-	if ((i > 0 && check_char(&input[*i]) == 0 &&
-<<<<<<< HEAD
-		check_char(&input[*(i) - 1]) == 1) ||
-		(check_char(&input[*i]) == 1 &&
-		check_char(&input[*(i) - 1]) == 0 &&
-		input[(*i) - 1] != ' ') || (check_char(&input[*i]) == 1 &&
-		check_char(&input[*(i) - 1]) == 1 &&
-		input[*i] != input[*(i) - 1]))
-=======
-		check_char(&input[*(i - 1)]) == 1) ||
-		(check_char(&input[*i]) == 1 &&
-		check_char(&input[*(i - 1)]) == 0 &&
-		input[(*i - 1)] != ' ') || (check_char(&input[*i]) == 1 &&
-		check_char(&input[*(i - 1)]) == 1 &&
-		input[*i] != input[*(i - 1)]))
->>>>>>> c299a9e79a51baacc51868b6e13f33b0be404fea
-			new_string[(*j)++] = ' ';
+	if ((i > 0 && check_char(&input[*i]) == 0
+			&& check_char(&input[*(i) - 1]) == 1)
+		|| (check_char(&input[*i]) == 1
+			&& check_char(&input[*(i) - 1]) == 0
+			&& input[(*i) - 1] != ' ') || (check_char(&input[*i]) == 1
+			&& check_char(&input[*(i) - 1]) == 1
+			&& input[*i] != input[*(i) - 1]))
+		new_string[(*j)++] = ' ';
 	new_string[(*j)++] = input[(*i)++];
 	return (10);
 }
@@ -254,7 +246,9 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 /*just allocating memory for set_up_array fuction*/
 char	*allocate_memory(int size)
 {
-	char *new_string = (char *)malloc(sizeof(char) * (size + 1));
+	char	*new_string;
+
+	new_string = (char *)malloc(sizeof(char) * (size + 1));
 	if (!new_string)
 	{
 		printf("Memory allocation failed!\n");
@@ -264,11 +258,11 @@ char	*allocate_memory(int size)
 }
 
 /*this function is preparing the tokenized input line by line */
-char **set_up_array(int cc, char *input)
+char	**set_up_array(int cc, char *input)
 {
-	char *new_string;
-	int i;
-	int j;
+	char	*new_string;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
@@ -292,20 +286,23 @@ char **set_up_array(int cc, char *input)
 	return (tokenize_input(new_string));
 }
 
-/*counting characters (cc) from input and taking care of quotes. This is used for mallocing memory in the 'set_up_array' function.*/
+/*counting characters (cc) from input and taking care of quotes. This is
+used for mallocing memory in the 'set_up_array' function.*/
 void	count_up(int *i, int *cc)
 {
-		(*i)++;
-		(*cc)++;
+	(*i)++;
+	(*cc)++;
 }
-/*the prep_input functions 0-4 are are counting the characters and spaces beeded to allocate memory for the norminized string.*/
+
+/*the prep_input functions 0-4 are are counting the characters and spaces
+beeded to allocate memory for the norminized string.*/
 void	prep_input_three(int i, int *cc, char *input)
 {
-	if (i > 0 && *cc != 0 && input[i] && input[i] != ' ' &&
-		input[i - 1] == ' ' && (input[i] != '\'' || input[i] != '\"'))
+	if (i > 0 && *cc != 0 && input[i] && input[i] != ' '
+		&& input[i - 1] == ' ' && (input[i] != '\'' || input[i] != '\"'))
 		(*cc)++;
-	if (i > 0 && *cc != 0 && input[i] && input[i] == ' ' &&
-		(input[i + 1] == '\'' || input[i + 1] == '\"'))
+	if (i > 0 && *cc != 0 && input[i] && input[i] == ' '
+		&& (input[i + 1] == '\'' || input[i + 1] == '\"'))
 		(*cc)++;
 	if (input[i] && input[i] != ' ')
 		(*cc)++;
@@ -313,29 +310,30 @@ void	prep_input_three(int i, int *cc, char *input)
 		(*cc)--;
 }
 
-int	prep_input_two(int i, int *cc, char *input)
+int	prep_input_two(int *i, int *cc, char *input)
 {
-	if (input[i - 1] != ' ')
+	if (input[*(i) - 1] != ' ')
 		(*cc)--;
-	count_up(&i, cc);
-	if (i > 1 && input[i - 2] != ' ')
+	count_up(i, cc);
+	if (*i > 1 && input[*(i) - 2] != ' ')
 		(*cc)++;
-	while (input[i] != '\'' || input[i] != '\"')
-		count_up(&i, cc);
-	if(input[i + 1] != '\0' || input[i + 1] == ' ')
-		count_up(&i, cc);
-	else if (input[i + 1] != '\0')
+	while (input[*i] != '\'' && input[*i] != '\"')
+		count_up(i, cc);
+	if (input[*(i) + 1] != '\0' || input[*(i) + 1] == ' ')
+		count_up(i, cc);
+	else if (input[*(i) + 1] != '\0')
 		return (-9);
 	return (9);
 }
 
 void	prep_input_one(int i, int *cc, char *input)
 {
-	if (i > 0 && *cc != 0 && input[i] == '<' && input[i - 1] != ' ' &&
-		input[i - 1] != '<' && (input[i - 1] != '\'' || input[i - 1] != '\"'))
+	if (i > 0 && *cc != 0 && input[i] == '<' && input[i - 1] != ' '
+		&& input[i - 1] != '<' && (input[i - 1] != '\''
+			|| input[i - 1] != '\"'))
 		(*cc)++;
-	if (input[i] == '<' && input[i + 1] != ' ' && input[i + 1] != '<' &&
-		input[i + 1] != '\0' && (input[i] != '\'' || input[i] != '\"'))
+	if (input[i] == '<' && input[i + 1] != ' ' && input[i + 1] != '<'
+		&& input[i + 1] != '\0' && (input[i] != '\'' || input[i] != '\"'))
 		(*cc)++;
 }
 
@@ -352,7 +350,7 @@ char	**prep_input(char *input)
 	{
 		prep_input_one(i, &cc, input);
 		if (i > 0 && input[i] && (input[i] == '\'' || input[i] == '\"'))
-			if (prep_input_two(i, &cc, input) < 0)
+			if (prep_input_two(&i, &cc, input) < 0)
 				break ;
 		prep_input_three(i, &cc, input);
 		i++;
@@ -362,11 +360,11 @@ char	**prep_input(char *input)
 }
 
 /*tokenize the input the first time using the "|" as an delimiter*/
-char    **tokenize_one(char *input, int pipe)
+char	**tokenize_one(char *input, int pipe)
 {
-	char    **result;
-	char    *token;
-	int     index;
+	char	**result;
+	char	*token;
+	int		index;
 
 	result = malloc((pipe + 1) * sizeof(char *));
 	if (result == NULL)
@@ -385,7 +383,8 @@ char    **tokenize_one(char *input, int pipe)
 	return (result);
 }
 
-/*This is an extension for the count_pipes function. It handles the pipes in case of appearance.*/
+/*This is an extension for the count_pipes function. It handles the pipes 
+in case of appearance.*/
 void	error_check_pipes(int *i, int *pipe, char *input)
 {
 	(*i)++;
@@ -404,10 +403,10 @@ void	error_check_pipes(int *i, int *pipe, char *input)
 }
 
 /*count "|"-sections within the input. used for allocating memory*/
-int    count_pipes(char *input)
+int	count_pipes(char *input)
 {
-	int i;
-	int pipe;
+	int	i;
+	int	pipe;
 
 	i = 0;
 	pipe = 0;
