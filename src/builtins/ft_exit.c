@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 21:34:05 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/19 23:50:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,64 @@ int	overflows_ll(t_common *c, char *arg)
 	return (0);
 }
 
+int	is_sign(char c)
+{
+	if (c == '-' || c == '+')
+		return (1);
+	return (0);
+}
+
+int	valid_num(char *arg)
+{
+	int	i;
+
+	if (!arg || !arg[0])
+		return (0);
+	i = 0;
+	while (arg[i] == ' ')
+		i++;
+	if ((int)ft_strlen(arg) > i && is_sign(arg[i])) //dannach muss eine zahl kommen, wenn nach der zahl was anderes als leerzeichen kommt, dann ist es falsch. same error
+		i++;
+	while (arg[i])
+	{
+		if (ft_isdigit(arg[i]))
+		{
+			while (arg[i] == ' ')
+				i++;
+			if (arg[i] == '\0')
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+int	ft_numeric_arg(t_common *c, char **arg)
+{
+	int	i;
+	
+	if (!arg[1] || !arg[1][0])
+		return (1);
+	i = 0;
+	
+	if (!valid_num(arg[1]) || overflows_ll(c, arg[1]))
+	{
+		ft_putstr_fd("❌ minishell: exit: ", 2);
+		ft_putstr_fd(arg[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		return (c->exitstatus = 2, 0);
+	}
+	return (1);
+}
+
 // this does not check for input like "exit +++" or "exit "--123-"" Maybe it
 // would be best to put this whole if statement into a sparte function.
 int	check_arg(t_common *c, char **arg)
 {
-	int	i;
-
 	if (!arg[1])
 		return (c->exitstatus = 0, -1);
-	i = 0;
-	while (arg[1][i])
-	{
-		if ((!ft_isdigit(arg[1][i]) && arg[1][i] != '-' && arg[1][i] != '+'
-				&& arg[1][i] != ' ') || overflows_ll(c, arg[1]))
-		{
-			ft_putstr_fd("❌ minishell: exit: ", 2);
-			ft_putstr_fd(arg[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			return (c->exitstatus = 2, 2);
-		}
-		i++;
-	}
+	if (!ft_numeric_arg(c, arg))
+		return (2);
 	if (arg[2])
 	{
 		return (ft_putstr_fd("❌ minishell: exit: too many arguments\n", 1), 1);// don't exit in this case
