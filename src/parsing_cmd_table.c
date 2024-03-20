@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/19 14:56:04 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 13:42:11 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -352,7 +352,7 @@ int	ft_parsing(t_common *c)
 	ft_expansion(c->env, cmd_list);
 	ft_rm_quotes(cmd_list); */
 //END
-	ft_expansion(c->env, c->cmd_struct);
+	ft_expansion(c, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
 	ft_cmd_args_to_2d(c->cmd_struct);
 	return (EXIT_SUCCESS);

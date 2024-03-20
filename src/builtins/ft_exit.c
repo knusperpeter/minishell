@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/20 00:58:54 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/20 13:29:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	valid_num(char *arg)
 	i = 0;
 	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
 		i++;
- //dannach muss eine zahl kommen, wenn nach der zahl
+ // dannach muss eine zahl kommen, wenn nach der zahl
  // was anderes als leerzeichen kommt, dann ist es falsch. same error
 	if ((int)ft_strlen(arg) > i && is_sign(arg[i]))
 		i++;

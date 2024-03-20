@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 21:12:41 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 13:42:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ void	ft_rm_quotes(t_list_d *cmds);
 //lexer
 void    error_lexer(char *s, int i);
 int		get_cmd_path(t_common *c, t_cmd_table *cmd);
-void	ft_expansion(t_env *env, t_list_d *cmds);
+void	ft_expansion(t_common *c, t_list_d *cmds);
 int    count_pipes(char *input);
 
 // builtins
