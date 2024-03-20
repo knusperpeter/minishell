@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/20 13:42:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 15:05:09 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ typedef struct common_data
 	t_list				*tokens;
 //	t_list				*cmd_tokens;
 	unsigned int		exitstatus;
+	char				*exitstatus_str;
 	char				*raw_prompt;
 	t_pipe				new_pipe;
 	t_pipe				old_pipe;

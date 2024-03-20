@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 21:27:52 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 15:09:03 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,10 @@ void	free_all(t_common *c)
 	if (c)
 	{
 	//	ft_cleanup_loop(c);
-		free_env_nodes(c->env);
+		if (c->env)
+			free_env_nodes(c->env);
+		if (c->exitstatus_str)
+			free(c->exitstatus_str);
 //		free(c);
 	}
 	rl_clear_history();

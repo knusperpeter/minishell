@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/03/19 15:53:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 14:55:30 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	check_char(char *character)
 	int		i;
 
 	i = 0;
-	special = "*?[]()<>#";
+	special = "*[]()<>#";
 	if (*character == '\'' || *character == '\"')
 		return (2);
 	while (i < 10)

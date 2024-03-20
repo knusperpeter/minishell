@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 08:29:48 by miheider          #+#    #+#             */
-/*   Updated: 2023/09/16 18:43:06 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/20 15:03:42 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	length(int n, int len_n)
 static char	*check_intmin(char *str)
 {
 	str = malloc(sizeof(char) * 12);
-	if (NULL == str)
+	if (str == NULL)
 		return (0);
 	ft_strlcpy(str, "-2147483648", 12);
 	return (str);

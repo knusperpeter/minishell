@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/20 13:43:24 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 15:07:46 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,12 @@ char	*ft_replace_var(t_common *c, t_env *env, char *str, int *i)
 	while (str[*i + 1 + var_len] && (ft_isalnum(str[*i + 1 + var_len]) || str[*i + 1 + var_len] == '_'))
 		var_len++;
 	if (str[*i + 1] == '?')
-		tmp = ft_itoa(c->exitstatus);
+	{
+		c->exitstatus_str = ft_itoa(c->exitstatus);
+		if (!c->exitstatus_str)
+			return (ft_printerrno("expansion: "), NULL);
+		return (ft_create_string(c->exitstatus_str, str, i, 1));
+	}
 	else
 		tmp = ft_substr(str, *i + 1, var_len);
 	if (!tmp)
