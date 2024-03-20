@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 23:50:52 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 00:58:54 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,14 @@ int	valid_num(char *arg)
 {
 	int	i;
 
-	if (!arg || !arg[0])
+	if (!*arg)
 		return (0);
 	i = 0;
-	while (arg[i] == ' ')
+	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
 		i++;
-	if ((int)ft_strlen(arg) > i && is_sign(arg[i])) //dannach muss eine zahl kommen, wenn nach der zahl was anderes als leerzeichen kommt, dann ist es falsch. same error
+ //dannach muss eine zahl kommen, wenn nach der zahl
+ // was anderes als leerzeichen kommt, dann ist es falsch. same error
+	if ((int)ft_strlen(arg) > i && is_sign(arg[i]))
 		i++;
 	while (arg[i])
 	{
@@ -64,13 +66,9 @@ int	valid_num(char *arg)
 }
 
 int	ft_numeric_arg(t_common *c, char **arg)
-{
-	int	i;
-	
+{	
 	if (!arg[1] || !arg[1][0])
-		return (1);
-	i = 0;
-	
+		return (1);	
 	if (!valid_num(arg[1]) || overflows_ll(c, arg[1]))
 	{
 		ft_putstr_fd("❌ minishell: exit: ", 2);

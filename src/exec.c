@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/19 14:17:28 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 00:59:32 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,12 +363,10 @@ int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
 void	wait_all_childs(t_common *c)
 {
 	t_list_d	*tmp;
-	t_cmd_table	*curr;
 	
 	tmp = ft_lstlast_d(c->cmd_struct);
 	while (tmp)
 	{
-		curr = tmp->content;
 		waitpid(-1, NULL, 0);
 		tmp = tmp->prev;
 	}

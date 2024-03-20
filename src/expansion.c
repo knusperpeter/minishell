@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/16 21:07:28 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 00:59:18 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,9 +219,7 @@ char	*ft_rm_quotes_str(char *str)
 	int 	j;
 	int		single_quotes;
 	int		double_quotes;
-	char	*ret;
 
-	ret = str;
 	if (!str)
 		return (NULL);
 	single_quotes = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 13:16:33 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/19 14:52:34 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 00:58:22 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <stddef.h>
 # include <stdio.h>
 # include <fcntl.h>
+
+# define WHITESPACE	" \f\n\r\t\v"
 
 # ifndef BUFFER_SIZE 
 #  define BUFFER_SIZE 1024
