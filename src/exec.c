@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/20 00:59:32 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/20 18:27:17 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,99 +177,19 @@ void	close_fds(t_common *c, t_cmd_table *cmd)
 	}
 }
 
-int	get_env_size(t_env *env)
-{
-	int	size;
-
-	size = 0;
-	while (env)
-	{
-		size++;
-		env = env->next;
-	}
-	return (size);
-}
-/**
- * Function: env_to_arr
- * Description: Converts the environment linked list into an array.
- * Parameters: size - The size of the environment linked list, env - The linked list of environment variables.
- * Returns: An array of environment variables.
- */
-char	**env_to_arr(int size, t_env *env)
-{
-	char	**ret;
-	char	*s;
-	int		i;
-
-	ret = malloc(sizeof(char *) * (size + 1));
-	if (!ret)
-		return (ft_printerrno(NULL), NULL);
-	i = 0;
-	while (i < size)
-	{
-		s = ft_strjoin(env->variable, "=");
-		if (!s)
-			return (ft_printerrno(NULL), NULL);
-		ret[i] = ft_strjoin(s, env->value);
-		free(s);
-		if (!ret[i])
-		{
-			free_2d(ret);
-			return (ft_printerrno(NULL), NULL);
-		}
-		i++;
-		env = env->next;
-	}
-	ret[i] = NULL;
-	return (ret);
-}
-
-char	**get_envp(t_env *env)
-{
-	int		size;
-	char	**ret;
-	t_env	*tmp;
-
-	ret = NULL;
-	tmp = env;
-	size = get_env_size(tmp);
-	tmp = env;
-	if (size > 0)
-	{
-		ret = env_to_arr(size, env);
-	}
-	return (ret);
-}
-
 /**
  * Function: ft_preexec
  * Description: Prepares the execution of a command by setting up the file descriptors.
  * Parameters: cmd_table - The linked list of command tables, cmd - The command table, c - The common structure containing the shell data.
  */
-void redirect_io(t_list_d *cmd_table, t_cmd_table *cmd, t_common *c)
+int redirect_io(int *read_fd, int *write_fd)
 {
-	cmd = cmd_table->content;
-	if (cmd->read_fd != 0 && *(c->old_pipe.read_fd) == -1)
+	if (dup2(*read_fd, 0) == -1 || dup2(*write_fd, 1) == -1)
 	{
-		if (dup2(cmd->read_fd, 0) == -1)
-			ft_printerrno(strerror(errno));
+		ft_printerrno("dup2: ");
+		return (0);
 	}
-	else if (cmd->read_fd != 0)
-	{
-		if (dup2(*(c->old_pipe.read_fd), 0) == -1)
-			ft_printerrno(strerror(errno));
-	}
-	if (cmd_table->next && cmd->write_fd != 1)
-	{
-		if (dup2(*(c->new_pipe.write_fd), 1) == -1)
-			ft_printerrno(strerror(errno));			
-	}
-	else if (cmd->write_fd != 1)
-	{
-		if (dup2(*(c->new_pipe.write_fd), 1) == -1)
-			ft_printerrno(strerror(errno));
-	}
-	close_fds(c, cmd);
+	return (1);
 }
 
 int	ft_exec_builtins(t_common *c, t_cmd_table *cmd)
@@ -322,38 +242,71 @@ int	is_cmd_in_pipeline(t_list_d *cmd)
  * Parameters: c - The common structure containing the shell data, cmd_table - The linked list of command tables.
  * Returns: EXIT_SUCCESS upon successful execution.
  */
-int	ft_exec_cmd(t_common *c, t_list_d *cmd_table)
+int	ft_execute_pipeline(t_common *c, t_list_d *cmd_table)
 {
 	t_cmd_table	*cmd;
 
 	cmd = cmd_table->content;
-	c->envp = get_envp(c->env);
-	if (!c->envp)
-		ft_printerrno("c->envp: ");
-	if (is_builtin(cmd->str[0]) && !is_cmd_in_pipeline(cmd_table))
-		ft_exec_builtins(c, cmd);
-	else
+	while (cmd_table)
 	{
-		cmd->id = fork();
-		if (cmd->id < 0)
-			return (EXIT_FAILURE);
-		if (cmd->id == 0)
+		if (cmd_table->prev || cmd_table->next)
+			if (create_pipe(c, cmd) == EXIT_FAILURE)
+				printf("pipe error\n");
+///////////////
+
+
+
+		if (is_builtin(cmd->str[0]) && !is_cmd_in_pipeline(cmd_table))
+			ft_exec_builtins(c, cmd);
+		else
 		{
-			handle_pipes_child(&c->new_pipe, &c->old_pipe);
-			open_io(cmd->io_red, cmd);
-			redirect_io(cmd_table, cmd, c);
-			if (!ft_exec_builtins(c, cmd))
+			cmd->id = fork();
+			if (cmd->id < 0)
+				return (EXIT_FAILURE);
+			if (cmd->id == 0)
 			{
-				if (!get_cmd_path(c, cmd))
-					printf("%s: command not found\n", cmd->str[0]);
-				else
-					execve(cmd->exec_path, cmd->str, c->envp);
+				handle_pipes_child(&c->new_pipe, &c->old_pipe);
+				if (!open_io(cmd->io_red, cmd))
+					return (0);
+				if (!redirect_io(&cmd->read_fd, &cmd->write_fd))
+					return (0);
+				if (!ft_exec_builtins(c, cmd))
+				{
+					if (!get_cmd_path(c, cmd))
+						printf("%s: command not found\n", cmd->str[0]);
+					else
+						execve(cmd->exec_path, cmd->str, c->envp);
+				}
 			}
+//			handle_pipes_parent(&c->new_pipe, &c->old_pipe);
 		}
-//		handle_pipes_parent(&c->new_pipe, &c->old_pipe);
+		cmd_table = cmd_table->next;
 	}
 	return (EXIT_SUCCESS);
 }
+
+void	handle_pipeline_execution(t_common *c, t_list_d *cmd_table)
+{
+	t_cmd_table	*cmd;
+
+	cmd = cmd_table->content;
+	c->subpid = fork();
+	if (c->subpid < 0)
+		ft_printerrno("fork: ");
+	else if (c->subpid == 0)
+	{
+		c->subshell_level++;
+		handle_pipes_child(&c->new_pipe, &c->old_pipe);
+		ft_execute_pipeline(c, cmd_table);
+	}
+	else
+	{
+		waitpid(c->subpid, NULL, 0);
+		close_fds(c, cmd);
+	}
+}
+
+
 /**
  * Function: wait_all_childs
  * Description: Waits for all child processes to finish execution.
@@ -410,22 +363,28 @@ int	ft_execute(t_common *c)
 
 	pipes = ft_count_pipes(c->cmd_struct);
 	curr_cmd = c->cmd_struct;
-	if (pipes > 0)
+	while (curr_cmd)
 	{
-		while (curr_cmd)
-		{
-			curr_cmd_table = curr_cmd->content;
-			if (pipes-- > 0)
-				if (create_pipe(c, curr_cmd_table))
-					ft_printerrno("pipe: ");
-			if (curr_cmd_table->str[0])
-				ft_exec_cmd(c, curr_cmd);
-			handle_pipes_parent(&c->new_pipe, &c->old_pipe);
-			curr_cmd = curr_cmd->next;
-		}
-		close_all_pipes(c);
-		wait_all_childs(c);
+		if (pipes > 0)
+			handle_pipeline_execution(c, curr_cmd);
+		else
+			handle_simple_cmd(c, curr_cmd);
 	}
+/* 
+		curr_cmd_table = curr_cmd->content;
+		if (pipes-- > 0)
+			if (create_pipe(c, curr_cmd_table))
+				ft_printerrno("pipe: ");
+		if (curr_cmd_table->str[0])
+			ft_exec_cmd(c, curr_cmd);
+		handle_pipes_parent(&c->new_pipe, &c->old_pipe);
+		curr_cmd = curr_cmd->next;
+	}
+	close_all_pipes(c);
+	wait_all_childs(c); 
+*/
+
+/* 
 	else if ( pipes == 0)
 	{
 		curr_cmd_table = curr_cmd->content;
@@ -433,6 +392,7 @@ int	ft_execute(t_common *c)
 			ft_exec_cmd(c, c->cmd_struct);
 		wait_all_childs(c);
 	}
+*/
 	return (EXIT_SUCCESS);
 }
 

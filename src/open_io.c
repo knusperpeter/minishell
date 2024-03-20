@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 14:54:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 16:21:54 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,18 +69,44 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table)
  */
 int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 {
+	int		fd;
+	
 	if (io->type == HEREDOC)
 	{
-		cmd_node->read_fd = open(cmd_node->heredoc_name, O_CREAT | O_WRONLY
+		fd = open(cmd_node->heredoc_name, O_CREAT | O_WRONLY
 				| O_TRUNC, 0644);
 		here_doc(io->heredoc_limiter, cmd_node);
 	}
 	else
-		cmd_node->read_fd = open(io->infile, O_RDONLY);
-	if (cmd_node->read_fd == -1)
-		return (ft_printerrno(io->infile), EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		fd = open(io->infile, O_RDONLY);
+	if (fd == -1)
+	{
+		ft_printerrno("filename");
+		return (0);
+	}
+	replace_fd(&cmd_node->read_fd, &fd);
+	return (1);
 }
+
+int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
+{
+	int		fd;
+	
+	if (io->type == REDIR_OUT)
+		fd = open(io->outfile, O_WRONLY | O_TRUNC
+				| O_CREAT, S_IRUSR | S_IWUSR);
+	else
+		fd = open(io->outfile, O_WRONLY | O_APPEND
+				| O_CREAT, S_IRUSR | S_IWUSR);
+	if (fd == -1)
+	{
+		ft_printerrno("filename");
+		return (0);
+	}
+	replace_fd(&cmd_node->write_fd, &fd);
+	return (1);
+}
+
 /**
  * Function: open_file
  * Description: Opens the file for IO redirection.
@@ -96,17 +122,8 @@ int	open_file(t_io_red *io, t_cmd_table *cmd_node)
 	if (io->type == HEREDOC || io->type == REDIR_IN)
 		return (open_infile(io, cmd_node));
 	else if (io->type == REDIR_OUT || io->type == APPEND)
-	{
-		if (io->type == REDIR_OUT)
-			cmd_node->write_fd = open(io->outfile, O_WRONLY | O_TRUNC
-					| O_CREAT, S_IRUSR | S_IWUSR);
-		else
-			cmd_node->write_fd = open(io->outfile, O_WRONLY | O_APPEND
-					| O_CREAT, S_IRUSR | S_IWUSR);
-		if (cmd_node->write_fd == -1)
-			return (ft_printerrno(io->outfile), EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+		return (open_outfile(io, cmd_node));
+	return (1);
 }
 /**
  * Function: unlink_heredoc

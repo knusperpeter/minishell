@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/20 15:05:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 17:22:33 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	init_loop_data(t_common *c){
 	c->cmd_struct = NULL;
 	c->envp = NULL;
 	c->exitstatus_str = NULL;
+	c->subshell_level = 0;
 	init_pipe(&c->new_pipe);
 	init_pipe(&c->old_pipe);
 }

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/20 13:42:11 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 17:11:42 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,6 +330,66 @@ void	ft_cmd_args_to_2d(t_list_d *cmd_table)
 		tmp = tmp->next;
 	}
 }
+
+int	get_env_size(t_env *env)
+{
+	int	size;
+
+	size = 0;
+	while (env)
+	{
+		size++;
+		env = env->next;
+	}
+	return (size);
+}
+
+char	**env_to_arr(int size, t_env *env)
+{
+	char	**ret;
+	char	*s;
+	int		i;
+
+	ret = malloc(sizeof(char *) * (size + 1));
+	if (!ret)
+		return (ft_printerrno(NULL), NULL);
+	i = 0;
+	while (i < size)
+	{
+		s = ft_strjoin(env->variable, "=");
+		if (!s)
+			return (ft_printerrno(NULL), NULL);
+		ret[i] = ft_strjoin(s, env->value);
+		free(s);
+		if (!ret[i])
+		{
+			free_2d(ret);
+			return (ft_printerrno(NULL), NULL);
+		}
+		i++;
+		env = env->next;
+	}
+	ret[i] = NULL;
+	return (ret);
+}
+
+char	**get_envp(t_env *env)
+{
+	int		size;
+	char	**ret;
+	t_env	*tmp;
+
+	ret = NULL;
+	tmp = env;
+	size = get_env_size(tmp);
+	tmp = env;
+	if (size > 0)
+	{
+		ret = env_to_arr(size, env);
+	}
+	return (ret);
+}
+
 /**
  * Function: ft_parsing
  * Description: Parses the raw input and converts it into a command table linked list.
@@ -355,5 +415,8 @@ int	ft_parsing(t_common *c)
 	ft_expansion(c, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
 	ft_cmd_args_to_2d(c->cmd_struct);
+	c->envp = get_envp(c->env);
+	if (!c->envp)
+		ft_printerrno("c->envp: ");	
 	return (EXIT_SUCCESS);
 }
