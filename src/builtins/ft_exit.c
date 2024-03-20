@@ -6,36 +6,43 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/20 13:29:32 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 15:26:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-int	overflows_ll(t_common *c, char *arg)
-{
-	long long	i;
-	int			len;
-	char		*s;
-
-	(void) c;
-	len = ft_strlen(arg);
-	i = ft_atoll(arg);
-	s = ft_lltoa(i);
-	if (ft_strncmp(arg, s, len))
-	{
-		free(s);
-		return (1);
-	}
-	free(s);
-	return (0);
-}
 
 int	is_sign(char c)
 {
 	if (c == '-' || c == '+')
 		return (1);
 	return (0);
+}
+
+int	overflows_ll(char *arg)
+{
+	int		i;
+	char	*long_max;
+	int		num_len;
+
+	i = 0;
+	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
+		i++;
+	if (arg[i] == '-')
+		long_max = "9223372036854775808";
+	else
+		long_max = "9223372036854775807";
+	if (is_sign(arg[i]))
+		i++;
+	while (arg[i] == '0')
+		i++;
+	num_len = 0;
+	while (ft_isdigit(arg[i + num_len]))
+		num_len++;
+	if (num_len < (int)ft_strlen(long_max)
+			|| ft_strncmp(&arg[i], long_max, num_len) <= 0)
+		return (0);
+	return (1);
 }
 
 int	valid_num(char *arg)
@@ -47,21 +54,21 @@ int	valid_num(char *arg)
 	i = 0;
 	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
 		i++;
- // dannach muss eine zahl kommen, wenn nach der zahl
- // was anderes als leerzeichen kommt, dann ist es falsch. same error
-	if ((int)ft_strlen(arg) > i && is_sign(arg[i]))
+	if (is_sign(arg[i]))
 		i++;
+	if (!ft_isdigit(arg[i]))
+		return (0);
 	while (arg[i])
 	{
 		if (ft_isdigit(arg[i]))
-		{
-			while (arg[i] == ' ')
-				i++;
-			if (arg[i] == '\0')
-			return (0);
-		}
-		i++;
+			i++;
+		else
+			break ;
 	}
+	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
+		i++;
+	if (arg[i] != '\0')
+		return (0);
 	return (1);
 }
 
@@ -69,7 +76,7 @@ int	ft_numeric_arg(t_common *c, char **arg)
 {	
 	if (!arg[1] || !arg[1][0])
 		return (1);	
-	if (!valid_num(arg[1]) || overflows_ll(c, arg[1]))
+	if (!valid_num(arg[1]) || overflows_ll(arg[1]))
 	{
 		ft_putstr_fd("❌ minishell: exit: ", 2);
 		ft_putstr_fd(arg[1], 2);
