@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/20 17:22:33 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/21 22:59:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	init_pipe(t_pipe *pipe)
 {
 	pipe->pipes[0] = -1;
 	pipe->pipes[1] = -1;
-	pipe->read_fd = &pipe->pipes[0];
-	pipe->read_fd = &pipe->pipes[1];
+	// pipe->read_fd = &pipe->pipes[0];
+	// pipe->read_fd = &pipe->pipes[1];
 }
 
 /**

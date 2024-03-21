@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/20 17:21:17 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/21 19:24:36 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ typedef struct s_io_red
 // Each pipe stands for a new node.???????
 typedef struct s_cmd_table
 {
-	int					id;
+	pid_t				id;
 	int					read_fd;
 	int					write_fd;
 	t_list				*io_red;
@@ -118,7 +118,7 @@ typedef struct	s_pipe
 typedef struct common_data
 {
 	pid_t				pid;
-	pid_t				subpid;
+	int					cmd_count;
 	int					subshell_level;
 	t_env				*env;
 	char				**envp;

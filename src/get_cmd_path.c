@@ -6,11 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/18 17:39:26 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/21 23:30:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <stdio.h>
 /**
  * Function: ft_get_paths
  * Description: Retrieves the PATH environment variable and splits it into an array of paths.
@@ -102,7 +103,10 @@ int	add_path(t_cmd_table *cmd, char **paths)
 				if (!path)
 					return (0);
 				if (!access(path, F_OK | X_OK | R_OK) && !is_dir(path))
+				{
+//					dprintf(2, "%s\n", path);
 					return (cmd->exec_path = path, 1);
+				}
 				free(path);
 			}
 		}
@@ -121,6 +125,8 @@ int	get_cmd_path(t_common *c, t_cmd_table *cmd)
 {
 	char	**paths;
 
+
+	// if cmd not found exit child
 	paths = ft_get_paths(c->env);
 	if (!paths)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/20 16:21:54 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/21 22:50:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_printerrno(char *s)
 	ft_putstr_fd("minishell: ", 2);
 	if (s)
 		ft_putstr_fd(s, 2);
-	ft_putstr_fd(strerror(errno), 2);
+//	ft_putstr_fd(strerror(errno), 2);
 }
 
 /**
@@ -84,7 +84,7 @@ int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 		ft_printerrno("filename");
 		return (0);
 	}
-	replace_fd(&cmd_node->read_fd, &fd);
+	replace_fd(&fd, &cmd_node->read_fd);
 	return (1);
 }
 
@@ -103,7 +103,7 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 		ft_printerrno("filename");
 		return (0);
 	}
-	replace_fd(&cmd_node->write_fd, &fd);
+	replace_fd(&fd, &cmd_node->write_fd);
 	return (1);
 }
 
@@ -159,23 +159,27 @@ void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
  * - cmd_node: The command table node.
  * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
  */
-int	open_io(t_list *io, t_cmd_table *cmd_node)
+int	open_io(t_list *io_lst, t_cmd_table *cmd_node)
 {
 	t_list		*tmp;
+	t_io_red	*io;
 	int			status;
 
-	status = EXIT_SUCCESS;
-	tmp = io;
+	status = 1;
+	tmp = io_lst;
 	while (tmp)
 	{
+		io = tmp->content;
 		ft_close_old_fd(cmd_node, tmp->content);
-		if (open_file(tmp->content, cmd_node) == EXIT_FAILURE)
-		{
-			unlink_heredoc(io->content, cmd_node);
-			status = EXIT_FAILURE;
-		}
+		if (io->type == HEREDOC || io->type == REDIR_IN)
+			status = open_infile(io, cmd_node);
+		else if (io->type == REDIR_OUT || io->type == APPEND)
+			status = open_outfile(io, cmd_node);
+		if (status == 0)
+			unlink_heredoc(io_lst->content, cmd_node);
 //if multiple infiles -> just take the last one. This should happen already in open_file
 		tmp = tmp->next;
 	}
+	
 	return (status);
 }
