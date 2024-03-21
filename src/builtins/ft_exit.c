@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/20 15:26:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/21 16:00:57 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,45 @@ int	is_sign(char c)
 	return (0);
 }
 
+char	*get_llstr(char *arg, int i, int num_len)
+{
+	char	*str;
+	int		j;
+	int		minus;
+
+	minus = 0;
+	j = 0;
+	while (arg[j] && ft_strchr(WHITESPACE, arg[j]))
+		j++;
+	if (is_sign(arg[j]))
+	{
+		if (arg[j] == '-')
+			minus = 1;
+		j++;
+	}
+	str = malloc(sizeof(char) * (num_len + minus + 1));
+	if (str == NULL)
+		return (NULL);
+	j = 0;
+	if (minus)
+		str[j++] = '-';
+	while (arg[i] && ft_isdigit(arg[i]))
+		str[j++] = arg[i++];
+	str[j] = '\0';
+	return (str);
+}
+
 int	overflows_ll(char *arg)
 {
 	int		i;
-	char	*long_max;
+	char	*num;
+    char    *s;
 	int		num_len;
 
 	i = 0;
+	num_len = 0;
 	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
 		i++;
-	if (arg[i] == '-')
-		long_max = "9223372036854775808";
-	else
-		long_max = "9223372036854775807";
 	if (is_sign(arg[i]))
 		i++;
 	while (arg[i] == '0')
@@ -39,10 +65,11 @@ int	overflows_ll(char *arg)
 	num_len = 0;
 	while (ft_isdigit(arg[i + num_len]))
 		num_len++;
-	if (num_len < (int)ft_strlen(long_max)
-			|| ft_strncmp(&arg[i], long_max, num_len) <= 0)
-		return (0);
-	return (1);
+	s = get_llstr(arg, i, num_len);
+    num = ft_lltoa(ft_atoll(s));
+	if (ft_strncmp(s, num, num_len))
+		return (free(s), free(num), 1);
+    return(free(s), free(num), 0);
 }
 
 int	valid_num(char *arg)
