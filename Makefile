@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: miheider <miheider@42>                     +#+  +:+       +#+         #
+#    By: miheider <miheider@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/03/10 20:04:50 by miheider         ###   ########.fr        #
+#    Updated: 2024/03/19 19:46:20 by miheider         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/builtins/ft_cd_2.c \
 			src/minishell.c \
 			src/init_env.c \
-			src/lexer_new.c \
+			src/lexer.c \
 			src/lexer_utils.c \
 			src/parsing_cmd_table.c \
 			src/expansion.c \
