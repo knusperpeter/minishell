@@ -1,19 +1,30 @@
-Here's a step-by-step guide to the project:
+# Minishell
 
-1. **Understand the basics of shells**: Before you begin coding, it's crucial to understand what a shell is and how it works. A shell provides a convenient text interface to interact with your system.
+## Summary
 
-2. **Set up your development environment**: Choose a suitable IDE or text editor for writing your code. You'll also need to ensure that your computer has the necessary libraries and tools installed to build and run your shell [Source 0].
+Minishell is a simple shell, similar to bash, written in C. It provides a command line interface for users to interact with the system. This project is a great way to learn about processes and file descriptors.
 
-3. **Create the lexer**: The lexer, also known as the tokenizer, breaks down the input into tokens. This process is often straightforward.
+## Features
 
-4. **Develop the parser**: Parsing is a complex process. You need to understand how to use techniques such as recursive descent to parse the input. Recursive descent involves breaking down a problem into smaller subproblems until a solution can be found.
+- Displays a prompt when waiting for a new command.
+- Maintains a working history.
+- Searches and launches the right executable (based on the PATH variable or using a relative or absolute path).
+- Handles single and double quotes.
+- Implements redirections (`<`, `>`, `<<`, `>>`).
+- Implements pipes (`|`).
+- Handles environment variables (`$`).
+- Handles `$?` which expands to the exit status of the most recently executed foreground pipeline.
+- Handles ctrl-C, ctrl-D and ctrl-\ signals.
+- Implements the following builtins: echo (with option -n), cd, pwd, export, unset, env, exit.
 
-5. **Define the grammar**: The grammar of your shell defines how commands and expressions should be structured. For this project, you'll likely use Context-Free Grammar (CFG).
+## Building and Running
 
-6. **Handle redirections**: Redirections involve opening a file and then redirecting the standard input or standard output to that file. In the case of a here-doc, you redirect the standard input to a pipe.
+The project includes a Makefile for building the executable. Use the following commands:
 
-7. **Implement built-in commands**: Built-in commands are functions that are included in the shell itself, such as `echo`. These commands can range from simple to complex.
+- To build the project, run `make`.
+- To clean the build, run `make clean`.
+- To run the shell, use `./minishell`.
 
-8. **Handle signals**: Your shell should respond appropriately to certain signals, such as `ctrl + C`, `ctrl + \`, and `ctrl + D`. For these signals, you'll need to catch `SIGINT` and `SIGQUIT`, and check for `EOF` or the end of string (`NULL` character) in the case of `ctrl + D`.
+## Notes
 
-9. **Test your shell**: Finally, thoroughly test your shell to ensure it behaves as expected. Be prepared to handle edge cases and potential errors.
+- The readline() function can cause memory leaks. Create a suppression file if you want to look for leaks.

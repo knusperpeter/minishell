@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/18 20:41:28 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:16:07 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ typedef struct s_io_red
 // Each pipe stands for a new node.???????
 typedef struct s_cmd_table
 {
-	int					id;
+	pid_t				id;
 	int					read_fd;
 	int					write_fd;
 	t_list				*io_red;
@@ -117,15 +117,18 @@ typedef struct	s_pipe
 // Common struct
 typedef struct common_data
 {
+	pid_t				pid;
+	int					cmd_count;
+	int					subshell_level;
 	t_env				*env;
 	char				**envp;
 	t_list_d			*cmd_struct;
 	t_list				*tokens;
 //	t_list				*cmd_tokens;
 	unsigned int		exitstatus;
+	char				*exitstatus_str;
 	char				*raw_prompt;
-	t_pipe				new_pipe;
-	t_pipe				old_pipe;
+	int					old_pipe;
 
 //	t_final_cmd_table	*final_cmd;
 }	t_common;
@@ -138,7 +141,8 @@ void	free_2d(char **str);
 void	free_env_nodes(t_env *start);
 void	free_cmd_table(void *content);
 void	ft_cleanup_loop(t_common *c);
-void	free_all(t_common *c);
+void	free_all(t_common *c, int cleanup_loop);
+void	ft_clean_exit(t_common *c, char *msg, int cleanup_loop);
 int		ft_loop(t_common *c);
 int		ft_parsing(t_common *c);
 int		open_io(t_list *io, t_cmd_table *cmd_node);
@@ -152,14 +156,13 @@ t_list_d	*ft_lstlast_d(t_list_d *lst);
 void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
-void	safe_close(int *fd);
 void	ft_rm_quotes(t_list_d *cmds);
 
 //lexer
 void    error_lexer(char *s, int i);
 int		get_cmd_path(t_common *c, t_cmd_table *cmd);
-void	ft_expansion(t_env *env, t_list_d *cmds);
-int    count_pipes(char *input);
+void	ft_expansion(t_common *c, t_list_d *cmds);
+int		count_pipes(char *input);
 
 // builtins
 int		ft_pwd(void);

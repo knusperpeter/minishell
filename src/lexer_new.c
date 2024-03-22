@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/03/19 15:53:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/20 14:55:30 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	check_char(char *character)
 	int		i;
 
 	i = 0;
-	special = "*?[]()<>#";
+	special = "*[]()<>#";
 	if (*character == '\'' || *character == '\"')
 		return (2);
 	while (i < 10)
@@ -227,7 +227,7 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 				return (-10);
 		}
 	}
-	if ((i > 0 && check_char(&input[*i]) == 0
+	if ((*i > 0 && check_char(&input[*i]) == 0
 			&& check_char(&input[*(i) - 1]) == 1)
 		|| (check_char(&input[*i]) == 1
 			&& check_char(&input[*(i) - 1]) == 0
@@ -386,7 +386,7 @@ void	error_check_pipes(int *i, int *pipe, char *input)
 		error_lexer("|", 2);
 	while (input[*i] && input[*i] == ' ')
 	{
-		if (input[*i] == ' ' && input[*(i + 1)] == '\0')
+		if (input[*i] == ' ' && input[*(i) + 1] == '\0')
 			error_lexer("|", 2);
 		(*i)++;
 	}

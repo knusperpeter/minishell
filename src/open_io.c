@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   open_io.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 14:54:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:54 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
 /**
  * Function: ft_printerrno
  * Description: Prints the error message associated with the current errno value.
@@ -21,7 +22,7 @@ void	ft_printerrno(char *s)
 	ft_putstr_fd("minishell: ", 2);
 	if (s)
 		ft_putstr_fd(s, 2);
-	ft_putstr_fd(strerror(errno), 2);
+//	ft_putstr_fd(strerror(errno), 2);
 }
 
 /**
@@ -31,11 +32,11 @@ void	ft_printerrno(char *s)
  * - limiter: The delimiter string for the heredoc.
  * - cmd_table: The command table structure.
  */
-void	here_doc(char *limiter, t_cmd_table *cmd_table)
+void	here_doc(char *limiter, t_cmd_table *cmd_table, int *fd)
 {
 	char		*buf;
 
-	if (cmd_table->read_fd == -1)
+	if (*(fd) == -1)
 		ft_printerrno(limiter);
 	while (1)
 	{
@@ -46,12 +47,12 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table)
 			break ;
 		if (ft_strncmp(limiter, buf, (ft_strlen(buf) - 1)) == 0)
 			break ;
-		write(cmd_table->read_fd, buf, ft_strlen(buf));
+		write(*(fd), buf, ft_strlen(buf));
 	}
 	get_next_line(0, &buf, 1);
 	free(buf);
-	close(cmd_table->read_fd);
-	cmd_table->read_fd = open(cmd_table->heredoc_name, O_RDONLY);
+	close(*(fd));
+	*(fd) = open(cmd_table->heredoc_name, O_RDONLY);
 	if (cmd_table->read_fd == -1)
 	{
 		ft_printerrno(NULL);
@@ -69,18 +70,48 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table)
  */
 int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 {
+	int		fd;
+	
 	if (io->type == HEREDOC)
 	{
-		cmd_node->read_fd = open(cmd_node->heredoc_name, O_CREAT | O_WRONLY
+		fd = open(cmd_node->heredoc_name, O_CREAT | O_WRONLY
 				| O_TRUNC, 0644);
-		here_doc(io->heredoc_limiter, cmd_node);
+		here_doc(io->heredoc_limiter, cmd_node, &fd);
 	}
 	else
-		cmd_node->read_fd = open(io->infile, O_RDONLY);
-	if (cmd_node->read_fd == -1)
-		return (ft_printerrno(io->infile), EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		fd = open(io->infile, O_RDONLY);
+	if (fd == -1)
+	{
+		ft_printerrno("filename");
+		return (0);
+	}
+	if (cmd_node->read_fd != 0)
+		close(cmd_node->read_fd);
+	cmd_node->read_fd = fd;
+	return (1);
 }
+
+int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
+{
+	int		fd;
+	
+	if (io->type == REDIR_OUT)
+		fd = open(io->outfile, O_WRONLY | O_TRUNC
+				| O_CREAT, S_IRUSR | S_IWUSR);
+	else
+		fd = open(io->outfile, O_WRONLY | O_APPEND
+				| O_CREAT, S_IRUSR | S_IWUSR);
+	if (fd == -1)
+	{
+		ft_printerrno("filename");
+		return (0);
+	}
+	if (cmd_node->write_fd != 1)
+		close(cmd_node->write_fd);
+	cmd_node->write_fd = fd;
+	return (1);
+}
+
 /**
  * Function: open_file
  * Description: Opens the file for IO redirection.
@@ -96,17 +127,8 @@ int	open_file(t_io_red *io, t_cmd_table *cmd_node)
 	if (io->type == HEREDOC || io->type == REDIR_IN)
 		return (open_infile(io, cmd_node));
 	else if (io->type == REDIR_OUT || io->type == APPEND)
-	{
-		if (io->type == REDIR_OUT)
-			cmd_node->write_fd = open(io->outfile, O_WRONLY | O_TRUNC
-					| O_CREAT, S_IRUSR | S_IWUSR);
-		else
-			cmd_node->write_fd = open(io->outfile, O_WRONLY | O_APPEND
-					| O_CREAT, S_IRUSR | S_IWUSR);
-		if (cmd_node->write_fd == -1)
-			return (ft_printerrno(io->outfile), EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+		return (open_outfile(io, cmd_node));
+	return (1);
 }
 /**
  * Function: unlink_heredoc
@@ -129,10 +151,10 @@ void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich e
  */
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 {
-		if (io->type == HEREDOC || io->type == REDIR_IN)
-			safe_close(&cmd_node->read_fd);
-		else if (io->type == REDIR_OUT || io->type == APPEND)
-			safe_close(&cmd_node->write_fd);	
+		if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
+			close(cmd_node->read_fd);
+		else if ((io->type == REDIR_OUT || io->type == APPEND) && cmd_node->write_fd != 1)
+			close(cmd_node->write_fd);	
 }
 /**
  * Function: open_io
@@ -142,23 +164,27 @@ void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
  * - cmd_node: The command table node.
  * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
  */
-int	open_io(t_list *io, t_cmd_table *cmd_node)
+int	open_io(t_list *io_lst, t_cmd_table *cmd_node)
 {
 	t_list		*tmp;
+	t_io_red	*io;
 	int			status;
 
-	status = EXIT_SUCCESS;
-	tmp = io;
+	status = 1;
+	tmp = io_lst;
 	while (tmp)
 	{
+		io = tmp->content;
 		ft_close_old_fd(cmd_node, tmp->content);
-		if (open_file(tmp->content, cmd_node) == EXIT_FAILURE)
-		{
-			unlink_heredoc(io->content, cmd_node);
-			status = EXIT_FAILURE;
-		}
+		if (io->type == HEREDOC || io->type == REDIR_IN)
+			status = open_infile(io, cmd_node);
+		else if (io->type == REDIR_OUT || io->type == APPEND)
+			status = open_outfile(io, cmd_node);
+		if (status == 0)
+			unlink_heredoc(io_lst->content, cmd_node);
 //if multiple infiles -> just take the last one. This should happen already in open_file
 		tmp = tmp->next;
 	}
+	
 	return (status);
 }

@@ -6,12 +6,12 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/14 18:19:44 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:49:55 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// declare -x VAR="value" only?
 #include "../../include/minishell.h"
-#include <stdlib.h>
 
 void	export_print_env(t_env *env)//add alphabetical order?
 {

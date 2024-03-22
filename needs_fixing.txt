@@ -1,21 +1,23 @@
 >Tokenizing expanded variables still missing
->Prompt does not show right after executing non-builtins
 
 .ls ./ls ./ ./libft/
 
 
 heredoc expansion{
-<< 1 cat
-> $x
-> 1
-123
-
-<< "1" cat
-> $x
-> 1
-$x
+    << 1 cat
+    > $x
+    > 1
+    123
+    
+    << "1" cat
+    > $x
+    > 1
+    $x
 }
 
-Lexer:
+exit not working sometimes. why?
+
+lexer_new.c cases:
+
 export x=""ls -l""      >> valgrind
 export x="ls \"-l\""    >>ms: x=ls \-l\     bash: x=ls "-l"

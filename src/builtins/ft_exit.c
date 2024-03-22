@@ -6,77 +6,139 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 15:21:11 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/21 16:00:57 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	overflows_ll(t_common *c, char *arg)
+int	is_sign(char c)
 {
-	long long	i;
-	int			len;
-	char		*s;
-
-	(void) c;
-	len = ft_strlen(arg);
-	i = ft_atoll(arg);
-	s = ft_lltoa(i);
-	if (ft_strncmp(arg, s, len))
-	{
-		free(s);
+	if (c == '-' || c == '+')
 		return (1);
-	}
-	free(s);
 	return (0);
+}
+
+char	*get_llstr(char *arg, int i, int num_len)
+{
+	char	*str;
+	int		j;
+	int		minus;
+
+	minus = 0;
+	j = 0;
+	while (arg[j] && ft_strchr(WHITESPACE, arg[j]))
+		j++;
+	if (is_sign(arg[j]))
+	{
+		if (arg[j] == '-')
+			minus = 1;
+		j++;
+	}
+	str = malloc(sizeof(char) * (num_len + minus + 1));
+	if (str == NULL)
+		return (NULL);
+	j = 0;
+	if (minus)
+		str[j++] = '-';
+	while (arg[i] && ft_isdigit(arg[i]))
+		str[j++] = arg[i++];
+	str[j] = '\0';
+	return (str);
+}
+
+int	overflows_ll(char *arg)
+{
+	int		i;
+	char	*num;
+    char    *s;
+	int		num_len;
+
+	i = 0;
+	num_len = 0;
+	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
+		i++;
+	if (is_sign(arg[i]))
+		i++;
+	while (arg[i] == '0')
+		i++;
+	num_len = 0;
+	while (ft_isdigit(arg[i + num_len]))
+		num_len++;
+	s = get_llstr(arg, i, num_len);
+    num = ft_lltoa(ft_atoll(s));
+	if (ft_strncmp(s, num, num_len))
+		return (free(s), free(num), 1);
+    return(free(s), free(num), 0);
+}
+
+int	valid_num(char *arg)
+{
+	int	i;
+
+	if (!*arg)
+		return (0);
+	i = 0;
+	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
+		i++;
+	if (is_sign(arg[i]))
+		i++;
+	if (!ft_isdigit(arg[i]))
+		return (0);
+	while (arg[i])
+	{
+		if (ft_isdigit(arg[i]))
+			i++;
+		else
+			break ;
+	}
+	while (arg[i] && ft_strchr(WHITESPACE, arg[i]))
+		i++;
+	if (arg[i] != '\0')
+		return (0);
+	return (1);
+}
+
+int	ft_numeric_arg(t_common *c, char **arg)
+{	
+	if (!arg[1] || !arg[1][0])
+		return (1);	
+	if (!valid_num(arg[1]) || overflows_ll(arg[1]))
+	{
+		ft_putstr_fd("❌ minishell: exit: ", 2);
+		ft_putstr_fd(arg[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		return (c->exitstatus = 2, 0);
+	}
+	return (1);
 }
 
 // this does not check for input like "exit +++" or "exit "--123-"" Maybe it
 // would be best to put this whole if statement into a sparte function.
 int	check_arg(t_common *c, char **arg)
 {
-	int	i;
-
-	i = 0;
-	while (arg[1][i])
-	{
-		if ((!ft_isdigit(arg[1][i]) && arg[1][i] != '-' && arg[1][i] != '+'
-				&& arg[1][i] != ' ') || overflows_ll(c, arg[1]))
-		{
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(arg[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			return (-1);
-		}
-		i++;
-	}
+	if (!arg[1])
+		return (c->exitstatus = 0, -1);
+	if (!ft_numeric_arg(c, arg))
+		return (2);
 	if (arg[2])
 	{
-		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 0);// don't exit in this case
+		return (ft_putstr_fd("❌ minishell: exit: too many arguments\n", 1), 1);// don't exit in this case
 	}
 	else if (arg[1])
 		c->exitstatus = ft_atoll(arg[1]) % 256;//check if negative nums might appear
-	else
-		c->exitstatus = 0;
-	return (1);
+	return (-1);
 }
 
 //to hand back the exit status from subshell, use waitpid in parent process?
 void	ft_exit(t_common *c, char **cmd)
 {
-	c->exitstatus = 1;
 	printf("exit\n");
 	if (cmd)
-	{
 		if (cmd[1])
-		{
-			if (!check_arg(c, cmd))
-			{
+			if (check_arg(c, cmd) == 1)
 				return ;
-			}
-		}
-	}
-	exit(c->exitstatus);
+	ft_clean_exit(c, NULL, 1);
 }
 
 /* 

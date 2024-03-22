@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/16 23:53:49 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:17:45 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	init_pipe(t_pipe *pipe)
 {
 	pipe->pipes[0] = -1;
 	pipe->pipes[1] = -1;
-	pipe->read_fd = &pipe->pipes[0];
-	pipe->read_fd = &pipe->pipes[1];
+	// pipe->read_fd = &pipe->pipes[0];
+	// pipe->read_fd = &pipe->pipes[1];
 }
 
 /**
@@ -47,8 +47,9 @@ void	init_loop_data(t_common *c){
 	c->tokens = NULL;
 	c->cmd_struct = NULL;
 	c->envp = NULL;
-	init_pipe(&c->new_pipe);
-	init_pipe(&c->old_pipe);
+	c->exitstatus_str = NULL;
+	c->subshell_level = 0;
+	c->old_pipe = 0;
 }
 
 /**
@@ -116,6 +117,6 @@ int	main(int ac, char **av, char **envp)
 
 	init_minishell(&c, envp);
 	ft_loop(&c);
-	free_all(&c);
+	free_all(&c, 0);
 	return (0);
 }
