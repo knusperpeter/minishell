@@ -6,7 +6,7 @@
 #    By: miheider <miheider@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/03/19 19:46:20 by miheider         ###   ########.fr        #
+#    Updated: 2024/03/21 17:37:17 by miheider         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 CC		= cc
 AR		= ar
 RM		= rm
-CFLAGS	= -Wall -Wextra -Werror -Wno-unused-result -Ofast -march=native -g
+CFLAGS	= -Wall -Wextra -Werror -Wno-unused-result -march=native -g
 LFLAGS	= -lreadline
 HDRS	= include/minishell.h
 LIBFT	= libft

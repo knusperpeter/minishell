@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/19 22:25:10 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/21 19:47:27 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ int	check_char(char *character)
 	int		i;
 
 	i = 0;
-	special = "*?[]()<>#";
+	special = "*[]()<>#";
 	if (*character == '\'' || *character == '\"')
 		return (2);
-	while (i < 10)
+	while (i < 9)
 	{
 		if (special[i] == *character)
 			return (1);
@@ -321,13 +321,13 @@ int	prep_input_two(int *i, int *cc, char *input)
 		(*cc)++;
 	while (input[*i] != '\0' && input[*i] != '\'' && input[*i] != '\"')
 	{
-		if (input[*(i) + 1] == '\0') // Check for null terminator
+		if (input[*(i)] == '\0') // Check for null terminator
 			break;
     	count_up(i, cc);
 	}
 	if (input[*i] != '\0')
 	{
-		if (input[*(i) + 1] != '\0' && input[*(i) + 1] != ' ')
+		if (input[*(i) + 1] != '\0' || input[*(i) + 1] != ' ')
 			count_up(i, cc);
 		else if (input[*(i) + 1] != '\0')
     		return (-9);
@@ -338,10 +338,10 @@ int	prep_input_two(int *i, int *cc, char *input)
 void	prep_input_one(int i, int *cc, char *input)
 {
 	if (i > 0 && *cc != 0 && check_char(&input[i]) == 1 && input[i - 1] != ' '
-		&& check_char(&input[i - 1]) != 1 && (input[i - 1] != '\''
+		&& input[i] != input[i - 1] && (input[i - 1] != '\''
 			|| input[i - 1] != '\"'))
 		(*cc)++;
-	if (check_char(&input[i]) == 1 && input[i + 1] != ' '
+	if (input[i] && check_char(&input[i]) == 1 && input[i + 1] != ' '
 		&& check_char(&input[i + 1]) != 1 && input[i + 1] != '\0'
 		&& (input[i] != '\'' || input[i] != '\"'))
 		(*cc)++;
