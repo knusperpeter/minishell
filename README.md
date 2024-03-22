@@ -1,19 +1,7 @@
-Here's a step-by-step guide to the project:
+**Minishell** is a project that aims to create a simple shell, similar to bash, using the C programming language. The shell is designed to communicate with the computer using interactive lines of commands in a language somewhat close to human language.
 
-1. **Understand the basics of shells**: Before you begin coding, it's crucial to understand what a shell is and how it works. A shell provides a convenient text interface to interact with your system.
+The end program, named "minishell", is capable of displaying a prompt when waiting for a new command, maintaining a working history, and searching and launching the correct executable based on the PATH variable or using a relative or absolute path. It handles single and double quotes, implements redirections and pipes, and handles environment variables and certain special signals like ctrl-C, ctrl-D and ctrl-.
 
-2. **Set up your development environment**: Choose a suitable IDE or text editor for writing your code. You'll also need to ensure that your computer has the necessary libraries and tools installed to build and run your shell [Source 0].
+The shell also implements several built-in commands like echo, cd, pwd, export, unset, env, and exit. The program is written in accordance with the Norm and is expected to handle errors gracefully without unexpected quits.
 
-3. **Create the lexer**: The lexer, also known as the tokenizer, breaks down the input into tokens. This process is often straightforward.
-
-4. **Develop the parser**: Parsing is a complex process. You need to understand how to use techniques such as recursive descent to parse the input. Recursive descent involves breaking down a problem into smaller subproblems until a solution can be found.
-
-5. **Define the grammar**: The grammar of your shell defines how commands and expressions should be structured. For this project, you'll likely use Context-Free Grammar (CFG).
-
-6. **Handle redirections**: Redirections involve opening a file and then redirecting the standard input or standard output to that file. In the case of a here-doc, you redirect the standard input to a pipe.
-
-7. **Implement built-in commands**: Built-in commands are functions that are included in the shell itself, such as `echo`. These commands can range from simple to complex.
-
-8. **Handle signals**: Your shell should respond appropriately to certain signals, such as `ctrl + C`, `ctrl + \`, and `ctrl + D`. For these signals, you'll need to catch `SIGINT` and `SIGQUIT`, and check for `EOF` or the end of string (`NULL` character) in the case of `ctrl + D`.
-
-9. **Test your shell**: Finally, thoroughly test your shell to ensure it behaves as expected. Be prepared to handle edge cases and potential errors.
+The project is evaluated based on the code submitted to the assigned git repository and is expected to be free of memory leaks and other malfunctions.
