@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/22 01:32:21 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/22 16:58:15 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,16 +131,18 @@ char	**get_envp(t_env *env)
  * @param fd: Array of file descriptors, prev: Previous file descriptor, cmd: Command table.
  * Closes read and write file descriptors in the command table, previous descriptor, and both descriptors in the array.
  */
-void	close_fds(int *fd, int old_pipe, t_cmd_table *cmd)
+void	close_fds(t_common *c, int *fd, t_cmd_table *cmd)
 {	
 	if (cmd->read_fd != STDIN)
 		close(cmd->read_fd);
 	if (cmd->write_fd != STDOUT)
 		close(cmd->write_fd);
-	if (old_pipe)
-		close(old_pipe);
-	close(fd[0]); //if more than 1 cmd
-	close(fd[1]); //if more than 1 cmd
+	if (c->old_pipe)
+		close(c->old_pipe);
+	if (c->cmd_count > 1)
+		close(fd[0]); //if more than 1 cmd
+	if (c->cmd_count > 1)
+		close(fd[1]); //if more than 1 cmd
 }
 
 /**
@@ -187,7 +189,7 @@ void ft_redirect_io(t_common *c, t_cmd_table *cmd, int i, int *fd)
 		if (dup2(fd[1], STDOUT) == -1)
 			ft_printerrno("4");
 	}
-	close_fds(fd, c->old_pipe, cmd);
+	close_fds(c, fd, cmd);
 }
 
 /**
@@ -202,13 +204,13 @@ int	is_builtin(char *cmd)
 	if (!cmd)
 		return (0);
 	size = ft_strlen(cmd);
-	if (ft_strncmp(cmd, "echo", size) == 0 || \
-		ft_strncmp(cmd, "env", size) == 0 || \
-		ft_strncmp(cmd, "unset", size) == 0 || \
-		ft_strncmp(cmd, "export", size) == 0 || \
-		ft_strncmp(cmd, "cd", size) == 0 || \
-		ft_strncmp(cmd, "pwd", size) == 0 || \
-		ft_strncmp(cmd, "exit", size) == 0)
+	if (ft_strncmp("echo", cmd, size) == 0 || \
+		ft_strncmp("env", cmd, size) == 0 || \
+		ft_strncmp("unset", cmd, size) == 0 || \
+		ft_strncmp("export", cmd, size) == 0 || \
+		ft_strncmp("cd", cmd, size) == 0 || \
+		ft_strncmp("pwd", cmd, size) == 0 || \
+		ft_strncmp("exit", cmd, size) == 0)
 		return (1);
 	return (0);
 }
