@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/20 15:07:46 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:18 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdio.h>
 
 //	wenn quotes in doublequotes, dann quotes nicht removen
 //	wenn doublequotes in quotes, dann nichts expanden

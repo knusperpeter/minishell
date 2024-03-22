@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/20 15:09:03 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:24 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
 /**
  * Function: free_2d
  * Description: Frees a 2D array of strings.

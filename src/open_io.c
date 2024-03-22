@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   open_io.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/21 22:50:52 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:54 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
 /**
  * Function: ft_printerrno
  * Description: Prints the error message associated with the current errno value.

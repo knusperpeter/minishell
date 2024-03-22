@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_cmd_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/21 22:08:09 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:59 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
+
 /**
  * Function: setup_env
  * Description: Converts the linked list of environment variables into an array of strings.

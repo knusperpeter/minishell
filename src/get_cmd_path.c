@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/21 23:30:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:31 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdio.h>
+
 /**
  * Function: ft_get_paths
  * Description: Retrieves the PATH environment variable and splits it into an array of paths.
