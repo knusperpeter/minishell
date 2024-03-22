@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 20:33:37 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/11 15:41:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:51:16 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 t_list_d	*ft_lstnew_d(void *content)
 {

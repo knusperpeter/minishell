@@ -6,12 +6,11 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:15 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/13 23:11:13 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:48:14 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <stdlib.h>
 
 int	check_nl(char *arg)
 {

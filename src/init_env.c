@@ -6,12 +6,11 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/13 23:59:14 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:35 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdlib.h>
 
 int	create_list_element(void **element, size_t size)
 {

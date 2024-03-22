@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/19 14:35:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:24 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
 /**
  * Function: free_2d
  * Description: Frees a 2D array of strings.
@@ -150,13 +151,28 @@ void	ft_cleanup_loop(t_common *c)
  * Description: Frees all allocated memory before the program ends.
  * Parameter: c - The common structure containing the shell data.
  */
-void	free_all(t_common *c)
+void	free_all(t_common *c, int cleanup_loop)
 {
 //	t_env	*node;
 	//rl_clear_history();
 	if (c)
 	{
-		free_env_nodes(c->env);
-		free(c);
+		if (cleanup_loop)
+			ft_cleanup_loop(c);
+		if (c->env)
+			free_env_nodes(c->env);
+		if (c->exitstatus_str)
+			free(c->exitstatus_str);
+//		free(c);
 	}
+	rl_clear_history();
+}
+
+void	ft_clean_exit(t_common *c, char *msg, int cleanup_loop)
+{
+	if (msg)
+		printf("%s\n", msg);
+//	close_all_pipes(c);
+	free_all(c, cleanup_loop);
+	exit(c->exitstatus);
 }

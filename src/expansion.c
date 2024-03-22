@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/16 21:07:28 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:18 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdio.h>
 
 //	wenn quotes in doublequotes, dann quotes nicht removen
 //	wenn doublequotes in quotes, dann nichts expanden
@@ -63,7 +62,7 @@ char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
  * Parameters: env - The linked list of environment variables, str - The original string, i - The index of the variable in the string.
  * Returns: The new string with the variable replaced by its value.
  */
-char	*ft_replace_var(t_env *env, char *str, int *i)
+char	*ft_replace_var(t_common *c, t_env *env, char *str, int *i)
 {
 	int		var_len;
 	char	*tmp;
@@ -72,7 +71,15 @@ char	*ft_replace_var(t_env *env, char *str, int *i)
 	var_len = 0;
 	while (str[*i + 1 + var_len] && (ft_isalnum(str[*i + 1 + var_len]) || str[*i + 1 + var_len] == '_'))
 		var_len++;
-	tmp = ft_substr(str, *i + 1, var_len);
+	if (str[*i + 1] == '?')
+	{
+		c->exitstatus_str = ft_itoa(c->exitstatus);
+		if (!c->exitstatus_str)
+			return (ft_printerrno("expansion: "), NULL);
+		return (ft_create_string(c->exitstatus_str, str, i, 1));
+	}
+	else
+		tmp = ft_substr(str, *i + 1, var_len);
 	if (!tmp)
 		return (ft_printerrno("expansion: "), NULL);
 	while (env)
@@ -90,7 +97,7 @@ char	*ft_replace_var(t_env *env, char *str, int *i)
  * Parameters: env - The linked list of environment variables, str - The original string.
  * Returns: The new string with all variables replaced by their values.
  */
-char	*ft_substitute(t_env *env, char *str)
+char	*ft_substitute(t_common *c, t_env *env, char *str)
 {
 	int		i;
 	char	*ret;
@@ -117,7 +124,7 @@ char	*ft_substitute(t_env *env, char *str)
 		if (str[i] == '$' && str[i + 1] && str[i + 1] != ' ' && !single_quotes)
 		{
 			tmp = env;
-			ret = ft_replace_var(tmp, str, &i);
+			ret = ft_replace_var(c, tmp, str, &i);
 			if (!ret)
 				return (ft_printerrno("expansion ret malloc: "), NULL);
 			str = ret;
@@ -136,7 +143,7 @@ char	*ft_substitute(t_env *env, char *str)
  * Parameters: env - The linked list of environment variables, io_lst - The linked list of I/O redirections.
  * This function iterates over the I/O redirection list and substitutes variables in the filenames.
  */
-void	ft_expand_red(t_env *env, t_list *io_lst)
+void	ft_expand_red(t_common *c, t_list *io_lst)
 {
 	t_io_red	*io;
 
@@ -145,8 +152,8 @@ void	ft_expand_red(t_env *env, t_list *io_lst)
 		io = io_lst->content;
 		if (!io)
 			return ;
-		io->infile = ft_substitute(env, io->infile);
-		io->outfile = ft_substitute(env, io->outfile);
+		io->infile = ft_substitute(c, c->env, io->infile);
+		io->outfile = ft_substitute(c, c->env, io->outfile);
 		io_lst = io_lst->next;
 	}
 }
@@ -157,7 +164,7 @@ void	ft_expand_red(t_env *env, t_list *io_lst)
  * Parameters: env - The linked list of environment variables, cmd - The command table.
  * This function iterates over the command and I/O redirections and substitutes variables.
  */
-void	ft_expand_cmd(t_env *env, t_cmd_table *cmd)
+void	ft_expand_cmd(t_common *c, t_cmd_table *cmd)
 {
 	t_list	*tmp_io;
 	t_list	*tmp_cmd;
@@ -167,11 +174,11 @@ void	ft_expand_cmd(t_env *env, t_cmd_table *cmd)
 	tmp_cmd = cmd->cmds;
 	while (tmp_cmd)
 	{
-		tmp_cmd->content = ft_substitute(env, tmp_cmd->content);
+		tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
 		tmp_cmd = tmp_cmd->next;
 	}
 	tmp_io = cmd->io_red;
-	ft_expand_red(env, tmp_io);
+	ft_expand_red(c, tmp_io);
 }
 
 /**
@@ -180,14 +187,14 @@ void	ft_expand_cmd(t_env *env, t_cmd_table *cmd)
  * Parameters: env - The linked list of environment variables, cmds - The linked list of command tables.
  * This function iterates over the command tables and expands variables in each one.
  */
-void	ft_expansion(t_env *env, t_list_d *cmds)//$? "|" ">" ...
+void	ft_expansion(t_common *c, t_list_d *cmds)//$? "|" ">" ...
 {
 	t_list_d	*tmp;
 
 	tmp = cmds;
 	while (tmp)
 	{
-		ft_expand_cmd(env, tmp->content);
+		ft_expand_cmd(c, tmp->content);
 		tmp = tmp->next;
 	}
 }
@@ -219,9 +226,7 @@ char	*ft_rm_quotes_str(char *str)
 	int 	j;
 	int		single_quotes;
 	int		double_quotes;
-	char	*ret;
 
-	ret = str;
 	if (!str)
 		return (NULL);
 	single_quotes = 0;

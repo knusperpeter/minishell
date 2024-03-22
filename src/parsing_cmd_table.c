@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_cmd_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/19 14:56:04 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/22 01:50:59 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
+
 /**
  * Function: setup_env
  * Description: Converts the linked list of environment variables into an array of strings.
@@ -330,6 +329,7 @@ void	ft_cmd_args_to_2d(t_list_d *cmd_table)
 		tmp = tmp->next;
 	}
 }
+
 /**
  * Function: ft_parsing
  * Description: Parses the raw input and converts it into a command table linked list.
@@ -352,7 +352,7 @@ int	ft_parsing(t_common *c)
 	ft_expansion(c->env, cmd_list);
 	ft_rm_quotes(cmd_list); */
 //END
-	ft_expansion(c->env, c->cmd_struct);
+	ft_expansion(c, c->cmd_struct);
 	ft_rm_quotes(c->cmd_struct);
 	ft_cmd_args_to_2d(c->cmd_struct);
 	return (EXIT_SUCCESS);
