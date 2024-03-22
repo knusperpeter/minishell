@@ -138,7 +138,7 @@ void	ft_exit(t_common *c, char **cmd)
 		if (cmd[1])
 			if (check_arg(c, cmd) == 1)
 				return ;
-	ft_clean_exit(c, NULL);
+	ft_clean_exit(c, NULL, 1);
 }
 
 /* 

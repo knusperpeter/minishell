@@ -150,13 +150,14 @@ void	ft_cleanup_loop(t_common *c)
  * Description: Frees all allocated memory before the program ends.
  * Parameter: c - The common structure containing the shell data.
  */
-void	free_all(t_common *c)
+void	free_all(t_common *c, int cleanup_loop)
 {
 //	t_env	*node;
 	//rl_clear_history();
 	if (c)
 	{
-	//	ft_cleanup_loop(c);
+		if (cleanup_loop)
+			ft_cleanup_loop(c);
 		if (c->env)
 			free_env_nodes(c->env);
 		if (c->exitstatus_str)
@@ -166,11 +167,11 @@ void	free_all(t_common *c)
 	rl_clear_history();
 }
 
-void	ft_clean_exit(t_common *c, char *msg)
+void	ft_clean_exit(t_common *c, char *msg, int cleanup_loop)
 {
 	if (msg)
 		printf("%s\n", msg);
-	close_all_pipes(c);
-	free_all(c);
+//	close_all_pipes(c);
+	free_all(c, cleanup_loop);
 	exit(c->exitstatus);
 }

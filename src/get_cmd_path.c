@@ -104,7 +104,6 @@ int	add_path(t_cmd_table *cmd, char **paths)
 					return (0);
 				if (!access(path, F_OK | X_OK | R_OK) && !is_dir(path))
 				{
-//					dprintf(2, "%s\n", path);
 					return (cmd->exec_path = path, 1);
 				}
 				free(path);

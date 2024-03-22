@@ -31,11 +31,11 @@ void	ft_printerrno(char *s)
  * - limiter: The delimiter string for the heredoc.
  * - cmd_table: The command table structure.
  */
-void	here_doc(char *limiter, t_cmd_table *cmd_table)
+void	here_doc(char *limiter, t_cmd_table *cmd_table, int *fd)
 {
 	char		*buf;
 
-	if (cmd_table->read_fd == -1)
+	if (*(fd) == -1)
 		ft_printerrno(limiter);
 	while (1)
 	{
@@ -46,12 +46,12 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table)
 			break ;
 		if (ft_strncmp(limiter, buf, (ft_strlen(buf) - 1)) == 0)
 			break ;
-		write(cmd_table->read_fd, buf, ft_strlen(buf));
+		write(*(fd), buf, ft_strlen(buf));
 	}
 	get_next_line(0, &buf, 1);
 	free(buf);
-	close(cmd_table->read_fd);
-	cmd_table->read_fd = open(cmd_table->heredoc_name, O_RDONLY);
+	close(*(fd));
+	*(fd) = open(cmd_table->heredoc_name, O_RDONLY);
 	if (cmd_table->read_fd == -1)
 	{
 		ft_printerrno(NULL);
@@ -75,7 +75,7 @@ int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 	{
 		fd = open(cmd_node->heredoc_name, O_CREAT | O_WRONLY
 				| O_TRUNC, 0644);
-		here_doc(io->heredoc_limiter, cmd_node);
+		here_doc(io->heredoc_limiter, cmd_node, &fd);
 	}
 	else
 		fd = open(io->infile, O_RDONLY);
@@ -84,7 +84,9 @@ int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 		ft_printerrno("filename");
 		return (0);
 	}
-	replace_fd(&fd, &cmd_node->read_fd);
+	if (cmd_node->read_fd != 0)
+		close(cmd_node->read_fd);
+	cmd_node->read_fd = fd;
 	return (1);
 }
 
@@ -103,7 +105,9 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 		ft_printerrno("filename");
 		return (0);
 	}
-	replace_fd(&fd, &cmd_node->write_fd);
+	if (cmd_node->write_fd != 1)
+		close(cmd_node->write_fd);
+	cmd_node->write_fd = fd;
 	return (1);
 }
 
@@ -146,10 +150,10 @@ void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich e
  */
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 {
-		if (io->type == HEREDOC || io->type == REDIR_IN)
-			safe_close(&cmd_node->read_fd);
-		else if (io->type == REDIR_OUT || io->type == APPEND)
-			safe_close(&cmd_node->write_fd);	
+		if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
+			close(cmd_node->read_fd);
+		else if ((io->type == REDIR_OUT || io->type == APPEND) && cmd_node->write_fd != 1)
+			close(cmd_node->write_fd);	
 }
 /**
  * Function: open_io
