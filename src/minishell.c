@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/22 01:17:45 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/23 13:57:18 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	ft_loop(t_common *c)
 	while (1)
 	{
 		init_loop_data(c);
-	//	interactive();
+		interactive();
 		c->raw_prompt = prompt(c);
 //		ft_putstr_fd(c->raw_prompt, 1);
 //		if (!c->raw_prompt[0])

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: chris <chris@student.42.fr>                +#+  +:+       +#+         #
+#    By: miheider <miheider@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/03/22 02:09:02 by chris            ###   ########.fr        #
+#    Updated: 2024/03/23 14:59:07 by miheider         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,8 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/minishell.c \
 			src/init_env.c \
 			src/lexer.c \
+			src/lexer_array.c \
+			src/lexer_prep_input.c \
 			src/lexer_utils.c \
 			src/parsing.c \
 			src/expansion.c \
@@ -40,7 +42,7 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/utils_1.c \
 			src/free.c \
 			src/lexer_error.c \
-#			src/signals.c \
+			src/signals.c \
 
 OBJECTS = $(SOURCES:.c=.o)
 
