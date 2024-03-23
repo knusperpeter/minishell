@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 20:17:44 by chris             #+#    #+#             */
-/*   Updated: 2024/03/23 13:57:18 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/23 16:34:35 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,6 @@ char	*prompt(t_common *c)
 	if (line && *line)
 		add_history(line);
 	return (line);
-}
-
-void	init_pipe(t_pipe *pipe)
-{
-	pipe->pipes[0] = -1;
-	pipe->pipes[1] = -1;
-	// pipe->read_fd = &pipe->pipes[0];
-	// pipe->read_fd = &pipe->pipes[1];
 }
 
 /**
