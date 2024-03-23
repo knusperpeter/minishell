@@ -6,3 +6,4 @@ minishell
 out
 in
 .heredoc_tmp*
+minishell_tester
