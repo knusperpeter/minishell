@@ -6,7 +6,7 @@
 #    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/03/23 19:18:10 by caigner          ###   ########.fr        #
+#    Updated: 2024/03/23 19:30:08 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,6 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/minishell.c \
 			src/init_env.c \
 			src/lexer.c \
-			src/lexer_utils.c \
 			src/parsing.c \
 			src/expansion.c \
 			src/open_io.c \
