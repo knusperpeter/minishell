@@ -3,48 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@42>                     +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 21:22:44 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/10 13:47:18 by miheider         ###   ########.fr       */
+/*   Updated: 2024/03/23 15:08:23 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-#include <readline/readline.h>
+#include "../include/minishell.h"
 
-void    ignore_signal(int signum)
+void ignore_signal(int signum, siginfo_t *info, void *ucontent)
 {
-    signal(signum, SIG_IGN);
+    (void)info;
+    (void)ucontent;
+
+    struct sigaction sa_ignore;
+    sa_ignore.sa_flags = 0;
+    sa_ignore.sa_handler = SIG_IGN; // Set action to ignore signal
+    sigemptyset(&sa_ignore.sa_mask);
+
+    sigaction(signum, &sa_ignore, NULL); // Set signal action
 }
 
 
-void signal_cmd_c_ia(int signum)
+void signal_cmd_c_ia(int signal, siginfo_t *info, void *ucontent)
 {
-//    (void)info;
-//    (void)ucontent;
+    (void)info;
+    (void)ucontent;
+    (void)signal;
     write(1, "^C\n", 3);
     rl_replace_line("", 0);
     rl_on_new_line();
     rl_redisplay();
 }
 
-void signal_cmd_c_nonia(int signum)
+void signal_cmd_c_nonia(int signal, siginfo_t *info, void *ucontent)
 {
-//    (void)info;
-//    (void)ucontent;
-    g_signal = 2;
+    (void)info;
+    (void)ucontent;
+    (void)signal;
+//    g_signal = 2;
     write(1, "^C\n", 3);
     rl_replace_line("", 0);
     rl_on_new_line();
     rl_redisplay();
 }
 
-void    signal_bs_nonia(int signum)
+void    signal_bs_nonia(int signal, siginfo_t *info, void *ucontent)
 {
-//    (void)info;
-//    (void)ucontent;
-    g_signal = 3;
+    (void)info;
+    (void)ucontent;
+    (void)signal;
+//    g_signal = 3;
     write(1, "\n^\\ Quit (core dumped)\n", 23);
     rl_replace_line("", 0);
     rl_on_new_line();
@@ -52,17 +62,20 @@ void    signal_bs_nonia(int signum)
 }
 
 
-void    interactive(void)
+void interactive(void)
 {
-    struct sigaction    signal;
+    struct sigaction sig_int;
+    struct sigaction sig_quit;
 
-    signal.sa_flags = 0;
-    signal.sa_sigaction = &signal_cmd_c_ia;
-    sigemptyset(&signal.sa_mask);
-    sigaction(SIGINT, &signal, NULL);
+    sig_int.sa_flags = 0;
+    sig_int.sa_sigaction = &signal_cmd_c_ia;
+    sigemptyset(&sig_int.sa_mask);
+    sigaction(SIGINT, &sig_int, NULL);
 
-    signal.sa_sigaction = &ignore_signal;
-    sigaction(SIGQUIT, &signal, NULL);
+    sig_quit.sa_flags = 0;
+    sig_quit.sa_sigaction = &ignore_signal;
+    sigemptyset(&sig_quit.sa_mask);
+    sigaction(SIGQUIT, &sig_quit, NULL);
 }
 void    non_interactive(void)
 {
@@ -76,4 +89,3 @@ void    non_interactive(void)
     signal.sa_sigaction = &signal_bs_nonia;
     sigaction(SIGQUIT, &signal, NULL);
 }
-*/
