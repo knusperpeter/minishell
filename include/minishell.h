@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/22 01:16:07 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/23 16:29:06 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,6 @@
 
 //int	g_signal = 0;
 
-// enum can be used anywhere. VOID == 0, PIPE == 1, STRING == 2, ...
-// https://www.programiz.com/c-programming/c-enumeration
-// Ex.: "common->simple_cmd->type = VOID" is the same as
-//		"common->simple_cmd->type = 0"
 typedef enum e_type
 {
 	VOID,
@@ -85,7 +81,6 @@ typedef struct s_io_red
 }	t_io_red;
 
 // Inputs and what attributes come with them is locatedhere.
-// Each pipe stands for a new node.???????
 typedef struct s_cmd_table
 {
 	pid_t				id;
@@ -98,22 +93,6 @@ typedef struct s_cmd_table
 	char				*exec_path;
 }	t_cmd_table;
 
-/* typedef struct s_final_cmd_table //do i need this? no, exec to cmd_table
-{
-	char			**simple_cmd;
-	char			*exec_path;
-	char			**env;
-	int				read_fd;
-	int				write_fd;
-}	t_final_cmd_table;
- */
-typedef struct	s_pipe
-{
-	int				pipes[2];
-	int				*read_fd;
-	int				*write_fd;
-}	t_pipe;
-
 // Common struct
 typedef struct common_data
 {
@@ -124,13 +103,10 @@ typedef struct common_data
 	char				**envp;
 	t_list_d			*cmd_struct;
 	t_list				*tokens;
-//	t_list				*cmd_tokens;
 	unsigned int		exitstatus;
 	char				*exitstatus_str;
 	char				*raw_prompt;
 	int					old_pipe;
-
-//	t_final_cmd_table	*final_cmd;
 }	t_common;
 
 

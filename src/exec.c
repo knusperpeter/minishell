@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/22 16:58:15 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/23 16:25:55 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ void	handle_fds_parent(t_common *c, int *fd)
  * @param c: Common structure, cmd: Command table, i: Current command index, fd: File descriptors, old_pipe: Previous pipe.
  * Handles error checking and redirection for both input and output.
  */
-void ft_redirect_io(t_common *c, t_cmd_table *cmd, int i, int *fd)
+void ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
 {
 	if (cmd->read_fd == -1 || cmd->write_fd == -1) // check if really -1 if wrong
 		dprintf(2, "error opening file");
@@ -174,7 +174,7 @@ void ft_redirect_io(t_common *c, t_cmd_table *cmd, int i, int *fd)
 		if (dup2(cmd->read_fd, STDIN) == -1)
 			ft_printerrno("1\n"); //check error and exit 
 	}
-	else if (fd[0] != -1 && c->cmd_count != 1)
+	else if (c->old_pipe != 0 && c->cmd_count != 1)
 	{
 		if (dup2(c->old_pipe, STDIN) == -1)
 			ft_printerrno("2\n");
@@ -184,7 +184,7 @@ void ft_redirect_io(t_common *c, t_cmd_table *cmd, int i, int *fd)
 		if (dup2(cmd->write_fd, STDOUT) == -1)
 			ft_printerrno("3");
 	}
-	else if (i < c->cmd_count - 1 && c->cmd_count != 1)
+	else if (curr < c->cmd_count && c->cmd_count != 1)
 	{
 		if (dup2(fd[1], STDOUT) == -1)
 			ft_printerrno("4");
@@ -266,48 +266,51 @@ int	ft_check_builtin(t_cmd_table *cmd)
 	return (0);
 }
 
-void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int i, int *fd)
+void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 {
 	if (!open_io(curr_cmd_table->io_red, curr_cmd_table))
 		ft_clean_exit(c, NULL, 1);
-	ft_redirect_io(c, curr_cmd_table, i, fd);
+	ft_redirect_io(c, curr_cmd_table, curr, fd);
 	if (is_builtin(curr_cmd_table->str[0]))
+	{
 		ft_builtins(curr_cmd_table, c); // free & exit
+	}
 	else
 	{
 		c->envp = get_envp(c->env);
 		if (get_cmd_path(c, curr_cmd_table))
 			execve(curr_cmd_table->exec_path, curr_cmd_table->str, c->envp);
 		perror(curr_cmd_table->str[0]);
-		ft_clean_exit(c, NULL, 0);
 	}
+	ft_clean_exit(c, NULL, 0);
 }
 
 int	execute_cmds(t_common *c)
 {
-	int	i;
+	int	curr;
 	int	fd[2];
 	t_list_d *curr_cmd;
 	t_cmd_table *curr_cmd_table;
 	
-	i = 0;
+	curr = 1;
+	c->old_pipe = 0;
 	curr_cmd = c->cmd_struct;
-	while (i <= c->cmd_count - 1)
+	while (curr <= c->cmd_count)
 	{
 		curr_cmd_table = curr_cmd->content;
-		if (i < c->cmd_count - 1)
+		if (curr < c->cmd_count)
 			if (pipe(fd) == -1) //if more than 1 cmd -jakob //since last needs no pipe, maybe better like this? -chris
 				return (ft_printerrno("pipe: "), EXIT_FAILURE);
 		curr_cmd_table->id = fork();
 		if (curr_cmd_table->id == -1)
 			return (ft_printerrno("fork: "), EXIT_FAILURE);
 		else if (!curr_cmd_table->id)
-			execute_child(c, curr_cmd_table, i, fd);
+			execute_child(c, curr_cmd_table, curr, fd);
 		handle_fds_parent(c, fd);
-		i++;
+		curr++;
 		curr_cmd = curr_cmd->next;
 	}
-//	close(prv_pipe); // close prv_pipe? why not :(
+//	close(c->old_pipe); // close c->old_pipe? why not :(
 	return (EXIT_SUCCESS);
 }
 
@@ -319,7 +322,10 @@ int	ft_execute(t_common *c)
 		ft_builtins(c->cmd_struct->content, c);
 		return (EXIT_SUCCESS);
 	}
-	execute_cmds(c);
-	wait_all_childs(c);
+	else//
+	{//
+		execute_cmds(c);
+		wait_all_childs(c);
+	}//
 	return (0);
 }
