@@ -6,7 +6,11 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 14:56:52 by miheider          #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2024/03/23 15:55:22 by miheider         ###   ########.fr       */
+=======
 /*   Updated: 2024/03/23 15:17:43 by miheider         ###   ########.fr       */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +63,13 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 	{
 		if ((input[*i] && check_char(&input[*i]) == 0
 				&& check_char(&input[*(i) - 1]) == 1)
+<<<<<<< HEAD
+			|| (check_char(&input[*i]) == 1 && check_char(&input[*(i) - 1]) == 0
+				&& !strchr(WHITESPACE, input[(*i) - 1]))
+			|| (check_char(&input[*i]) == 1 && check_char(&input[*(i) - 1]) == 1
+				&& input[*i] != input[*(i) - 1]))
+			new_string[(*j)++] = ' ';
+=======
 			|| (check_char(&input[*i]) == 1
 				&& check_char(&input[*(i) - 1]) == 0
 				&& !strchr(WHITESPACE, input[(*i) - 1]))
@@ -68,6 +79,7 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 		{
 			new_string[(*j)++] = ' ';
 		}
+>>>>>>> main
 	}
 	new_string[(*j)++] = input[(*i)++];
 	return (10);
