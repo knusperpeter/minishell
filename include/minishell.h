@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:56 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/23 16:29:06 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/23 16:34:20 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <limits.h>
 # include <dirent.h>
 # include <string.h>
+# include <signal.h>
 # include <termios.h>
 # include <sys/wait.h>
 # include <sys/types.h>
@@ -35,7 +36,7 @@
 # define STDOUT 1
 # define STDERR 2
 
-//int	g_signal = 0;
+//volatile	g_signal = 0;
 
 typedef enum e_type
 {
@@ -139,6 +140,14 @@ void    error_lexer(char *s, int i);
 int		get_cmd_path(t_common *c, t_cmd_table *cmd);
 void	ft_expansion(t_common *c, t_list_d *cmds);
 int		count_pipes(char *input);
+char	**set_up_array(int cc, char *input);
+char	**prep_input(char *input);
+char	*ft_strtok(char *s1, const char *delim);
+int		check_char(char *character);
+int		check_token(char *token);
+
+//signals
+void    interactive(void);
 
 // builtins
 int		ft_pwd(void);
