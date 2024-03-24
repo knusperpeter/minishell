@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/23 19:37:02 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/24 20:45:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ char	*prompt(t_common *c)
 {
 	char	*line;
 
+	interactive();
 	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
 	if (line == NULL)
 		ft_exit(c, NULL);
