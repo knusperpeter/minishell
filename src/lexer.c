@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/23 19:34:37 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/25 21:11:06 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,14 +322,14 @@ int	prep_input_two(int *i, int *cc, char *input)
 	{
 		if (input[*(i)] == '\0') // Check for null terminator
 			break;
-    	count_up(i, cc);
+		count_up(i, cc);
 	}
 	if (input[*i] != '\0')
 	{
 		if (input[*(i) + 1] != '\0' || !strchr(WHITESPACE, input[*(i) + 1]))
 			count_up(i, cc);
 		else if (input[*(i) + 1] != '\0')
-    		return (-9);
+			return (-9);
 	}	
 	return (9);
 }
@@ -410,6 +410,40 @@ void	error_check_pipes(int *i, int *pipe, char *input)
 		*pipe += 1;
 }
 
+int	is_in_quotes(char *str, int i)
+{
+	int	inside_quotes = 0;
+	char	current_quote = '\0';
+
+	while (i >= 0)
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+		{
+			if (current_quote == str[i])
+			{
+				inside_quotes = !inside_quotes;
+				current_quote = '\0';
+			}
+			else if (current_quote == '\0')
+			{
+				inside_quotes = !inside_quotes;
+				current_quote = str[i];
+			}
+		}
+		i--;
+	}
+	return inside_quotes;
+}
+
+int	ignore_pipe(char *str, int i)
+{
+	if (i == 0)
+		return (0);
+	if (is_in_quotes(str, i))
+		return (1);
+	return (0);
+}
+
 /*count "|"-sections within the input. used for allocating memory*/
 int	count_pipes(char *input)
 {
@@ -420,7 +454,7 @@ int	count_pipes(char *input)
 	pipe = 0;
 	while (input[i] && strchr(WHITESPACE, input[i]))
 		i++;
-	if (input[i] == '|')
+	if (input[i] == '|' && !ignore_pipe(input, i))
 		error_lexer("|", 3);
 	while (input[i])
 	{
@@ -430,7 +464,7 @@ int	count_pipes(char *input)
 			while (input[i] != '\"' && input[i] == '\'')
 				i++;
 		}
-		if (input[i] == '|')
+		if (input[i] == '|' && !ignore_pipe(input, i))
 			error_check_pipes(&i, &pipe, input);
 		if (input[i])
 			i++;

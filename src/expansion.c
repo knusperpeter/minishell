@@ -6,65 +6,47 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/25 17:07:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/25 21:21:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	dont_expand_result(char *str, int i, int double_quotes, int single_quotes)
+int dont_expand_result(char *str, int i)
 {
-	int	j;
+	int inside_single_quotes = 0;
+	int inside_double_quotes = 0;
 
-	j = i;
-	while (i != -1)
+	while (i >= 0)
 	{
-		if (str[i] == '\'' && nb_esc_char(str, i) % 2 == 0)
-			single_quotes++;
-		if (str[i] == '\"' && nb_esc_char(str, i) % 2 == 0)
-			double_quotes++;
+		if (str[i] == '\'' && nb_esc_char(str, i) % 2 == 0 && !inside_double_quotes)
+		{
+			inside_single_quotes = !inside_single_quotes;
+		}
+		else if (str[i] == '\"' && nb_esc_char(str, i) % 2 == 0)
+		{
+			inside_double_quotes = !inside_double_quotes;
+		}
 		i--;
 	}
-	if (single_quotes == 1 && double_quotes == 0)
-		return (1);
-	else if (single_quotes == 1 && str[j - 1] == '\"')
-		return (1);
-	else if (single_quotes == 2 && double_quotes == 1)
-		return (0);
-	else if (single_quotes == 1 && double_quotes == 2 && str[j - 1] == '\'')
-		return (1);
-	else if (single_quotes == 2 && double_quotes == 2 && str[j - 1] == '\''
-			&& str[j - 3] == '\'')
-		return (1);
-	else if (single_quotes == 4 && double_quotes == 3)
-		return (1);
-	return (0);
+
+	// Return 1 if not inside single quotes, 0 otherwise
+	return inside_single_quotes;
 }
 
 int	dont_expand(char *str, int i)
 {
-	int	j;
 	int	single_quotes;
 	int	double_quotes;
-	int	go_back;
 
 	single_quotes = 0;
 	double_quotes = 0;
-	go_back = 0;
 	if (i == 0)
 		return (0);
-	j = i;
 	if (i > 0 && (str[i + 1] == '\"' || str[i + 1] == '\''))
 		return (1);
-	while (j != 0)
-	{
-		if (str[j] == '\"' || str[j] == '\"')
-			go_back = 0;
-		j--;
-	}
-	if (go_back == 0)
-		if (dont_expand_result(str, i, double_quotes, single_quotes))
-			return (1);
+	if (dont_expand_result(str, i))
+		return (1);
 	return (0);
 }
 
