@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/23 16:33:57 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/25 22:36:59 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 		return (perror("Error initializing cmd\n"), EXIT_FAILURE);
 	if (check_cmd("pwd", tmp))
 		ft_pwd();
-	else if (check_cmd("export", tmp))	
-		ft_export(tmp->str, c->env);
+	else if (check_cmd("export", tmp))
+		c->exitstatus = ft_export(tmp->str, c->env);
 	else if (check_cmd("env", tmp))
 		ft_env(c->env);
 	else if (check_cmd("exit", tmp))

@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/22 01:49:55 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/25 22:30:18 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // declare -x VAR="value" only?
 #include "../../include/minishell.h"
+#include <stdlib.h>
 
 void	export_print_env(t_env *env)//add alphabetical order?
 {
@@ -29,9 +30,9 @@ int	is_valid_env(char *env)
 {
 	int	i;
 
-	i = 0;
 	if (!ft_isalpha(env[0]) && env[0] != '_')
 		return (-1);
+	i = 0;
 	while (env[i] && env[i] != '=')
 	{
 		if (!ft_isalnum(env[i]) && env[i] != '_')
