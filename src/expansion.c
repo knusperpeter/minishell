@@ -3,23 +3,114 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/22 01:50:18 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/25 17:07:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-//	wenn quotes in doublequotes, dann quotes nicht removen
-//	wenn doublequotes in quotes, dann nichts expanden
-int	ft_single_quotes(char *str)
+int	dont_expand_result(char *str, int i, int double_quotes, int single_quotes)
 {
-	if (str[0] == '\'' && str[ft_strlen(str) - 1] == '\'')
+	int	j;
+
+	j = i;
+	while (i != -1)
+	{
+		if (str[i] == '\'' && nb_esc_char(str, i) % 2 == 0)
+			single_quotes++;
+		if (str[i] == '\"' && nb_esc_char(str, i) % 2 == 0)
+			double_quotes++;
+		i--;
+	}
+	if (single_quotes == 1 && double_quotes == 0)
 		return (1);
-	else
-	 	return (0);
+	else if (single_quotes == 1 && str[j - 1] == '\"')
+		return (1);
+	else if (single_quotes == 2 && double_quotes == 1)
+		return (0);
+	else if (single_quotes == 1 && double_quotes == 2 && str[j - 1] == '\'')
+		return (1);
+	else if (single_quotes == 2 && double_quotes == 2 && str[j - 1] == '\''
+			&& str[j - 3] == '\'')
+		return (1);
+	else if (single_quotes == 4 && double_quotes == 3)
+		return (1);
+	return (0);
+}
+
+int	dont_expand(char *str, int i)
+{
+	int	j;
+	int	single_quotes;
+	int	double_quotes;
+	int	go_back;
+
+	single_quotes = 0;
+	double_quotes = 0;
+	go_back = 0;
+	if (i == 0)
+		return (0);
+	j = i;
+	if (i > 0 && (str[i + 1] == '\"' || str[i + 1] == '\''))
+		return (1);
+	while (j != 0)
+	{
+		if (str[j] == '\"' || str[j] == '\"')
+			go_back = 0;
+		j--;
+	}
+	if (go_back == 0)
+		if (dont_expand_result(str, i, double_quotes, single_quotes))
+			return (1);
+	return (0);
+}
+
+int	nb_esc_char(char *str, int index)
+{
+	int	i;
+	int	count;
+
+	i = index - 1;
+	count = 0;
+	if (index <= 0)
+		return (count);
+	while (str[i] != -1)
+	{
+		if (str[i] == '\\')
+			count++;
+		else if (str[i] != '\\')
+			return (count);
+		i--;
+	}
+	return (count);
+}
+
+int	has_dollar(t_common *c, char *str)
+{
+	int	i;
+
+	(void)c;
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (str[0] == '$' && !ft_strchr(WHITESPACE, str[i + 1]) && str[i + 1])
+			return (1);
+		else if (str[i] == '$' && !str[i + 1])
+			break;
+		else if ((str[i] == '$' && nb_esc_char(str, i) % 2 != 0) || dont_expand(str, i))
+			i++;
+		else if (str[i] == '$' && ft_strchr(WHITESPACE, str[i + 1]))
+			return (0);
+		else if (str[i] == '$' && !ft_strchr(WHITESPACE, str[i + 1]))
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 /**
@@ -112,16 +203,9 @@ char	*ft_substitute(t_common *c, t_env *env, char *str)
 		return (NULL);
 	i = 0;
 	while (str[i])
-	{//das gehört in den lexer
-		if (str[i] == '\'' && !single_quotes && !double_quotes)
-			single_quotes = 1;
-		else if (str[i] == '\'' && single_quotes && !double_quotes)
-			single_quotes = 0;
-		else if (str[i] == '\"' && !single_quotes && double_quotes)
-			double_quotes = 0;
-		else if (str[i] == '\"' && !single_quotes && !double_quotes)
-			double_quotes = 1;
-		if (str[i] == '$' && str[i + 1] && str[i + 1] != ' ' && !single_quotes)
+	{
+		if (str[i] == '$' && nb_esc_char(str, i) % 2 == 0
+			&& !dont_expand(str, i))
 		{
 			tmp = env;
 			ret = ft_replace_var(c, tmp, str, &i);
@@ -129,11 +213,8 @@ char	*ft_substitute(t_common *c, t_env *env, char *str)
 				return (ft_printerrno("expansion ret malloc: "), NULL);
 			str = ret;
 		}
-		else
-			i++;
+		i++;
 	}
-	if (single_quotes || double_quotes)
-		return (printf("Error: unclosed quotes: %s\n", str), NULL); //should we print the right arg?
 	return (str);
 }
 
@@ -152,8 +233,10 @@ void	ft_expand_red(t_common *c, t_list *io_lst)
 		io = io_lst->content;
 		if (!io)
 			return ;
-		io->infile = ft_substitute(c, c->env, io->infile);
-		io->outfile = ft_substitute(c, c->env, io->outfile);
+		if (has_dollar(c, io->infile))
+			io->infile = ft_substitute(c, c->env, io->infile);
+		if (has_dollar(c, io->outfile))
+			io->outfile = ft_substitute(c, c->env, io->outfile);
 		io_lst = io_lst->next;
 	}
 }
@@ -164,7 +247,7 @@ void	ft_expand_red(t_common *c, t_list *io_lst)
  * Parameters: env - The linked list of environment variables, cmd - The command table.
  * This function iterates over the command and I/O redirections and substitutes variables.
  */
-void	ft_expand_cmd(t_common *c, t_cmd_table *cmd)
+void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 {
 	t_list	*tmp_io;
 	t_list	*tmp_cmd;
@@ -174,9 +257,10 @@ void	ft_expand_cmd(t_common *c, t_cmd_table *cmd)
 	tmp_cmd = cmd->cmds;
 	while (tmp_cmd)
 	{
-		tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
+		if (has_dollar(c, tmp_cmd->content))
+			tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
 		tmp_cmd = tmp_cmd->next;
-	}
+	}	
 	tmp_io = cmd->io_red;
 	ft_expand_red(c, tmp_io);
 }
@@ -190,11 +274,15 @@ void	ft_expand_cmd(t_common *c, t_cmd_table *cmd)
 void	ft_expansion(t_common *c, t_list_d *cmds)//$? "|" ">" ...
 {
 	t_list_d	*tmp;
+	t_list		*cmd_table;
+	t_token		*cmd;	
 
 	tmp = cmds;
 	while (tmp)
 	{
-		ft_expand_cmd(c, tmp->content);
+		cmd_table = tmp->content;
+		cmd = cmd_table->content;
+		ft_expand_cmd_table(c, tmp->content);
 		tmp = tmp->next;
 	}
 }
