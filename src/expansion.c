@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/25 21:21:28 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/26 01:00:18 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,6 @@ int dont_expand_result(char *str, int i)
 
 int	dont_expand(char *str, int i)
 {
-	int	single_quotes;
-	int	double_quotes;
-
-	single_quotes = 0;
-	double_quotes = 0;
 	if (i == 0)
 		return (0);
 	if (i > 0 && (str[i + 1] == '\"' || str[i + 1] == '\''))
@@ -59,7 +54,7 @@ int	nb_esc_char(char *str, int index)
 	count = 0;
 	if (index <= 0)
 		return (count);
-	while (str[i] != -1)
+	while (i != -1)
 	{
 		if (str[i] == '\\')
 			count++;
@@ -175,12 +170,8 @@ char	*ft_substitute(t_common *c, t_env *env, char *str)
 	int		i;
 	char	*ret;
 	t_env	*tmp;
-	int		single_quotes;
-	int		double_quotes;
 
 	ret = NULL;
-	single_quotes = 0;
-	double_quotes = 0;
 	if (!str || !env)
 		return (NULL);
 	i = 0;
@@ -242,7 +233,8 @@ void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 		if (has_dollar(c, tmp_cmd->content))
 			tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
 		tmp_cmd = tmp_cmd->next;
-	}	
+	}
+	
 	tmp_io = cmd->io_red;
 	ft_expand_red(c, tmp_io);
 }
@@ -256,14 +248,10 @@ void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 void	ft_expansion(t_common *c, t_list_d *cmds)//$? "|" ">" ...
 {
 	t_list_d	*tmp;
-	t_list		*cmd_table;
-	t_token		*cmd;	
 
 	tmp = cmds;
 	while (tmp)
 	{
-		cmd_table = tmp->content;
-		cmd = cmd_table->content;
 		ft_expand_cmd_table(c, tmp->content);
 		tmp = tmp->next;
 	}
