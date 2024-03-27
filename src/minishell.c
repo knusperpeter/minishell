@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/24 20:45:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/27 22:39:13 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*prompt(t_common *c)
 	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
 	if (line == NULL)
 		ft_exit(c, NULL);
-	if (line && *line)
+	if (line/* &&  *line */) // second condition is redundant
 		add_history(line);
 	return (line);
 }
