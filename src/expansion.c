@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/27 17:36:40 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/29 13:02:29 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
 	char	*tmp;
 	char	*value;
 
+	if (env_value == NULL)
+		return (ft_strdup(str));
 	tmp = NULL;
 	value = NULL;
 	value = ft_substr(str, 0, *i);
@@ -216,28 +218,6 @@ void	ft_expand_red(t_common *c, t_list *io_lst)
 	}
 }
 
-int	space_outside_quotes(char *str)
-{
-	int	i;
-	int	single_quotes;
-	int	double_quotes;
-
-	i = 0;
-	single_quotes = 0;
-	double_quotes = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' && !double_quotes)
-			single_quotes = !single_quotes;
-		else if (str[i] == '\"' && !single_quotes)
-			double_quotes = !double_quotes;
-		else if (str[i] == ' ' && !single_quotes && !double_quotes)
-			return (i);
-		i++;
-	}
-	return (0);
-}
-
 /**
  * Function: ft_expand_cmd
  * Description: Expands variables in the command and I/O redirections of a command table.
@@ -246,10 +226,10 @@ int	space_outside_quotes(char *str)
  */
 void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 {
-	t_list	*tmp_io;
+	t_list	*tmp_lst;
 	t_list	*tmp_cmd;
-	char	*tmp1;
-	char	*tmp2;
+	char	**tmp1;
+	int		i;
 
 	if (!cmd)
 		return ;
@@ -259,21 +239,30 @@ void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 		if (has_dollar(c, tmp_cmd->content))
 		{
 			tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
-			if (ft_strchr(tmp_cmd->content, ' ') && space_outside_quotes(tmp_cmd->content))
+			if (ft_strchr(tmp_cmd->content, ' '))
 			{
-				tmp1 = malloc(sizeof(char) * space_outside_quotes(tmp_cmd->content) + 1);
-				tmp1 = ft_strlcpy(tmp1, tmp_cmd->content, space_outside_quotes(tmp_cmd->content));
-				ft_lstadd_front(&tmp_cmd, ft_lstnew(tmp1));
-				tmp2 = ft_strdup(&(tmp_cmd->content[space_outside_quotes(tmp_cmd->content) + 1]));
+				tmp1 = ft_split(tmp_cmd->content, ' ');
+				if (!tmp1)
+					return ;
 				free(tmp_cmd->content);
-				tmp_cmd->content = tmp2;
+				tmp_cmd->content = ft_strdup(tmp1[0]);
+				i = 1;
+				while (tmp1[i])
+				{
+					tmp_lst = ft_lstnew(ft_strdup(tmp1[i]));
+					tmp_lst->next = tmp_cmd->next;
+					tmp_cmd->next = tmp_lst;
+					tmp_cmd = tmp_cmd->next;
+					i++;
+				}
+				free (tmp1);
 			}
 		}
 		tmp_cmd = tmp_cmd->next;
 	}
 	
-	tmp_io = cmd->io_red;
-	ft_expand_red(c, tmp_io);
+	tmp_lst = cmd->io_red;
+	ft_expand_red(c, tmp_lst);
 }
 
 /**
