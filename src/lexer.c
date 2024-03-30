@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/25 21:11:06 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/30 13:12:40 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ char	**tokenize_input(char *input)
 
 /*this is the inner while loop of the set_up_array function. The first 
 if statement is handling quotes, the second one is handling different 
-situations to inpute a space to new_string*/
+situations to put in a space to new_string*/
 int	no_space_array(int *i, int *j, char *input, char *new_string)
 {
 	if (input[*i] && check_char(&input[*i]) == 2)
@@ -221,7 +221,12 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 			new_string[(*j)++] = input[(*i)++];
 		if (input[*i] && check_char(&input[*i]) == 2)
 		{
-			new_string[(*j)++] = input[(*i)++];
+			new_string[(*j)] = input[(*i)];
+			if (input[(*i) + 1] != '\0')
+			{
+				(*i)++;
+				(*j)++;
+			}
 			if (input[*i] && strchr(WHITESPACE, input[*i]))
 				return (-10);
 		}

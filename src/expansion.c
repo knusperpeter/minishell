@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/27 22:31:47 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/30 13:15:15 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,8 @@ void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 void	ft_expansion(t_common *c, t_list_d *cmds)//$? "|" ">" ...
 {
 	t_list_d	*tmp;
+	t_list		*cmd_table;
+	t_token		*cmd;	
 
 	tmp = cmds;
 	while (tmp)
