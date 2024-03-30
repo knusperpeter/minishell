@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/30 13:16:45 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/30 13:20:27 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,8 +134,7 @@ void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	ft_rm_quotes(t_list_d *cmds);
-int	nb_esc_char(char *str, int index);
-int	nb_esc_char(char *str, int index);
+int		nb_esc_char(char *str, int index);
 
 //lexer
 void    error_lexer(char *s, int i);
