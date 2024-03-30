@@ -3,68 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/25 17:07:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/30 13:33:34 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	dont_expand_result(char *str, int i, int double_quotes, int single_quotes)
+int dont_expand_result(char *str, int i)
 {
-	int	j;
+	int inside_single_quotes = 0;
+	int inside_double_quotes = 0;
 
-	j = i;
-	while (i != -1)
+	while (i >= 0)
 	{
-		if (str[i] == '\'' && nb_esc_char(str, i) % 2 == 0)
-			single_quotes++;
-		if (str[i] == '\"' && nb_esc_char(str, i) % 2 == 0)
-			double_quotes++;
+		if (str[i] == '\'' && nb_esc_char(str, i) % 2 == 0 && !inside_double_quotes)
+		{
+			inside_single_quotes = !inside_single_quotes;
+		}
+		else if (str[i] == '\"' && nb_esc_char(str, i) % 2 == 0)
+		{
+			inside_double_quotes = !inside_double_quotes;
+		}
 		i--;
 	}
-	if (single_quotes == 1 && double_quotes == 0)
-		return (1);
-	else if (single_quotes == 1 && str[j - 1] == '\"')
-		return (1);
-	else if (single_quotes == 2 && double_quotes == 1)
-		return (0);
-	else if (single_quotes == 1 && double_quotes == 2 && str[j - 1] == '\'')
-		return (1);
-	else if (single_quotes == 2 && double_quotes == 2 && str[j - 1] == '\''
-			&& str[j - 3] == '\'')
-		return (1);
-	else if (single_quotes == 4 && double_quotes == 3)
-		return (1);
-	return (0);
+	return (inside_single_quotes);
 }
 
 int	dont_expand(char *str, int i)
 {
-	int	j;
-	int	single_quotes;
-	int	double_quotes;
-	int	go_back;
-
-	single_quotes = 0;
-	double_quotes = 0;
-	go_back = 0;
 	if (i == 0)
 		return (0);
-	j = i;
 	if (i > 0 && (str[i + 1] == '\"' || str[i + 1] == '\''))
 		return (1);
-	while (j != 0)
-	{
-		if (str[j] == '\"' || str[j] == '\"')
-			go_back = 0;
-		j--;
-	}
-	if (go_back == 0)
-		if (dont_expand_result(str, i, double_quotes, single_quotes))
-			return (1);
+	if (dont_expand_result(str, i))
+		return (1);
 	return (0);
 }
 
@@ -77,7 +52,7 @@ int	nb_esc_char(char *str, int index)
 	count = 0;
 	if (index <= 0)
 		return (count);
-	while (str[i] != -1)
+	while (i != -1)
 	{
 		if (str[i] == '\\')
 			count++;
@@ -124,6 +99,8 @@ char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
 	char	*tmp;
 	char	*value;
 
+	if (env_value == NULL)
+		return (ft_strdup(str));
 	tmp = NULL;
 	value = NULL;
 	value = ft_substr(str, 0, *i);
@@ -193,12 +170,8 @@ char	*ft_substitute(t_common *c, t_env *env, char *str)
 	int		i;
 	char	*ret;
 	t_env	*tmp;
-	int		single_quotes;
-	int		double_quotes;
 
 	ret = NULL;
-	single_quotes = 0;
-	double_quotes = 0;
 	if (!str || !env)
 		return (NULL);
 	i = 0;
@@ -212,6 +185,10 @@ char	*ft_substitute(t_common *c, t_env *env, char *str)
 			if (!ret)
 				return (ft_printerrno("expansion ret malloc: "), NULL);
 			str = ret;
+			if (ft_strchr(str, ' '))
+			{
+				
+			}
 		}
 		i++;
 	}
@@ -249,8 +226,10 @@ void	ft_expand_red(t_common *c, t_list *io_lst)
  */
 void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 {
-	t_list	*tmp_io;
+	t_list	*tmp_lst;
 	t_list	*tmp_cmd;
+	char	**tmp1;
+	int		i;
 
 	if (!cmd)
 		return ;
@@ -258,11 +237,32 @@ void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 	while (tmp_cmd)
 	{
 		if (has_dollar(c, tmp_cmd->content))
+		{
 			tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
+			if (ft_strchr(tmp_cmd->content, ' '))
+			{
+				tmp1 = ft_split(tmp_cmd->content, ' ');
+				if (!tmp1)
+					return ;
+				free(tmp_cmd->content);
+				tmp_cmd->content = ft_strdup(tmp1[0]);
+				i = 1;
+				while (tmp1[i])
+				{
+					tmp_lst = ft_lstnew(ft_strdup(tmp1[i]));
+					tmp_lst->next = tmp_cmd->next;
+					tmp_cmd->next = tmp_lst;
+					tmp_cmd = tmp_cmd->next;
+					i++;
+				}
+				free (tmp1);
+			}
+		}
 		tmp_cmd = tmp_cmd->next;
-	}	
-	tmp_io = cmd->io_red;
-	ft_expand_red(c, tmp_io);
+	}
+	
+	tmp_lst = cmd->io_red;
+	ft_expand_red(c, tmp_lst);
 }
 
 /**
@@ -274,14 +274,10 @@ void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 void	ft_expansion(t_common *c, t_list_d *cmds)//$? "|" ">" ...
 {
 	t_list_d	*tmp;
-	t_list		*cmd_table;
-	t_token		*cmd;	
 
 	tmp = cmds;
 	while (tmp)
 	{
-		cmd_table = tmp->content;
-		cmd = cmd_table->content;
 		ft_expand_cmd_table(c, tmp->content);
 		tmp = tmp->next;
 	}

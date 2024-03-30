@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/23 16:33:57 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/25 23:27:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,19 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 	if (!tmp)
 		return (perror("Error initializing cmd\n"), EXIT_FAILURE);
 	if (check_cmd("pwd", tmp))
-		ft_pwd();
-	else if (check_cmd("export", tmp))	
-		ft_export(tmp->str, c->env);
+		/* c->exitstatus =  */ft_pwd();
+	else if (check_cmd("export", tmp))
+		c->exitstatus = ft_export(tmp->str, c->env);
 	else if (check_cmd("env", tmp))
-		ft_env(c->env);
+		/* c->exitstatus =  */ft_env(c->env);
 	else if (check_cmd("exit", tmp))
 		ft_exit(c, tmp->str);
 	else if (check_cmd("unset", tmp))
-		ft_unset(tmp->str, c);
+		/* c->exitstatus =  */ft_unset(tmp->str, c);
 	else if (check_cmd("echo", tmp))
-		ft_echo(tmp->str);
+		/* c->exitstatus =  */ft_echo(tmp->str);
 	else if (check_cmd("cd", cmd))
-		ft_cd(tmp->str, c);
+		c->exitstatus = ft_cd(tmp->str, c);
 	else
 	 	return (0);
 	return (1);
@@ -272,9 +272,7 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 		ft_clean_exit(c, NULL, 1);
 	ft_redirect_io(c, curr_cmd_table, curr, fd);
 	if (is_builtin(curr_cmd_table->str[0]))
-	{
 		ft_builtins(curr_cmd_table, c); // free & exit
-	}
 	else
 	{
 		c->envp = get_envp(c->env);
