@@ -6,10 +6,9 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/30 13:27:40 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/30 13:38:12 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../include/minishell.h"
 
@@ -174,7 +173,7 @@ int	check_tokens(char *input)
 		if (input[i] == '\'' || input[i] == '\"')
 		{
 			i++;
-			while (input[i] && input[i] != '\'' && input[i] != '\"')
+			while (input[i] != '\'' && input[i] != '\"')
 				i++;
 		}
 		if (input[i] && strchr(WHITESPACE, input[i]))
