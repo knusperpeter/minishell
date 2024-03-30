@@ -6,9 +6,10 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/29 13:39:32 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/30 13:27:40 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../include/minishell.h"
 
@@ -211,7 +212,7 @@ char	**tokenize_input(char *input)
 
 /*this is the inner while loop of the set_up_array function. The first 
 if statement is handling quotes, the second one is handling different 
-situations to inpute a space to new_string*/
+situations to put in a space to new_string*/
 int	no_space_array(int *i, int *j, char *input, char *new_string)
 {
 	if (input[*i] && check_char(&input[*i]) == 2)
@@ -221,7 +222,12 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 			new_string[(*j)++] = input[(*i)++];
 		if (input[*i] && check_char(&input[*i]) == 2)
 		{
-			new_string[(*j)++] = input[(*i)++];
+			new_string[(*j)] = input[(*i)];
+			if (input[(*i) + 1] != '\0')
+			{
+				(*i)++;
+				(*j)++;
+			}
 			if (input[*i] && strchr(WHITESPACE, input[*i]))
 				return (-10);
 		}
