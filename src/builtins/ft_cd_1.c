@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/13 23:07:33 by chris            ###   ########.fr       */
+/*   Updated: 2024/03/25 23:36:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 	int		size;
 
 	size = ft_strlen(args[1]);
+	if (args[2])
+		return (-3);
 	if (!args[1] || !ft_strncmp(args[1], "~", size))
 		return (get_set_path(c->env, "HOME", path));
 	else if (!ft_strncmp(args[1], "-", size))
@@ -80,6 +82,9 @@ void	print_error(int errorno, char *arg)
 		ft_putstr_fd("HOME not set\n", 2);
 	if (errorno == -2)
 		ft_putstr_fd("OLDPWD not set\n", 2);
+	if (errorno == -3)
+		ft_putstr_fd("too many arguments\n", 2);
+
 }
 
 int	ft_cd(char **args, t_common *c)
@@ -93,7 +98,7 @@ int	ft_cd(char **args, t_common *c)
 	if (!oldpwd)
 		return (print_error(0, args[1]), EXIT_FAILURE);
 	errorno = get_path(args, &oldpwd, &path, c);
-	if (chdir(path) == -1)
+	if (chdir(path) == -1 || errorno == -3)
 	{
 		free(path);
 		print_error(errorno, args[1]);

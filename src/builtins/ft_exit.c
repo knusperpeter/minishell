@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/21 16:00:57 by caigner          ###   ########.fr       */
+/*   Updated: 2024/03/25 23:41:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ int	check_arg(t_common *c, char **arg)
 		return (2);
 	if (arg[2])
 	{
-		return (ft_putstr_fd("❌ minishell: exit: too many arguments\n", 1), 1);// don't exit in this case
+		c->exitstatus = 1;
+		return (ft_putstr_fd("❌ minishell: exit: too many arguments\n", 2), 1);// don't exit in this case
 	}
 	else if (arg[1])
 		c->exitstatus = ft_atoll(arg[1]) % 256;//check if negative nums might appear
