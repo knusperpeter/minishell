@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/25 21:10:04 by miheider         ###   ########.fr       */
-=======
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/30 13:20:27 by chris            ###   ########.fr       */
->>>>>>> 8f095c83947716ed3fbe3036b81b0d35cbce1560
+/*   Updated: 2024/04/22 16:44:29 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,11 +134,7 @@ void	ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void	ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void	ft_rm_quotes(t_list_d *cmds);
-<<<<<<< HEAD
-int	nb_esc_char(char *str, int index);
-=======
 int		nb_esc_char(char *str, int index);
->>>>>>> 8f095c83947716ed3fbe3036b81b0d35cbce1560
 
 //lexer
 void    error_lexer(char *s, int i);
