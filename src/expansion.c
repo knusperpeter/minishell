@@ -6,71 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/03/25 17:07:27 by caigner          ###   ########.fr       */
-=======
-/*   Updated: 2024/03/30 13:33:34 by chris            ###   ########.fr       */
->>>>>>> 8f095c83947716ed3fbe3036b81b0d35cbce1560
+/*   Updated: 2024/04/22 16:42:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-<<<<<<< HEAD
-int	dont_expand_result(char *str, int i, int double_quotes, int single_quotes)
-{
-	int	j;
-
-	j = i;
-	while (i != -1)
-	{
-		if (str[i] == '\'' && nb_esc_char(str, i) % 2 == 0)
-			single_quotes++;
-		if (str[i] == '\"' && nb_esc_char(str, i) % 2 == 0)
-			double_quotes++;
-		i--;
-	}
-	if (single_quotes == 1 && double_quotes == 0)
-		return (1);
-	else if (single_quotes == 1 && str[j - 1] == '\"')
-		return (1);
-	else if (single_quotes == 2 && double_quotes == 1)
-		return (0);
-	else if (single_quotes == 1 && double_quotes == 2 && str[j - 1] == '\'')
-		return (1);
-	else if (single_quotes == 2 && double_quotes == 2 && str[j - 1] == '\''
-			&& str[j - 3] == '\'')
-		return (1);
-	else if (single_quotes == 4 && double_quotes == 3)
-		return (1);
-	return (0);
-}
-
-int	dont_expand(char *str, int i)
-{
-	int	j;
-	int	single_quotes;
-	int	double_quotes;
-	int	go_back;
-
-	single_quotes = 0;
-	double_quotes = 0;
-	go_back = 0;
-	if (i == 0)
-		return (0);
-	j = i;
-	if (i > 0 && (str[i + 1] == '\"' || str[i + 1] == '\''))
-		return (1);
-	while (j != 0)
-	{
-		if (str[j] == '\"' || str[j] == '\"')
-			go_back = 0;
-		j--;
-	}
-	if (go_back == 0)
-		if (dont_expand_result(str, i, double_quotes, single_quotes))
-			return (1);
-=======
 int dont_expand_result(char *str, int i)
 {
 	int inside_single_quotes = 0;
@@ -99,7 +40,6 @@ int	dont_expand(char *str, int i)
 		return (1);
 	if (dont_expand_result(str, i))
 		return (1);
->>>>>>> 8f095c83947716ed3fbe3036b81b0d35cbce1560
 	return (0);
 }
 
@@ -112,11 +52,7 @@ int	nb_esc_char(char *str, int index)
 	count = 0;
 	if (index <= 0)
 		return (count);
-<<<<<<< HEAD
-	while (str[i] != -1)
-=======
 	while (i != -1)
->>>>>>> 8f095c83947716ed3fbe3036b81b0d35cbce1560
 	{
 		if (str[i] == '\\')
 			count++;
@@ -301,13 +237,6 @@ void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 	while (tmp_cmd)
 	{
 		if (has_dollar(c, tmp_cmd->content))
-<<<<<<< HEAD
-			tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
-		tmp_cmd = tmp_cmd->next;
-	}	
-	tmp_io = cmd->io_red;
-	ft_expand_red(c, tmp_io);
-=======
 		{
 			tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
 			if (ft_strchr(tmp_cmd->content, ' '))
@@ -334,7 +263,6 @@ void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
 	
 	tmp_lst = cmd->io_red;
 	ft_expand_red(c, tmp_lst);
->>>>>>> 8f095c83947716ed3fbe3036b81b0d35cbce1560
 }
 
 /**
@@ -352,11 +280,6 @@ void	ft_expansion(t_common *c, t_list_d *cmds)//$? "|" ">" ...
 	tmp = cmds;
 	while (tmp)
 	{
-<<<<<<< HEAD
-		cmd_table = tmp->content;
-		cmd = cmd_table->content;
-=======
->>>>>>> 8f095c83947716ed3fbe3036b81b0d35cbce1560
 		ft_expand_cmd_table(c, tmp->content);
 		tmp = tmp->next;
 	}
