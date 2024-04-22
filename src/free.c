@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/22 01:50:24 by chris            ###   ########.fr       */
+/*   Updated: 2024/04/22 17:17:14 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,5 +174,5 @@ void	ft_clean_exit(t_common *c, char *msg, int cleanup_loop)
 		printf("%s\n", msg);
 //	close_all_pipes(c);
 	free_all(c, cleanup_loop);
-	exit(c->exitstatus);
+//	exit(c->exitstatus);
 }

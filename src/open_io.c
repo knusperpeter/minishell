@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_io.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/22 01:50:54 by chris            ###   ########.fr       */
+/*   Updated: 2024/04/22 17:31:18 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table, int *fd)
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
-		if (get_next_line(0, &buf, 0) < 0)
+		if (get_next_line_heredoc(0, &buf, 0) < 0)
 			exit (1);
 		if (buf == NULL || *buf == '\0')
 			break ;
@@ -49,7 +49,7 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table, int *fd)
 			break ;
 		write(*(fd), buf, ft_strlen(buf));
 	}
-	get_next_line(0, &buf, 1);
+	get_next_line_heredoc(0, &buf, 1);
 	free(buf);
 	close(*(fd));
 	*(fd) = open(cmd_table->heredoc_name, O_RDONLY);

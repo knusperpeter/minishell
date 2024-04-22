@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 13:16:33 by miheider          #+#    #+#             */
-/*   Updated: 2024/03/20 00:58:22 by chris            ###   ########.fr       */
+/*   Updated: 2024/04/22 17:23:54 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void		ft_lstclear(t_list **lst, void (*del)(void *));
 void		ft_lstiter(t_list *lst, void (*f)(void *));
 char		*ft_lltoa(long long n);
 long long	ft_atoll(const char *nptr);
-int			get_next_line(int fd, char **line, int flag);
+int			get_next_line_heredoc(int fd, char **line, int flag);
+char		*get_next_line(int fd);
 
 #endif
