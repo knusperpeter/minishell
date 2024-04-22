@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/22 17:38:13 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/22 17:45:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_loop(t_common *c)
 		prompt(c);
 		non_interactive();
 //		ft_putstr_fd(c->raw_prompt, 1);
-		if (!c->raw_prompt[0])
+		if (!c->raw_prompt)
 			break ;
 		if (c->raw_prompt[0])
 		{
