@@ -6,11 +6,13 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/22 16:44:51 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/23 11:44:25 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+// flag für single quotes open and double quotes open. if single quotes open ->skip until closed. if double quotes open expand while skipping until closed.
 
 int dont_expand_result(char *str, int i)
 {

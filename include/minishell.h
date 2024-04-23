@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/22 16:44:29 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/23 12:14:21 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ typedef struct common_data
 {
 	pid_t				pid;
 	int					cmd_count;
+	int					open_single_quotes;
+	int					open_double_quotes;
 	int					subshell_level;
 	t_env				*env;
 	char				**envp;
