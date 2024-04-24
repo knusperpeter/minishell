@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/22 16:42:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/22 17:45:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,26 @@
  * Description: Displays a prompt and reads a line of input from the user.
  * Returns: The line of input from the user.
  */
-char	*prompt(t_common *c)
+void	prompt(t_common *c)
 {
-	char	*line;
+	if (isatty(fileno(stdin)))
+		c->raw_prompt = readline("minishell🔮: 🚬🦦❯ ");
+	else
+	{
+		char *line;
+		line = get_next_line(fileno(stdin));
+		c->raw_prompt = ft_strtrim(line, "\n");
+		free(line);
+	}
+/* 	char	*line;
 
 	interactive();
 	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
 	if (line == NULL)
 		ft_exit(c, NULL);
-	if (line/* &&  *line */) // second condition is redundant
+	if (line) // second condition is redundant
 		add_history(line);
-	return (line);
+	return (line); */
 }
 
 /**
@@ -57,11 +66,11 @@ int	ft_loop(t_common *c)
 	{
 		init_loop_data(c);
 //		interactive();
-		c->raw_prompt = prompt(c);
+		prompt(c);
 		non_interactive();
 //		ft_putstr_fd(c->raw_prompt, 1);
-//		if (!c->raw_prompt[0])
-//			break ;
+		if (!c->raw_prompt)
+			break ;
 		if (c->raw_prompt[0])
 		{
 			//non_interactive();

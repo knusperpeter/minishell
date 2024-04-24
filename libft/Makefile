@@ -6,7 +6,7 @@
 #    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/13 11:49:47 by miheider          #+#    #+#              #
-#    Updated: 2024/03/08 18:59:48 by caigner          ###   ########.fr        #
+#    Updated: 2024/04/22 17:24:29 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,9 @@ SRCS=ft_isprint.c ft_isalpha.c ft_isdigit.c ft_strjoin.c ft_strlen.c \
 	 ft_strnstr.c ft_atoi.c ft_strtrim.c ft_putchar_fd.c ft_putstr_fd.c \
 	 ft_putendl_fd.c ft_putnbr_fd.c ft_split.c ft_striteri.c ft_strmapi.c \
 	 ft_itoa.c ft_substr.c ft_atoll.c ft_lltoa.c \
-	 get_next_line.c ft_lstnew.c ft_lstsize.c ft_lstadd_front.c ft_lstlast.c \
-	 ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c
+	 get_next_line_heredoc.c get_next_line.c ft_lstnew.c ft_lstsize.c \
+	 ft_lstadd_front.c ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c \
+	 ft_lstiter.c
 
 OBJS=$(SRCS:.c=.o)
 

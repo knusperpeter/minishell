@@ -1,16 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_heredoc.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 17:25:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/22 17:26:04 by caigner          ###   ########.fr       */
+/*   Created: 2024/04/22 17:23:06 by caigner           #+#    #+#             */
+/*   Updated: 2024/04/22 17:26:24 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+static int	some_error(char *str)
+{
+	if (str)
+		free(str);
+	return (-1);
+}
 
 static char	*putline(ssize_t index, char **left)
 {
@@ -59,25 +66,31 @@ static char	*get_ln(int fd, char **left, char *buffer)
 	return (result);
 }
 
-char	*get_next_line(int fd)
+int	get_next_line_heredoc(int fd, char **line, int flag)
 {
 	char		*buffer;
 	static char	*left[1024];
-	char		*result;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
+	if (flag == 1)
+	{
+		free(left[fd]);
+		left[fd] = NULL;
+		return (1);
+	}
+	if (fd < 0 || BUFFER_SIZE <= 0 || !line)
+		return (some_error(left[fd]));
 	buffer = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buffer)
-		return (NULL);
+		return (some_error(left[fd]));
 	if (!left[fd])
 		left[fd] = ft_strdup("");
-	result = (get_ln(fd, &left[fd], buffer));
+	*line = (get_ln(fd, &left[fd], buffer));
 	free(buffer);
-	return (result);
+	return (1);
 }
 
-/* int main()
+/* 
+int main()
 {
 	int fd1;
 	//int fd2;
