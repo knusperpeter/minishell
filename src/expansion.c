@@ -6,284 +6,154 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/23 11:44:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/24 17:26:01 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// flag für single quotes open and double quotes open. if single quotes open ->skip until closed. if double quotes open expand while skipping until closed.
-
-int dont_expand_result(char *str, int i)
+void	handle_quote_state(t_common *common, char c)
 {
-	int inside_single_quotes = 0;
-	int inside_double_quotes = 0;
-
-	while (i >= 0)
+	if (c == '\'' && !common->open_double_quotes)
 	{
-		if (str[i] == '\'' && nb_esc_char(str, i) % 2 == 0 && !inside_double_quotes)
-		{
-			inside_single_quotes = !inside_single_quotes;
-		}
-		else if (str[i] == '\"' && nb_esc_char(str, i) % 2 == 0)
-		{
-			inside_double_quotes = !inside_double_quotes;
-		}
-		i--;
+		if (common->open_single_quotes)
+			common->open_single_quotes = 0;
+		else
+			common->open_single_quotes = 1;
 	}
-	return (inside_single_quotes);
-}
-
-int	dont_expand(char *str, int i)
-{
-	if (i == 0)
-		return (0);
-	if (i > 0 && (str[i + 1] == '\"' || str[i + 1] == '\''))
-		return (1);
-	if (dont_expand_result(str, i))
-		return (1);
-	return (0);
-}
-
-int	nb_esc_char(char *str, int index)
-{
-	int	i;
-	int	count;
-
-	i = index - 1;
-	count = 0;
-	if (index <= 0)
-		return (count);
-	while (i != -1)
+	else if (c == '\"' && !common->open_single_quotes)
 	{
-		if (str[i] == '\\')
-			count++;
-		else if (str[i] != '\\')
-			return (count);
-		i--;
+		if (common->open_double_quotes)
+			common->open_double_quotes = 0;
+		else
+			common->open_double_quotes = 1;
 	}
-	return (count);
 }
 
-int	has_dollar(t_common *c, char *str)
+char	*replace_str(char **str, int i, int varlen, char *value)
 {
-	int	i;
-
-	(void)c;
-	if (!str)
-		return (0);
-	i = 0;
-	while (str[i])
-	{
-		if (str[0] == '$' && !ft_strchr(WHITESPACE, str[i + 1]) && str[i + 1])
-			return (1);
-		else if (str[i] == '$' && !str[i + 1])
-			break;
-		else if ((str[i] == '$' && nb_esc_char(str, i) % 2 != 0) || dont_expand(str, i))
-			i++;
-		else if (str[i] == '$' && ft_strchr(WHITESPACE, str[i + 1]))
-			return (0);
-		else if (str[i] == '$' && !ft_strchr(WHITESPACE, str[i + 1]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-/**
- * Function: ft_create_string
- * Description: Creates a new string by replacing a variable in the original string with its value from the environment.
- * Parameters: env_value - The value of the variable in the environment, str - The original string, i - The index of the variable in the string, var_len - The length of the variable.
- * Returns: The new string with the variable replaced by its value.
- */
-char	*ft_create_string(char *env_value, char *str, int *i, int var_len)
-{
-	char	*tmp;
-	char	*value;
-
-	if (env_value == NULL)
-		return (ft_strdup(str));
-	tmp = NULL;
-	value = NULL;
-	value = ft_substr(str, 0, *i);
-	if (!value)
-		return (ft_printerrno("expansion value malloc: "), NULL);
-	tmp = ft_strjoin(value, env_value);
-	if (!tmp)
-		return (ft_printerrno("expansion tmp malloc: "), NULL);
-	free(value);
-	value = NULL;
-	if (*i + var_len + 1 < (int)ft_strlen(str))
-		value = ft_strjoin(tmp, &str[*i + var_len + 1]);
-	else
-		value = ft_strdup(tmp);
-	if (!value)
-		return (ft_printerrno("expansion value malloc: "), NULL);
-	if (env_value)
-		*i += var_len;
-	free(tmp);
-	tmp = NULL;
-	return (value);
-}
-
-/**
- * Function: ft_replace_var
- * Description: Replaces a variable in a string with its value from the environment.
- * Parameters: env - The linked list of environment variables, str - The original string, i - The index of the variable in the string.
- * Returns: The new string with the variable replaced by its value.
- */
-char	*ft_replace_var(t_common *c, t_env *env, char *str, int *i)
-{
-	int		var_len;
+	int		valuelen;
 	char	*tmp;
 
-	tmp = NULL;
-	var_len = 0;
-	while (str[*i + 1 + var_len] && (ft_isalnum(str[*i + 1 + var_len]) || str[*i + 1 + var_len] == '_'))
-		var_len++;
-	if (str[*i + 1] == '?')
-	{
-		c->exitstatus_str = ft_itoa(c->exitstatus);
-		if (!c->exitstatus_str)
-			return (ft_printerrno("expansion: "), NULL);
-		return (ft_create_string(c->exitstatus_str, str, i, 1));
-	}
-	else
-		tmp = ft_substr(str, *i + 1, var_len);
+	valuelen = ft_strlen(value);
+	tmp = malloc(sizeof(char) * (ft_strlen(*(str) - varlen + valuelen + 1)));
 	if (!tmp)
-		return (ft_printerrno("expansion: "), NULL);
+		return (dprintf(2 ,"mallocfail"), *str);
+	ft_strlcpy(tmp, *str, (sizeof(char) * i));
+	ft_strlcat(tmp, value, (sizeof(char) * valuelen));
+	if ((*str)[i + varlen])
+		ft_strlcat(tmp, &(*str)[i + varlen], (ft_strlen(*str) - i - varlen));
+	return (free(*str), tmp);
+}
+
+static char	*get_env_value(t_env *env, char *env_var)
+{
 	while (env)
 	{
-		if (!ft_strncmp(env->variable, tmp, var_len + 1))
-			return (free(tmp), ft_create_string(env->value, str, i, var_len));
+		if (!ft_strncmp(env->variable, env_var, ft_strlen(env_var)))
+			return (ft_strdup(env->variable));
 		env = env->next;
 	}
-	return (free(tmp), ft_create_string(NULL, str, i, var_len));
+	return (NULL);
 }
 
-/**
- * Function: ft_substitute
- * Description: Substitutes variables in a string with their corresponding values from the environment.
- * Parameters: env - The linked list of environment variables, str - The original string.
- * Returns: The new string with all variables replaced by their values.
- */
-char	*ft_substitute(t_common *c, t_env *env, char *str)
+void	replace_with_env(t_common *c, int varlen, int i, char **str)
 {
-	int		i;
-	char	*ret;
-	t_env	*tmp;
+	char	*env_var;
+	char	*env_value;
+	
+	env_var = malloc(sizeof(char) * (varlen + 1));
+	if (!env_var)
+	{
+		dprintf(2, "mallocfail");
+		return ;
+	}
+	if (ft_strlcpy(env_var, &(*str)[i], varlen) != (size_t)varlen)
+		return ;
+	env_value = get_env_value(c->env, env_var);
+	*str = replace_str(str, i, varlen, env_value);
+}
 
-	ret = NULL;
-	if (!str || !env)
-		return (NULL);
+void	replace_with_value(t_common *c, char **str, int i)
+{
+	int		varlen;
+	int		tmp;
+
+	varlen = 1;
+	tmp = i;
+	if (*(str[i + 1]) == '?')
+	{
+		c->exitstatus_str = ft_itoa(c->exitstatus);
+		*str = replace_str(str, i, 2, c->exitstatus_str);
+		return ;
+	}
+	else if (*(str[i + 1]))
+	{
+		tmp++;
+		while (*(str)[tmp] && (ft_isalnum(*(str)[tmp]) || *(str)[tmp] == '_'))
+		{
+			varlen++;
+			tmp++;
+		}
+		replace_with_env(c, varlen, i, str);
+	}
+}
+
+void	expand_token(t_common *c, char *str)
+{
+	int	i;
+
 	i = 0;
+	c->open_double_quotes = 0;
+	c->open_single_quotes = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && nb_esc_char(str, i) % 2 == 0
-			&& !dont_expand(str, i))
+		handle_quote_state(c, str[i]);
+		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
+			replace_with_value(c, &str, i);
+	}
+}
+
+void	expand_io_token(t_common *c, t_io_red *io_red)
+{
+	if (io_red)
+	{
+		if (io_red->type == REDIR_IN)
+			expand_token(c, io_red->infile);
+		else if (io_red->type == REDIR_OUT || io_red->type == APPEND)
+			expand_token(c, io_red->outfile);
+	}
+}
+
+void	expansion(t_common *c, t_list_d *cmds)
+{
+	t_list_d	*curr;
+	t_cmd_table	*cmd_struct;
+	t_list		*curr_token;
+	t_io_red	*io_struct;
+
+	curr = cmds;
+	while (curr)
+	{
+		cmd_struct = curr->content;
+		curr_token = cmd_struct->cmds;
+		while (curr_token)
 		{
-			tmp = env;
-			ret = ft_replace_var(c, tmp, str, &i);
-			if (!ret)
-				return (ft_printerrno("expansion ret malloc: "), NULL);
-			str = ret;
-			if (ft_strchr(str, ' '))
-			{
-				
-			}
+			expand_token(c, curr_token->content);
+		//	split_whitespace(c, curr_token->content);
+			curr_token = curr_token->next;
 		}
-		i++;
-	}
-	return (str);
-}
-
-/**
- * Function: ft_expand_red
- * Description: Expands variables in the input and output filenames of each I/O redirection in the list.
- * Parameters: env - The linked list of environment variables, io_lst - The linked list of I/O redirections.
- * This function iterates over the I/O redirection list and substitutes variables in the filenames.
- */
-void	ft_expand_red(t_common *c, t_list *io_lst)
-{
-	t_io_red	*io;
-
-	while (io_lst)
-	{
-		io = io_lst->content;
-		if (!io)
-			return ;
-		if (has_dollar(c, io->infile))
-			io->infile = ft_substitute(c, c->env, io->infile);
-		if (has_dollar(c, io->outfile))
-			io->outfile = ft_substitute(c, c->env, io->outfile);
-		io_lst = io_lst->next;
-	}
-}
-
-/**
- * Function: ft_expand_cmd
- * Description: Expands variables in the command and I/O redirections of a command table.
- * Parameters: env - The linked list of environment variables, cmd - The command table.
- * This function iterates over the command and I/O redirections and substitutes variables.
- */
-void	ft_expand_cmd_table(t_common *c, t_cmd_table *cmd)
-{
-	t_list	*tmp_lst;
-	t_list	*tmp_cmd;
-	char	**tmp1;
-	int		i;
-
-	if (!cmd)
-		return ;
-	tmp_cmd = cmd->cmds;
-	while (tmp_cmd)
-	{
-		if (has_dollar(c, tmp_cmd->content))
+		curr_token = cmd_struct->io_red;
+		io_struct = curr_token->content;
+		while (curr_token)
 		{
-			tmp_cmd->content = ft_substitute(c, c->env, tmp_cmd->content);
-			if (ft_strchr(tmp_cmd->content, ' '))
-			{
-				tmp1 = ft_split(tmp_cmd->content, ' ');
-				if (!tmp1)
-					return ;
-				free(tmp_cmd->content);
-				tmp_cmd->content = ft_strdup(tmp1[0]);
-				i = 1;
-				while (tmp1[i])
-				{
-					tmp_lst = ft_lstnew(ft_strdup(tmp1[i]));
-					tmp_lst->next = tmp_cmd->next;
-					tmp_cmd->next = tmp_lst;
-					tmp_cmd = tmp_cmd->next;
-					i++;
-				}
-				free (tmp1);
-			}
+			expand_io_token(c, io_struct);
+			curr_token = curr_token->next;
 		}
-		tmp_cmd = tmp_cmd->next;
-	}
-	
-	tmp_lst = cmd->io_red;
-	ft_expand_red(c, tmp_lst);
-}
-
-/**
- * Function: ft_expansion
- * Description: Expands variables in the commands and I/O redirections of each command table in the list.
- * Parameters: env - The linked list of environment variables, cmds - The linked list of command tables.
- * This function iterates over the command tables and expands variables in each one.
- */
-void	ft_expansion(t_common *c, t_list_d *cmds)//$? "|" ">" ...
-{
-	t_list_d	*tmp;
-
-	tmp = cmds;
-	while (tmp)
-	{
-		ft_expand_cmd_table(c, tmp->content);
-		tmp = tmp->next;
+		curr = curr->next;
 	}
 }
+
 
 /**
  * Function: ft_str_wo_quotes

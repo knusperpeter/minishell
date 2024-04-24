@@ -1,5 +1,4 @@
 #include "../include/minishell.h"
-#include <limits.h>
 
 // flag für single quotes open and double quotes open. 
 // if single quotes open ->skip until closed.
@@ -26,13 +25,18 @@ void	handle_quote_state(t_common *common, char c)
 char	*replace_str(char **str, int i, int varlen, char *value)
 {
 	int		valuelen;
+	int		before;
 	char	*tmp;
 
 	valuelen = ft_strlen(value);
 	tmp = malloc(sizeof(char) * (ft_strlen(*(str) - varlen + valuelen + 1)));
 	if (!tmp)
-		return (dprintf(2 ,"mallocfail"), NULL);
-	
+		return (dprintf(2 ,"mallocfail"), *str);
+	ft_strlcpy(tmp, *str, (sizeof(char) * i));
+	ft_strlcat(tmp, value, (sizeof(char) * valuelen));
+	if ((*str)[i + varlen])
+		ft_strlcat(tmp, &(*str)[i + varlen], (ft_strlen(*str) - i - varlen));
+	return (free(*str), tmp);
 }
 
 char	*get_env_value(t_env *env, char *env_var)
@@ -46,12 +50,27 @@ char	*get_env_value(t_env *env, char *env_var)
 	return (NULL);
 }
 
+void	replace_with_env(t_common *c, int varlen, int i, char **str)
+{
+	char	*env_var;
+	char	*env_value;
+	
+	env_var = malloc(sizeof(char) * (varlen + 1));
+	if (!env_var)
+	{
+		dprintf(2, "mallocfail");
+		return ;
+	}
+	if (ft_strlcpy(env_var, &(*str)[i], varlen) != varlen)
+		return ;
+	env_value = get_env_value(c->env, env_var);
+	*str = replace_str(str, i, varlen, env_value);
+}
+
 void	replace_with_value(t_common *c, char **str, int i)
 {
 	int		varlen;
 	int		tmp;
-	char	*env_var;
-	char	*env_value;
 
 	varlen = 1;
 	tmp = i;
@@ -64,18 +83,12 @@ void	replace_with_value(t_common *c, char **str, int i)
 	else if (*(str[i + 1]))
 	{
 		tmp++;
-		while (ft_isalnum(*(str[tmp])) || *(str[tmp]) == '_')
-			varlen++;
-		env_var = malloc(sizeof(char) * varlen);
-		if (!env_var)
+		while (*(str)[tmp] && (ft_isalnum(*(str)[tmp]) || *(str)[tmp] == '_'))
 		{
-			dprintf(2, "mallocfail");
-			return ;
+			varlen++;
+			tmp++;
 		}
-	//problem hier weiter	if (ft_strlcpy(env_var, &*(str[i]), varlen) != varlen)
-			return ;
-		env_value = get_env_value(c->env, env_var);
-		*str = replace_str(str, i, varlen, env_value);
+		replace_with_env(c, varlen, i, str);
 	}
 }
 
