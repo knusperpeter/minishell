@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/24 21:35:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/25 12:26:37 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	replace_with_env(t_common *c, int varlen, int i, char **str)
 	if (ft_strlcpy(env_var, &(*str)[i], varlen) != (size_t)varlen)
 		return ;
 	env_value = get_env_value(c->env, env_var);
+	free(env_var);
 	*str = replace_str(str, i, varlen, env_value);
 }
 
@@ -80,7 +81,6 @@ void	replace_with_value(t_common *c, char **str, int i)
 	int		tmp;
 
 	varlen = 1;
-	tmp = i;
 	if (*(str[i + 1]) == '?')
 	{
 		c->exitstatus_str = ft_itoa(c->exitstatus);
@@ -89,6 +89,7 @@ void	replace_with_value(t_common *c, char **str, int i)
 	}
 	else if (*(str[i + 1]))
 	{
+		tmp = i;
 		tmp++;
 		while (*(str)[tmp] && (ft_isalnum(*(str)[tmp]) || *(str)[tmp] == '_'))
 		{
@@ -111,6 +112,7 @@ void	expand_token(t_common *c, char *str)
 		handle_quote_state(c, str[i]);
 		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
 			replace_with_value(c, &str, i);
+		i++;
 	}
 }
 
@@ -143,12 +145,15 @@ void	ft_expansion(t_common *c, t_list_d *cmds)
 		//	split_whitespace(c, curr_token->content);
 			curr_token = curr_token->next;
 		}
-		curr_token = cmd_struct->io_red;
-		io_struct = curr_token->content;
-		while (curr_token)
+		if (cmd_struct->io_red)
 		{
-			expand_io_token(c, io_struct);
-			curr_token = curr_token->next;
+			curr_token = cmd_struct->io_red;
+			io_struct = curr_token->content;
+			while (curr_token)
+			{
+				expand_io_token(c, io_struct);
+				curr_token = curr_token->next;
+			}
 		}
 		curr = curr->next;
 	}
