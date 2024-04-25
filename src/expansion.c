@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/24 17:26:01 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/24 21:35:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	expand_io_token(t_common *c, t_io_red *io_red)
 	}
 }
 
-void	expansion(t_common *c, t_list_d *cmds)
+void	ft_expansion(t_common *c, t_list_d *cmds)
 {
 	t_list_d	*curr;
 	t_cmd_table	*cmd_struct;
