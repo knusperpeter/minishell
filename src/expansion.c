@@ -6,11 +6,14 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/24 21:35:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/26 19:54:33 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// DER SCHEI? ist im quotes removal
+
 #include "../include/minishell.h"
+#include <readline/chardefs.h>
 
 void	handle_quote_state(t_common *common, char c)
 {
@@ -30,21 +33,37 @@ void	handle_quote_state(t_common *common, char c)
 	}
 }
 
-char	*replace_str(char **str, int i, int varlen, char *value)
+char	*replace_str(char *str, int i, int varlen, char *value)
 {
-	int		valuelen;
-	char	*tmp;
+	char	*tmp1;
+	char	*tmp2;
 
+	
+	tmp1 = ft_substr(str, 0, i);
+	//protect
+	tmp2 = ft_strjoin(tmp1, value);
+	//protect
+	if (tmp1)
+		free(tmp1);
+	tmp1 = ft_strjoin(tmp2, str + i + varlen);
+	//protect
+	free(tmp2);
+	return (tmp1);
+}
+/* void kas(){
 	valuelen = ft_strlen(value);
-	tmp = malloc(sizeof(char) * (ft_strlen(*(str) - varlen + valuelen + 1)));
+	tmp = malloc(sizeof(char) * (ft_strlen((*str) - varlen + valuelen + 1)));
 	if (!tmp)
 		return (dprintf(2 ,"mallocfail"), *str);
-	ft_strlcpy(tmp, *str, (sizeof(char) * i));
-	ft_strlcat(tmp, value, (sizeof(char) * valuelen));
+	ft_strlcpy(tmp, *str,  i);
+	printf("temp: %s, value: %s, valuelen: %d\n", tmp, value, valuelen);
+	 = ft_strjoin(tmp, value);
+	
+	printf("%s\n", tmp);
 	if ((*str)[i + varlen])
 		ft_strlcat(tmp, &(*str)[i + varlen], (ft_strlen(*str) - i - varlen));
 	return (free(*str), tmp);
-}
+} */
 
 static char	*get_env_value(t_env *env, char *env_var)
 {
@@ -57,52 +76,59 @@ static char	*get_env_value(t_env *env, char *env_var)
 	return (NULL);
 }
 
-void	replace_with_env(t_common *c, int varlen, int i, char **str)
+char	*replace_with_env(t_common *c, int varlen, int i, char *str)
 {
 	char	*env_var;
 	char	*env_value;
+	char	*tmp;
 	
 	env_var = malloc(sizeof(char) * (varlen + 1));
 	if (!env_var)
 	{
 		dprintf(2, "mallocfail");
-		return ;
+		return (str);
 	}
-	if (ft_strlcpy(env_var, &(*str)[i], varlen) != (size_t)varlen)
-		return ;
+	if (ft_strlcpy(env_var, str + i, varlen) != (size_t)varlen)
+		return (str);
 	env_value = get_env_value(c->env, env_var);
-	*str = replace_str(str, i, varlen, env_value);
+	tmp = replace_str(str, i, varlen, env_value);
+//	free(*str);
+	return (tmp);
 }
 
-void	replace_with_value(t_common *c, char **str, int i)
+char	*replace_with_value(t_common *c, char *str, int i)
 {
 	int		varlen;
 	int		tmp;
 
 	varlen = 1;
 	tmp = i;
-	if (*(str[i + 1]) == '?')
+	if (str[i + 1] == '?')
 	{
 		c->exitstatus_str = ft_itoa(c->exitstatus);
-		*str = replace_str(str, i, 2, c->exitstatus_str);
-		return ;
+		return (replace_str(str, i, 2, c->exitstatus_str));
+//		free(*str);
 	}
-	else if (*(str[i + 1]))
+	else if (str[i + 1])
 	{
 		tmp++;
-		while (*(str)[tmp] && (ft_isalnum(*(str)[tmp]) || *(str)[tmp] == '_'))
+		while (str[tmp] && (ft_isalnum(str[tmp]) || str[tmp] == '_'))
 		{
 			varlen++;
 			tmp++;
 		}
-		replace_with_env(c, varlen, i, str);
+		return (replace_with_env(c, varlen, i, str));
 	}
+	return (str);
 }
 
-void	expand_token(t_common *c, char *str)
-{
-	int	i;
 
+char	*expand_token(t_common *c, char *str)
+{
+	int		i;
+
+	if (!str)
+		return (NULL);
 	i = 0;
 	c->open_double_quotes = 0;
 	c->open_single_quotes = 0;
@@ -110,8 +136,11 @@ void	expand_token(t_common *c, char *str)
 	{
 		handle_quote_state(c, str[i]);
 		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
-			replace_with_value(c, &str, i);
+			return (replace_with_value(c, str, i));
+		else
+			i++;
 	}
+	return (str);
 }
 
 void	expand_io_token(t_common *c, t_io_red *io_red)
@@ -127,30 +156,43 @@ void	expand_io_token(t_common *c, t_io_red *io_red)
 
 void	ft_expansion(t_common *c, t_list_d *cmds)
 {
-	t_list_d	*curr;
+	t_list_d	*subcommand;
 	t_cmd_table	*cmd_struct;
 	t_list		*curr_token;
 	t_io_red	*io_struct;
+	char		*string;
 
-	curr = cmds;
-	while (curr)
+	subcommand = cmds;
+	while (subcommand)
 	{
-		cmd_struct = curr->content;
+		cmd_struct = subcommand->content;
 		curr_token = cmd_struct->cmds;
 		while (curr_token)
 		{
-			expand_token(c, curr_token->content);
+			printf("Current_Token: %s\n", (char *)curr_token->content);
+			while (ft_strchr(curr_token->content, '$'))
+			{
+				//CHECK FOR QUOTES HERE!
+				string = expand_token(c, curr_token->content);
+				free(curr_token->content);
+				curr_token->content = ft_strdup(string);
+				free(string);
+			}
+			printf("token after expansion: %s\n", (char*)curr_token->content);
 		//	split_whitespace(c, curr_token->content);
 			curr_token = curr_token->next;
 		}
-		curr_token = cmd_struct->io_red;
-		io_struct = curr_token->content;
-		while (curr_token)
+		if (cmd_struct->io_red)
 		{
-			expand_io_token(c, io_struct);
-			curr_token = curr_token->next;
+			curr_token = cmd_struct->io_red;
+			io_struct = curr_token->content;
+			while (curr_token)
+			{
+				expand_io_token(c, io_struct);
+				curr_token = curr_token->next;
+			}
 		}
-		curr = curr->next;
+		subcommand = subcommand->next;
 	}
 }
 
@@ -171,7 +213,7 @@ char	*ft_str_wo_quotes(char *str)
 }
 
 /**
- * Function: ft_rm_quotes_str
+ * Function: ft_rm_quotes_strtmp2
  * Description: Removes the quotes from the start and end of a string, if present.
  * Parameters: str - The original string.
  * Returns: A new string with the quotes removed, or the original string if no quotes were present.
