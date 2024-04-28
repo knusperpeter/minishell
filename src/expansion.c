@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/26 19:54:33 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/28 16:56:53 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,28 @@ void	handle_quote_state(t_common *common, char c)
 	}
 }
 
-char	*replace_str(char *str, int i, int varlen, char *value)
+char *replace_str(char *str, int i, int varlen, char *value)
 {
-	char	*tmp1;
-	char	*tmp2;
-
-	
-	tmp1 = ft_substr(str, 0, i);
-	//protect
-	tmp2 = ft_strjoin(tmp1, value);
-	//protect
-	if (tmp1)
-		free(tmp1);
-	tmp1 = ft_strjoin(tmp2, str + i + varlen);
-	//protect
-	free(tmp2);
-	return (tmp1);
+    if (!str || i < 0 || i + varlen > (int)strlen(str) || !value) {
+        return NULL;
+    }
+    char	*tmp1 = ft_substr(str, 0, i);
+    if (!tmp1) {
+        return NULL;
+    }
+    char	*tmp2 = ft_strjoin(tmp1, value);
+    free(tmp1);
+    if (!tmp2) {
+        return NULL;
+    }
+    tmp1 = ft_strjoin(tmp2, str + i + varlen);
+    free(tmp2);
+    if (!tmp1) {
+        return NULL;
+    }
+    return tmp1;
 }
+
 /* void kas(){
 	valuelen = ft_strlen(value);
 	tmp = malloc(sizeof(char) * (ft_strlen((*str) - varlen + valuelen + 1)));
@@ -70,7 +75,7 @@ static char	*get_env_value(t_env *env, char *env_var)
 	while (env)
 	{
 		if (!ft_strncmp(env->variable, env_var, ft_strlen(env_var)))
-			return (ft_strdup(env->variable));
+			return (ft_strdup(env->value));
 		env = env->next;
 	}
 	return (NULL);
@@ -88,11 +93,12 @@ char	*replace_with_env(t_common *c, int varlen, int i, char *str)
 		dprintf(2, "mallocfail");
 		return (str);
 	}
-	if (ft_strlcpy(env_var, str + i, varlen) != (size_t)varlen)
+	if (ft_strlcpy(env_var, str + i + 1, varlen - 1) != (size_t)varlen - 1)
 		return (str);
 	env_value = get_env_value(c->env, env_var);
+	if (!env_value)
+		return (printf("malloc fail"), NULL);
 	tmp = replace_str(str, i, varlen, env_value);
-//	free(*str);
 	return (tmp);
 }
 
@@ -107,7 +113,6 @@ char	*replace_with_value(t_common *c, char *str, int i)
 	{
 		c->exitstatus_str = ft_itoa(c->exitstatus);
 		return (replace_str(str, i, 2, c->exitstatus_str));
-//		free(*str);
 	}
 	else if (str[i + 1])
 	{
@@ -126,6 +131,7 @@ char	*replace_with_value(t_common *c, char *str, int i)
 char	*expand_token(t_common *c, char *str)
 {
 	int		i;
+	char	*new_str;
 
 	if (!str)
 		return (NULL);
@@ -136,7 +142,11 @@ char	*expand_token(t_common *c, char *str)
 	{
 		handle_quote_state(c, str[i]);
 		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
-			return (replace_with_value(c, str, i));
+		{
+			new_str = replace_with_value(c, str, i);
+			free(str);
+			return (new_str);
+		}
 		else
 			i++;
 	}
@@ -154,13 +164,37 @@ void	expand_io_token(t_common *c, t_io_red *io_red)
 	}
 }
 
+int	dollar_sign_expansion(t_common *c, char *str)
+{
+	char	*curr_dollar;
+	int		i;
+	
+	i = 0;
+	c->open_double_quotes = 0;
+	c->open_single_quotes = 0;
+	curr_dollar = ft_strchr(str, '$');
+	while (str[i] && curr_dollar)
+	{
+		handle_quote_state(c, str[i]);
+		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
+		{
+			if (curr_dollar == &str[i])
+				return (1);
+			else
+				curr_dollar = ft_strchr(curr_dollar + 1, '$');
+		}
+		i++;
+	}
+	return (0);
+}
+
 void	ft_expansion(t_common *c, t_list_d *cmds)
 {
 	t_list_d	*subcommand;
 	t_cmd_table	*cmd_struct;
 	t_list		*curr_token;
 	t_io_red	*io_struct;
-	char		*string;
+	char		*old_string;
 
 	subcommand = cmds;
 	while (subcommand)
@@ -169,16 +203,16 @@ void	ft_expansion(t_common *c, t_list_d *cmds)
 		curr_token = cmd_struct->cmds;
 		while (curr_token)
 		{
-			printf("Current_Token: %s\n", (char *)curr_token->content);
-			while (ft_strchr(curr_token->content, '$'))
+			printf("Token: %s\n", (char *)curr_token->content);
+			while (dollar_sign_expansion(c, curr_token->content))
 			{
-				//CHECK FOR QUOTES HERE!
-				string = expand_token(c, curr_token->content);
-				free(curr_token->content);
-				curr_token->content = ft_strdup(string);
-				free(string);
+				old_string = curr_token->content;
+				printf("string : %s\n", old_string);
+				curr_token->content = expand_token(c, old_string);
+				printf("after strdup: %s\n", (char *)curr_token->content);
+//				free(old_string);
 			}
-			printf("token after expansion: %s\n", (char*)curr_token->content);
+			printf("Token after expansion: %s\n", (char*)curr_token->content);
 		//	split_whitespace(c, curr_token->content);
 			curr_token = curr_token->next;
 		}
