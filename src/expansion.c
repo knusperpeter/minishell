@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/28 16:56:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/28 21:13:57 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,6 @@ char *replace_str(char *str, int i, int varlen, char *value)
     }
     return tmp1;
 }
-
-/* void kas(){
-	valuelen = ft_strlen(value);
-	tmp = malloc(sizeof(char) * (ft_strlen((*str) - varlen + valuelen + 1)));
-	if (!tmp)
-		return (dprintf(2 ,"mallocfail"), *str);
-	ft_strlcpy(tmp, *str,  i);
-	printf("temp: %s, value: %s, valuelen: %d\n", tmp, value, valuelen);
-	 = ft_strjoin(tmp, value);
-	
-	printf("%s\n", tmp);
-	if ((*str)[i + varlen])
-		ft_strlcat(tmp, &(*str)[i + varlen], (ft_strlen(*str) - i - varlen));
-	return (free(*str), tmp);
-} */
 
 static char	*get_env_value(t_env *env, char *env_var)
 {
@@ -124,7 +109,6 @@ char	*replace_with_value(t_common *c, char *str, int i)
 		}
 		return (replace_with_env(c, varlen, i, str));
 	}
-	return (str);
 }
 
 
@@ -144,7 +128,6 @@ char	*expand_token(t_common *c, char *str)
 		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
 		{
 			new_str = replace_with_value(c, str, i);
-			free(str);
 			return (new_str);
 		}
 		else
@@ -206,11 +189,11 @@ void	ft_expansion(t_common *c, t_list_d *cmds)
 			printf("Token: %s\n", (char *)curr_token->content);
 			while (dollar_sign_expansion(c, curr_token->content))
 			{
-				old_string = curr_token->content;
+				old_string = ft_strdup(curr_token->content);
 				printf("string : %s\n", old_string);
 				curr_token->content = expand_token(c, old_string);
 				printf("after strdup: %s\n", (char *)curr_token->content);
-//				free(old_string);
+				free(old_string);
 			}
 			printf("Token after expansion: %s\n", (char*)curr_token->content);
 		//	split_whitespace(c, curr_token->content);
