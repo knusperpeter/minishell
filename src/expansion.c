@@ -1,19 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expansion.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/28 21:13:57 by caigner          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-// DER SCHEI? ist im quotes removal
-
 #include "../include/minishell.h"
-#include <readline/chardefs.h>
+#include <stdlib.h>
 
 void	handle_quote_state(t_common *common, char c)
 {
@@ -33,121 +19,7 @@ void	handle_quote_state(t_common *common, char c)
 	}
 }
 
-char *replace_str(char *str, int i, int varlen, char *value)
-{
-    if (!str || i < 0 || i + varlen > (int)strlen(str) || !value) {
-        return NULL;
-    }
-    char	*tmp1 = ft_substr(str, 0, i);
-    if (!tmp1) {
-        return NULL;
-    }
-    char	*tmp2 = ft_strjoin(tmp1, value);
-    free(tmp1);
-    if (!tmp2) {
-        return NULL;
-    }
-    tmp1 = ft_strjoin(tmp2, str + i + varlen);
-    free(tmp2);
-    if (!tmp1) {
-        return NULL;
-    }
-    return tmp1;
-}
-
-static char	*get_env_value(t_env *env, char *env_var)
-{
-	while (env)
-	{
-		if (!ft_strncmp(env->variable, env_var, ft_strlen(env_var)))
-			return (ft_strdup(env->value));
-		env = env->next;
-	}
-	return (NULL);
-}
-
-char	*replace_with_env(t_common *c, int varlen, int i, char *str)
-{
-	char	*env_var;
-	char	*env_value;
-	char	*tmp;
-	
-	env_var = malloc(sizeof(char) * (varlen + 1));
-	if (!env_var)
-	{
-		dprintf(2, "mallocfail");
-		return (str);
-	}
-	if (ft_strlcpy(env_var, str + i + 1, varlen - 1) != (size_t)varlen - 1)
-		return (str);
-	env_value = get_env_value(c->env, env_var);
-	if (!env_value)
-		return (printf("malloc fail"), NULL);
-	tmp = replace_str(str, i, varlen, env_value);
-	return (tmp);
-}
-
-char	*replace_with_value(t_common *c, char *str, int i)
-{
-	int		varlen;
-	int		tmp;
-
-	varlen = 1;
-	tmp = i;
-	if (str[i + 1] == '?')
-	{
-		c->exitstatus_str = ft_itoa(c->exitstatus);
-		return (replace_str(str, i, 2, c->exitstatus_str));
-	}
-	else if (str[i + 1])
-	{
-		tmp++;
-		while (str[tmp] && (ft_isalnum(str[tmp]) || str[tmp] == '_'))
-		{
-			varlen++;
-			tmp++;
-		}
-		return (replace_with_env(c, varlen, i, str));
-	}
-}
-
-
-char	*expand_token(t_common *c, char *str)
-{
-	int		i;
-	char	*new_str;
-
-	if (!str)
-		return (NULL);
-	i = 0;
-	c->open_double_quotes = 0;
-	c->open_single_quotes = 0;
-	while (str[i])
-	{
-		handle_quote_state(c, str[i]);
-		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
-		{
-			new_str = replace_with_value(c, str, i);
-			return (new_str);
-		}
-		else
-			i++;
-	}
-	return (str);
-}
-
-void	expand_io_token(t_common *c, t_io_red *io_red)
-{
-	if (io_red)
-	{
-		if (io_red->type == REDIR_IN)
-			expand_token(c, io_red->infile);
-		else if (io_red->type == REDIR_OUT || io_red->type == APPEND)
-			expand_token(c, io_red->outfile);
-	}
-}
-
-int	dollar_sign_expansion(t_common *c, char *str)
+int	has_expansion(t_common *c, char *str)
 {
 	char	*curr_dollar;
 	int		i;
@@ -171,48 +43,176 @@ int	dollar_sign_expansion(t_common *c, char *str)
 	return (0);
 }
 
-void	ft_expansion(t_common *c, t_list_d *cmds)
+char	*get_expanded_str(/* t_common *c,  */char *str, char *envvalue, int i, int varsize)
 {
-	t_list_d	*subcommand;
-	t_cmd_table	*cmd_struct;
-	t_list		*curr_token;
-	t_io_red	*io_struct;
-	char		*old_string;
+	char	*res;
+	char	*tmp;
 
-	subcommand = cmds;
-	while (subcommand)
+	res = ft_substr(str, 0, i);
+	//protect
+	if (!res)
+		res = "";
+	tmp = ft_strjoin(res, envvalue);
+	//protect
+	if (res)
+		free(res);
+	res = ft_strjoin(tmp, &str[i + varsize + 1]);
+	//portekt
+	return (res);
+}
+
+int	varsize(char *str, int i)
+{
+	int		length;
+
+	length = 0;
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 	{
-		cmd_struct = subcommand->content;
-		curr_token = cmd_struct->cmds;
-		while (curr_token)
+		length++;
+		i++;
+	}
+	return (length);
+}
+
+static t_env *get_env_node(t_common *c, char *str, int i)
+{
+	int		length;
+	t_env	*env;
+	char	*var;
+
+	length = varsize(str, i);
+	var = malloc(length + 1);
+	if (!var)
+		return (printf("malloc-error"), NULL);
+	ft_strlcpy(var, &str[i], length);
+	env = c->env;
+	while (env)
+	{
+		if (!strncmp(env->variable, var, ft_strlen(var))
+				&& (int)ft_strlen(env->variable) == length)
+			return(free(var), env);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+char	*get_expansion_value(t_common *c, char *str, int i, int *varsize)
+{
+	t_env	*env_node;
+
+	if (str[i + 1] == '?')
+		return (*varsize = 1, ft_itoa(c->exitstatus));
+	else if (str[i + 1] == '$')
+		return (*varsize = 1, "1589302");
+	else if (str[++i])
+	{
+		env_node = get_env_node(c, str, i);
+		if (!env_node)
+			return (NULL);
+		return (*varsize = ft_strlen(env_node->variable), env_node->value);
+	}
+	return (NULL);
+}
+
+char	*expand_str(t_common *c, char *str)
+{
+	int		i;
+	int		varsize;
+	char	*new;
+	char	*envvalue;
+
+	if (!str)
+		return (NULL);
+	i = 0;
+	varsize = 0;
+	c->open_double_quotes = 0;
+	c->open_single_quotes = 0;
+	while (str[i])
+	{
+		handle_quote_state(c, str[i]);
+		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
 		{
-			printf("Token: %s\n", (char *)curr_token->content);
-			while (dollar_sign_expansion(c, curr_token->content))
-			{
-				old_string = ft_strdup(curr_token->content);
-				printf("string : %s\n", old_string);
-				curr_token->content = expand_token(c, old_string);
-				printf("after strdup: %s\n", (char *)curr_token->content);
-				free(old_string);
-			}
-			printf("Token after expansion: %s\n", (char*)curr_token->content);
-		//	split_whitespace(c, curr_token->content);
-			curr_token = curr_token->next;
+			envvalue = get_expansion_value(c, str, i, &varsize);
+			new = get_expanded_str(str, envvalue, i, varsize);
+			return (new);
 		}
-		if (cmd_struct->io_red)
+		i++;
+	}
+	return (NULL);
+}
+
+void	ft_expand_cmds(t_common *c, t_list *curr)
+{
+	char	*tmp;
+	int		flag;
+
+	flag = 0;
+	while (curr)
+	{
+		while (has_expansion(c, curr->content))
 		{
-			curr_token = cmd_struct->io_red;
-			io_struct = curr_token->content;
-			while (curr_token)
-			{
-				expand_io_token(c, io_struct);
-				curr_token = curr_token->next;
-			}
+			tmp = ft_strdup(curr->content);
+			free(curr->content);
+			curr->content = expand_str(c, tmp);
+			free(tmp);
 		}
-		subcommand = subcommand->next;
+		curr = curr->next;
 	}
 }
 
+void	ft_expand_io(t_common *c, t_list *curr)
+{
+	t_io_red	*io;
+	char		*tmp;
+
+	while(curr)
+	{
+		io = curr->content;
+		if (io)
+		{
+			if (io->type == REDIR_IN)
+			{
+				while(has_expansion(c, io->infile))
+				{
+					tmp = ft_strdup(io->infile);
+					free(io->infile);
+					io->infile = expand_str(c, tmp);
+					free(tmp);
+				}
+			}
+			else if (io->type == REDIR_OUT || io->type == APPEND)
+			{
+				while(has_expansion(c, io->infile))
+				{
+					tmp = ft_strdup(io->outfile);
+					free(io->outfile);
+					io->outfile = expand_str(c, tmp);
+					free(tmp);
+				}
+			}
+		}
+		curr = curr->next;
+	}
+}
+
+void	ft_expansion(t_common *c, t_list_d *cmds)
+{
+	t_cmd_table *cmd_struct;
+	t_list      *curr;
+
+	while (cmds)
+	{
+		cmd_struct = cmds->content;
+		curr = cmd_struct->cmds;
+		ft_expand_cmds(c, curr);
+		if (cmd_struct->io_red)
+		{
+			curr = cmd_struct->io_red;
+			ft_expand_io(c, curr);
+		}
+		cmds = cmds->next;
+	}
+}
 
 /**
  * Function: ft_str_wo_quotes

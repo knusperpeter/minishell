@@ -6,7 +6,7 @@
 #    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/03/23 19:30:08 by caigner          ###   ########.fr        #
+#    Updated: 2024/04/29 16:11:37 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,6 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/init_env.c \
 			src/lexer.c \
 			src/parsing.c \
-			src/expansion.c \
 			src/open_io.c \
 			src/get_cmd_path.c \
 			src/exec.c \
@@ -40,6 +39,7 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/free.c \
 			src/lexer_error.c \
 			src/signals.c \
+			src/expansion.c \
 
 OBJECTS = $(SOURCES:.c=.o)
 
