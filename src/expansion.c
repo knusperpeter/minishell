@@ -43,17 +43,18 @@ int	has_expansion(t_common *c, char *str)
 	return (0);
 }
 
-char	*get_expanded_str(/* t_common *c,  */char *str, char *envvalue, int i, int varsize)
+char	*get_expanded_str(char *str, char *envvalue, int i, int varsize)
 {
 	char	*res;
 	char	*tmp;
 
 	res = ft_substr(str, 0, i);
 	//protect
-	if (!res)
-		res = "";
-	tmp = ft_strjoin(res, envvalue);
-	//protect
+	if (envvalue)
+	{
+		tmp = ft_strjoin(res, envvalue);
+		//protect
+	}
 	if (res)
 		free(res);
 	res = ft_strjoin(tmp, &str[i + varsize + 1]);
