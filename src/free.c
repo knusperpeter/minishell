@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/22 17:17:14 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/30 15:45:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ void	free_tokens(void *content)
 	{
 		token = tmp;
 		tmp = token->next;
-		free(token->data);
+		if (token->data)
+			free(token->data);
 		free (token);
 	}
 }
@@ -170,9 +171,12 @@ void	free_all(t_common *c, int cleanup_loop)
 
 void	ft_clean_exit(t_common *c, char *msg, int cleanup_loop)
 {
+	int	exitstatus;
+
+	exitstatus = c->exitstatus;
 	if (msg)
 		printf("%s\n", msg);
 //	close_all_pipes(c);
 	free_all(c, cleanup_loop);
-//	exit(c->exitstatus);
+	exit(exitstatus);
 }

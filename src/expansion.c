@@ -152,7 +152,11 @@ void	ft_expand_cmds(t_common *c, t_list *curr)
 		while (has_expansion(c, curr->content))
 		{
 			tmp = ft_strdup(curr->content);
-			free(curr->content);
+			if (curr->content)
+			{
+				free(curr->content);
+				curr->content = NULL;
+			}
 			curr->content = expand_str(c, tmp);
 			free(tmp);
 		}

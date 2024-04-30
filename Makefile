@@ -6,7 +6,7 @@
 #    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/04/29 16:11:37 by caigner          ###   ########.fr        #
+#    Updated: 2024/04/29 22:06:42 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,6 +63,12 @@ fclean	:
 	$(RM) -rf $(NAME)
 
 re		: fclean all
+
+valgrind: $(NAME)
+	@echo "$(CYAN)Running $(BLUE)$(NAME)$(CYAN) under Valgrind...$(RESET)\n"
+	@valgrind --tool=memcheck --suppressions=minishell.supp --leak-check=full --leak-resolution=high --undef-value-errors=yes \
+		--show-leak-kinds=all --track-origins=yes --verbose --show-mismatched-frees=yes \
+		--read-var-info=yes --track-fds=yes --trace-children=yes ./minishell  ./$(NAME)
 
 # .SILENT:
 .PHONY: all clean fclean re
