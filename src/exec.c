@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/03/25 23:27:19 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/30 15:57:36 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,7 +272,10 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 		ft_clean_exit(c, NULL, 1);
 	ft_redirect_io(c, curr_cmd_table, curr, fd);
 	if (is_builtin(curr_cmd_table->str[0]))
+	{
 		ft_builtins(curr_cmd_table, c); // free & exit
+		ft_clean_exit(c, NULL, 1);
+	}
 	else
 	{
 		c->envp = get_envp(c->env);
@@ -280,7 +283,7 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 			execve(curr_cmd_table->exec_path, curr_cmd_table->str, c->envp);
 		perror(curr_cmd_table->str[0]);
 	}
-	ft_clean_exit(c, NULL, 0);
+	ft_clean_exit(c, NULL, 1);
 }
 
 int	execute_cmds(t_common *c)
@@ -314,6 +317,8 @@ int	execute_cmds(t_common *c)
 
 int	ft_execute(t_common *c)
 {
+	int	status;
+	
 	c->cmd_count = ft_count_cmds(c->cmd_struct);
 	if (c->cmd_count == 1 && ft_check_builtin(c->cmd_struct->content))
 	{
@@ -322,8 +327,10 @@ int	ft_execute(t_common *c)
 	}
 	else//
 	{//
-		execute_cmds(c);
+		status = execute_cmds(c);
 		wait_all_childs(c);
 	}//
-	return (0);
+	if (status == EXIT_FAILURE)
+		return(EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/24 21:34:49 by caigner          ###   ########.fr       */
+/*   Updated: 2024/04/30 15:55:26 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,9 +247,9 @@ int	tokenize(t_common *c)
 	arr = tokenize_one(c->raw_prompt, size + 1);
 	i = 0;
     while (arr[i])
-    {
-        sub_arr = prep_input(arr[i++]);
-		cmd_tok = ft_lstnew(malloc(sizeof(t_token)));
+	{
+		sub_arr = prep_input(arr[i++]);
+		cmd_tok = ft_lstnew(malloc(sizeof(t_token)));//make safe
 		if (!cmd_tok || !cmd_tok->content)
 		{
 			if (cmd_tok)
@@ -263,6 +263,24 @@ int	tokenize(t_common *c)
 	free_2d(arr);
 	return (EXIT_SUCCESS);
 }
+
+t_list_d	*create_cmds_node()
+{
+	t_list_d	*tmp_cmd;
+	t_cmd_table	*cmd_table;
+
+	cmd_table = malloc(sizeof(t_cmd_table));
+	if (!cmd_table)
+		return (perror("Error allocating memory for cmd_table\n"), NULL);
+	tmp_cmd = ft_lstnew_d(cmd_table);
+	if (!tmp_cmd)
+	{
+		perror("Error initializing cmd_struct\n");
+		return (free(cmd_table), NULL);
+	}
+	return (tmp_cmd);
+}
+
 /**
  * Function: t_lst_to_struct
  * Description: Converts the token linked list into a command table linked list.
@@ -271,48 +289,20 @@ int	tokenize(t_common *c)
  */
 int	t_lst_to_struct(t_common *c)
 {
-	t_list		*cmd_tok;
+	t_list		*cmd_token;
 	t_list_d	*tmp_cmd;
 
-	tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
-	if (!tmp_cmd || !tmp_cmd->content)
+	cmd_token = c->tokens;
+	while (cmd_token)
 	{
-		if (tmp_cmd)
-			free(tmp_cmd);
-		return (perror("Error initializing cmd_struct\n"), 1);
-	}
-	cmd_tok = c->tokens;
-	while (cmd_tok)
-	{
-		token_to_struct(cmd_tok->content, tmp_cmd->content);
+		tmp_cmd = create_cmds_node();
+		token_to_struct(cmd_token->content, tmp_cmd->content);
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
-		if (cmd_tok->next)
-		{
-			tmp_cmd = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
-			if (!tmp_cmd || !tmp_cmd->content)
-			{
-				if (tmp_cmd)
-					free(tmp_cmd);
-				return (perror("Error initializing cmd_struct\n"), 1);
-			}
-		}
-		cmd_tok = cmd_tok->next;
+		cmd_token = cmd_token->next;
 	}
-/* 	t_cmd_table *test;
-	for (t_list_d *p = c->cmd_struct; p; p = p->next)
-	{
-		int i = 0;
-		test = p->content;
-		if (test && test->str){
-			while (test->str[i])
-			{
-				printf("cmd_str->str[%d]: %s\n", i, test->str[i]);
-				i++;
-			}
-		}
-	} */
 	return (EXIT_SUCCESS);
 }
+
 /**
  * Function: ft_cmd_args_to_2d
  * Description: Converts the command arguments into a 2D array.
@@ -338,6 +328,7 @@ void	ft_cmd_args_to_2d(t_list_d *cmd_table)
  */
 int	ft_parsing(t_common *c)
 {
+	t_list_d	*cmd_str;
 	if (tokenize(c) == EXIT_FAILURE)
 		printf("Tokenize error\n");
 	if (t_lst_to_struct(c))
@@ -352,8 +343,11 @@ int	ft_parsing(t_common *c)
 	ft_expansion(c->env, cmd_list);
 	ft_rm_quotes(cmd_list); */
 //END
-	ft_expansion(c, c->cmd_struct);
+	cmd_str = c->cmd_struct;
+	ft_expansion(c, cmd_str);
+	cmd_str = c->cmd_struct;
 	ft_rm_quotes(c->cmd_struct);
+	cmd_str = c->cmd_struct;
 	ft_cmd_args_to_2d(c->cmd_struct);
 	return (EXIT_SUCCESS);
 }

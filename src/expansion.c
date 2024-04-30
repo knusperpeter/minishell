@@ -5,12 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/15 13:09:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/25 12:26:37 by caigner          ###   ########.fr       */
+/*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
+/*   Updated: 2024/04/30 19:49:05 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <stdlib.h>
 
 void	handle_quote_state(t_common *common, char c)
 {
@@ -30,135 +31,205 @@ void	handle_quote_state(t_common *common, char c)
 	}
 }
 
-char	*replace_str(char **str, int i, int varlen, char *value)
+int	has_expansion(t_common *c, char *str)
 {
-	int		valuelen;
-	char	*tmp;
-
-	valuelen = ft_strlen(value);
-	tmp = malloc(sizeof(char) * (ft_strlen(*(str) - varlen + valuelen + 1)));
-	if (!tmp)
-		return (dprintf(2 ,"mallocfail"), *str);
-	ft_strlcpy(tmp, *str, (sizeof(char) * i));
-	ft_strlcat(tmp, value, (sizeof(char) * valuelen));
-	if ((*str)[i + varlen])
-		ft_strlcat(tmp, &(*str)[i + varlen], (ft_strlen(*str) - i - varlen));
-	return (free(*str), tmp);
+	char	*curr_dollar;
+	int		i;
+	
+	i = 0;
+	c->open_double_quotes = 0;
+	c->open_single_quotes = 0;
+	curr_dollar = ft_strchr(str, '$');
+	while (str[i] && curr_dollar)
+	{
+		handle_quote_state(c, str[i]);
+		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
+		{
+			if (curr_dollar == &str[i])
+				return (1);
+			else
+				curr_dollar = ft_strchr(curr_dollar + 1, '$');
+		}
+		i++;
+	}
+	return (0);
 }
 
-static char	*get_env_value(t_env *env, char *env_var)
+char	*get_expanded_str(char *str, char *envvalue, int i, int varsize)
 {
+	char	*res;
+	char	*tmp;
+
+	res = ft_substr(str, 0, i);
+	//protect
+	if (envvalue)
+	{
+		tmp = ft_strjoin(res, envvalue);
+		//protect
+	}
+	if (res)
+		free(res);
+	res = ft_strjoin(tmp, &str[i + varsize + 1]);
+	//portekt
+	return (res);
+}
+
+int	varsize(char *str, int i)
+{
+	int		length;
+
+	length = 0;
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+	{
+		length++;
+		i++;
+	}
+	return (length);
+}
+
+static t_env *get_env_node(t_common *c, char *str, int i)
+{
+	int		length;
+	t_env	*env;
+	char	*var;
+
+	length = varsize(str, i);
+	var = malloc(length + 1);
+	if (!var)
+		return (printf("malloc-error"), NULL);
+	ft_strlcpy(var, &str[i], length);
+	env = c->env;
 	while (env)
 	{
-		if (!ft_strncmp(env->variable, env_var, ft_strlen(env_var)))
-			return (ft_strdup(env->variable));
+		if (!strncmp(env->variable, var, ft_strlen(var))
+				&& (int)ft_strlen(env->variable) == length)
+			return(free(var), env);
 		env = env->next;
 	}
 	return (NULL);
 }
 
-void	replace_with_env(t_common *c, int varlen, int i, char **str)
+char	*get_expansion_value(t_common *c, char *str, int i, int *varsize)
 {
-	char	*env_var;
-	char	*env_value;
-	
-	env_var = malloc(sizeof(char) * (varlen + 1));
-	if (!env_var)
+	t_env	*env_node;
+
+	if (str[i + 1] == '?')
+		return (*varsize = 1, ft_itoa(c->exitstatus));
+	else if (str[i + 1] == '$')
+		return (*varsize = 1, "1589302");
+	else if (str[++i])
 	{
-		dprintf(2, "mallocfail");
-		return ;
+		env_node = get_env_node(c, str, i);
+		if (!env_node)
+			return (NULL);
+		return (*varsize = ft_strlen(env_node->variable), env_node->value);
 	}
-	if (ft_strlcpy(env_var, &(*str)[i], varlen) != (size_t)varlen)
-		return ;
-	env_value = get_env_value(c->env, env_var);
-	free(env_var);
-	*str = replace_str(str, i, varlen, env_value);
+	return (NULL);
 }
 
-void	replace_with_value(t_common *c, char **str, int i)
+char	*expand_str(t_common *c, char *str)
 {
-	int		varlen;
-	int		tmp;
+	int		i;
+	int		varsize;
+	char	*new;
+	char	*envvalue;
 
-	varlen = 1;
-	if (*(str[i + 1]) == '?')
-	{
-		c->exitstatus_str = ft_itoa(c->exitstatus);
-		*str = replace_str(str, i, 2, c->exitstatus_str);
-		return ;
-	}
-	else if (*(str[i + 1]))
-	{
-		tmp = i;
-		tmp++;
-		while (*(str)[tmp] && (ft_isalnum(*(str)[tmp]) || *(str)[tmp] == '_'))
-		{
-			varlen++;
-			tmp++;
-		}
-		replace_with_env(c, varlen, i, str);
-	}
-}
-
-void	expand_token(t_common *c, char *str)
-{
-	int	i;
-
+	if (!str)
+		return (NULL);
 	i = 0;
+	varsize = 0;
 	c->open_double_quotes = 0;
 	c->open_single_quotes = 0;
 	while (str[i])
 	{
 		handle_quote_state(c, str[i]);
 		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
-			replace_with_value(c, &str, i);
+		{
+			envvalue = get_expansion_value(c, str, i, &varsize);
+			new = get_expanded_str(str, envvalue, i, varsize);
+			return (new);
+		}
 		i++;
 	}
+	return (NULL);
 }
 
-void	expand_io_token(t_common *c, t_io_red *io_red)
+void	ft_expand_cmds(t_common *c, t_list *curr)
 {
-	if (io_red)
+	char	*tmp;
+	int		flag;
+
+	flag = 0;
+	while (curr)
 	{
-		if (io_red->type == REDIR_IN)
-			expand_token(c, io_red->infile);
-		else if (io_red->type == REDIR_OUT || io_red->type == APPEND)
-			expand_token(c, io_red->outfile);
+		while (has_expansion(c, curr->content))
+		{
+			tmp = ft_strdup(curr->content);
+			if (curr->content)
+			{
+				free(curr->content);
+				curr->content = NULL;
+			}
+			curr->content = expand_str(c, tmp);
+			free(tmp);
+		}
+		curr = curr->next;
 	}
 }
 
-void	ft_expansion(t_common *c, t_list_d *cmds)
+void	ft_expand_io(t_common *c, t_list *curr)
 {
-	t_list_d	*curr;
-	t_cmd_table	*cmd_struct;
-	t_list		*curr_token;
-	t_io_red	*io_struct;
+	t_io_red	*io;
+	char		*tmp;
 
-	curr = cmds;
-	while (curr)
+	while(curr)
 	{
-		cmd_struct = curr->content;
-		curr_token = cmd_struct->cmds;
-		while (curr_token)
+		io = curr->content;
+		if (io)
 		{
-			expand_token(c, curr_token->content);
-		//	split_whitespace(c, curr_token->content);
-			curr_token = curr_token->next;
-		}
-		if (cmd_struct->io_red)
-		{
-			curr_token = cmd_struct->io_red;
-			io_struct = curr_token->content;
-			while (curr_token)
+			if (io->type == REDIR_IN)
 			{
-				expand_io_token(c, io_struct);
-				curr_token = curr_token->next;
+				while(has_expansion(c, io->infile))
+				{
+					tmp = ft_strdup(io->infile);
+					free(io->infile);
+					io->infile = expand_str(c, tmp);
+					free(tmp);
+				}
+			}
+			else if (io->type == REDIR_OUT || io->type == APPEND)
+			{
+				while(has_expansion(c, io->infile))
+				{
+					tmp = ft_strdup(io->outfile);
+					free(io->outfile);
+					io->outfile = expand_str(c, tmp);
+					free(tmp);
+				}
 			}
 		}
 		curr = curr->next;
 	}
 }
 
+void	ft_expansion(t_common *c, t_list_d *cmds)
+{
+	t_cmd_table *cmd_struct;
+	t_list      *curr;
+
+	while (cmds)
+	{
+		cmd_struct = cmds->content;
+		curr = cmd_struct->cmds;
+		ft_expand_cmds(c, curr);
+		if (cmd_struct->io_red)
+		{
+			curr = cmd_struct->io_red;
+			ft_expand_io(c, curr);
+		}
+		cmds = cmds->next;
+	}
+}
 
 /**
  * Function: ft_str_wo_quotes
@@ -176,7 +247,7 @@ char	*ft_str_wo_quotes(char *str)
 }
 
 /**
- * Function: ft_rm_quotes_str
+ * Function: ft_rm_quotes_strtmp2
  * Description: Removes the quotes from the start and end of a string, if present.
  * Parameters: str - The original string.
  * Returns: A new string with the quotes removed, or the original string if no quotes were present.
