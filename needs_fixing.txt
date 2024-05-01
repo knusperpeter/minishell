@@ -29,3 +29,5 @@ echo '$USER' "$USER" "text  ' text"
 
 touch "
 "
+
+echo " cat ' lol.c"
