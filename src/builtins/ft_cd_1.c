@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/25 23:36:32 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 13:58:48 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 	int		size;
 
 	size = ft_strlen(args[1]);
-	if (args[2])
+	if (args[1] && args[2])
 		return (-3);
 	if (!args[1] || !ft_strncmp(args[1], "~", size))
 		return (get_set_path(c->env, "HOME", path));
@@ -70,7 +70,7 @@ int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 
 void	print_error(int errorno, char *arg)
 {
-	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd("minishell🔮: cd: ", 2);
 	if (arg && errorno == 0)
 	{
 		ft_putstr_fd(arg, 2);
