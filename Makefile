@@ -6,7 +6,7 @@
 #    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/04/30 19:58:33 by caigner          ###   ########.fr        #
+#    Updated: 2024/05/01 18:58:07 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/lexer_error.c \
 			src/signals.c \
 			src/expansion.c \
+			src/heredoc_expansion.c
 
 OBJECTS = $(SOURCES:.c=.o)
 

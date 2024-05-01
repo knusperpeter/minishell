@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/01 17:31:47 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 19:57:20 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 void	init_io(t_io_red *io)
 {
 	io->heredoc_limiter = NULL;
-	io->expand_heredoc = 0;
+	io->expand_heredoc = 1;
 	io->infile = NULL;
 	io->outfile = NULL;
 }

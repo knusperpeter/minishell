@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 17:25:37 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 19:54:22 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void		free_all(t_common *c, int cleanup_loop);
 void		ft_clean_exit(t_common *c, char *msg, int cleanup_loop);
 int			ft_loop(t_common *c);
 int			ft_parsing(t_common *c);
-int			open_io(t_list *io, t_cmd_table *cmd_node);
+int			open_io(t_common *c, t_list *io, t_cmd_table *cmd_node);
 int			ft_execute(t_common *c);
 void		ft_printerrno(char *s);
 char		**tokenize_one(t_common *c, char *input, int pipe);
@@ -138,6 +138,9 @@ void		ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void		ft_rm_quotes(t_list_d *cmds);
 int			nb_esc_char(char *str, int index);
 void		ft_expansion(t_common *c, t_list_d *cmds);
+char		*get_expansion_value(t_common *c, char *str, int i, int *varsize);
+char		*get_expanded_str(char *str, char *envvalue, int i, int varsize);
+void	heredoc_expansion(t_common *c, t_io_red *io, char **str);
 
 //lexer
 void    	error_lexer(char *s, int i);

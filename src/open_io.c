@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 17:32:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 19:54:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ void	ft_printerrno(char *s)
  * - limiter: The delimiter string for the heredoc.
  * - cmd_table: The command table structure.
  */
-void	here_doc(char *limiter, t_cmd_table *cmd_table, int *fd)
+void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 {
 	char		*buf;
 
 	if (*(fd) == -1)
-		ft_printerrno(limiter);
+		ft_printerrno(io->heredoc_limiter);
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
@@ -45,8 +45,9 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table, int *fd)
 			exit (1);
 		if (buf == NULL || *buf == '\0')
 			break ;
-		if (ft_strncmp(limiter, buf, (ft_strlen(buf) - 1)) == 0)
+		if (ft_strncmp(io->heredoc_limiter, buf, (ft_strlen(buf) - 1)) == 0)
 			break ;
+		heredoc_expansion(c, io, &buf);
 		write(*(fd), buf, ft_strlen(buf));
 	}
 	get_next_line_heredoc(0, &buf, 1);
@@ -68,7 +69,7 @@ void	here_doc(char *limiter, t_cmd_table *cmd_table, int *fd)
  * - cmd_node: The command table node.
  * Returns: 0 if successful, EXIT_FAILURE if an error occurred.
  */
-int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
+int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 {
 	int		fd;
 	
@@ -76,7 +77,7 @@ int	open_infile(t_io_red *io, t_cmd_table *cmd_node)
 	{
 		fd = open(cmd_node->heredoc_name, O_CREAT | O_WRONLY
 				| O_TRUNC, 0644);
-		here_doc(io->heredoc_limiter, cmd_node, &fd);
+		here_doc(c, io, cmd_node, &fd);
 	}
 	else
 		fd = open(io->infile, O_RDONLY);
@@ -122,10 +123,10 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
  */
 
 //ACHTUNG: ich kann erst öffnen, wenn expanded wurde!!!
-int	open_file(t_io_red *io, t_cmd_table *cmd_node)
+int	open_file(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 {
 	if (io->type == HEREDOC || io->type == REDIR_IN)
-		return (open_infile(io, cmd_node));
+		return (open_infile(c, io, cmd_node));
 	else if (io->type == REDIR_OUT || io->type == APPEND)
 		return (open_outfile(io, cmd_node));
 	return (1);
@@ -164,7 +165,7 @@ void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
  * - cmd_node: The command table node.
  * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
  */
-int	open_io(t_list *io_lst, t_cmd_table *cmd_node)
+int	open_io(t_common *c, t_list *io_lst, t_cmd_table *cmd_node)
 {
 	t_list		*tmp;
 	t_io_red	*io;
@@ -177,7 +178,7 @@ int	open_io(t_list *io_lst, t_cmd_table *cmd_node)
 		io = tmp->content;
 		ft_close_old_fd(cmd_node, tmp->content);
 		if (io->type == HEREDOC || io->type == REDIR_IN)
-			status = open_infile(io, cmd_node);
+			status = open_infile(c, io, cmd_node);
 		else if (io->type == REDIR_OUT || io->type == APPEND)
 			status = open_outfile(io, cmd_node);
 		if (status == 0)
