@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/28 19:28:00y miheider         ###   ########.fr       */
+/*   Updated: 2024/04/22 17:35:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 		return (-1);
 	}
 	token->type = check_token(value[i]);
-//	printf("%s\n", (char *)token);
 	if (token->type >= 1 && token->type <= 4)
 	{
 		if (value[i + 1])
@@ -122,7 +121,6 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 		else
 		{
 			printf("minishell❌: syntax error\n");
-			//error_lexer((char *)token, ft_strlen((char *)token));
 			free(token);
 			return (-1);
 		}
@@ -374,248 +372,8 @@ char	**prep_input(char *input)
 	return (set_up_array(cc, input));
 }
 
-/*prints out the correct error message when only > or < as input*/
-int check_this(t_common *c, char *result, int j)
-{
-	int	status;
-
-	status = 0;
-	if (*result == '<' || *result == '>')
-	{
-		if (j == 6 && *result == '<')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `<<<'\n", 2);
-		else if (j == 6 && *result == '>')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `>>>'\n", 2);
-		else if (j == 5 && *result == '<')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `<<'\n", 2);
-		else if (j == 5 && *result == '>')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `>>'\n", 2);
-		else if (j == 4 && *result == '<')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `<'\n", 2);
-		else if (j == 4 && *result == '>')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `>'\n", 2);
-		else if (j == 3 || (j == 2 && result [1] == '<' && result[2] == '\0') || result[1] == '\0')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
-		if (status)
-		{
-			c->exitstatus = 2;
-			ft_clean_exit(c, NULL, 0);
-			exit (2);
-		}
-	}						// free stuff
-	return (0);
-}
-
-/*this function checks for dots as only input*/
-int	check_dot(char *result, int k, int j)
-{
-	int i;
-
-	if (result[k] == '.')
-	{
-		if(result[k] && result[k] == '.' && result [k + 1] == '\0')
-		{
-			ft_putstr_fd("minishell: .: filename argument required\n.: usage: . filename [arguments]", 2);
-			exit (2);
-		}
-		if (j > 1)
-		{
-			i = 0;
-			while (result[i])
-			{
-				write (2, &result[i], 1);
-				i++;
-			}
-			ft_putstr_fd(": command not found\n", 2);
-			exit (127);
-		}
-	}
-	return (0);	
-}
-
-/*this function checks for empty quote input*/
-int	check_quotes(char *result, int k)
-{
-	int i;
-	
-	if (result[k] == '"')
-		k++;
-	while (result[k] != '"')
-	{
-		if (result[k] == ' ' || (result[k] >= 9 && result[k] <= 13))
-			k++;
-		else
-			return (0);
-		k++;
-	}
-	if (result[k + 1] == '"')
-		k++;
-	i = 0;
-	printf("%d\n", k);
-	while (i < k + 1 /*&& (result[i] != ' ' || (result[k] >= 9 && result[k] <= 13))*/)
-	{
-		write (2, &result[i], 1);
-		printf("result[%d]: %c\n", i, result[i]);
-		i++;
-	}
-	ft_putstr_fd (" :command not found\n", 2);
-	return (0);	
-}
-
-int	check_again(t_common *c, char *result, int k, char fir)
-{
-	int status;
-	int len;
-
-	status = 0;
-	len = ft_strlen(result);
-	if ((len >= 2 && fir != '<' && fir != '>') || (len >= 2 && result[1] != ' '))
-		return (0);
-	if (len >= 2 && (result[k + 1] == ' ' || (result[k + 1] >= 9 || result[k + 1] <= 13)))
-	{
-		k++;
-		while(result[k] == ' ' || (result[k] >= 9 && result[k] <= 13))
-			k++;
-	}
-	else
-		return (0);
-	if (result[k] == '<' || result[k] == '>')
-	{
-		status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `", 2);
-		if (result[k] == '>')
-			write(2, &result[k], 1);
-		else
-			write(2, "<", 1);
-		if (result [k + 1] == '<' || result[k + 1] == '>')
-		{
-			if (result[k + 1] == '>')
-				write(2, &result[k], 1);
-			else
-				write(2, "<", 1);
-		}
-		write(2, "'", 1);
-	}
-	else
-		return (0);	
-	if (status)
-	{
-	    c->exitstatus = 2;
-	    ft_clean_exit(c, NULL, 0);
-	    exit (2);
-	}
-							// free stuff*/
-	return (0);
-}
-
-int	check_more(t_common *c, char *result, int k, char fir)
-{
-	int len;
-	int	status;
-
-	len = ft_strlen(result);
-	if (!(len >= 4 && result[k] == result[k + 1] && result[k] == fir && result[k + 2] == ' ' && (result[k + 3] == '<' ||  result[k + 3] == '>')))
-		return (0);
-	if (result[k + 3] == '<' || result[k + 3] == '>')
-	{
-		status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `", 2);
-		if (result[k] == '>')
-			write(2, &result[k + 3], 1);
-		else
-			write(2, "<", 1);
-		if (len >= 5 && (result [k + 4] == '<' || result[k + 4] == '>'))
-		{
-			if (result[k + 4] == '>')
-				write(2, &result[k], 1);
-			else
-				write(2, "<", 1);
-		}
-		write(2, "'", 1);
-	}
-	else
-		return (0);	
-	if (status)
-	{
-	    c->exitstatus = 2;
-	    ft_clean_exit(c, NULL, 0);
-	    exit (2);
-	}							// free stuff
-	return (0);
-}
-/*
-int	check_slash(t_common *c, char *result, int j, int k)
-{
-	j = k;
-	int i;
-	int status;
-
-	status = 0;
-	i = 0;
-	if (result[k] == '/' && (result[k + j + 1] == ' ' || result[j + k + 1] == '\0'))
-	{
-		while (i < j)
-		{
-			printf("status: %d", 2);
-			write(2, &result[k], 1);
-			i++;
-		}
-		status = ft_putstr_fd(": Is a directory\n", 2);
-	}
-	if (status)
-	{
-	    c->exitstatus = 2;
-	    ft_clean_exit(c, NULL, 0);
-	    exit (2);
-	}							// free stuff
-	return (0);
-}*/
-
-int check_result(t_common *c, char *result)
-{
-	int		i;
-	int 	j;
-	int 	k;
-	char	fir;
-	int 	len;
-
-	k = 0;
-	i = 0;
-	len = ft_strlen(result);
-	while (len >= 1 && (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13)))
-		i++;
-	if (len >= 1 && (result[i] == '<' || result[i] == '>'))
-		fir = result[i];
-	else if (result[i] == '.' && (result[i + 1] == '\0' || (len >= 2 && result[i + 1] == '.')))
-		fir = result[i];
-	else if (result[i] == '\"')
-		fir = result[i];
-	else if (result[i] == '/')
-		fir = result[i];
-	else
-		return (0);
-	k = i;
-	j = 0;
-	while (result[i] && i < k + 6)
-	{
-		if (result[i] == fir)
-			j++;
-		else
-			break;
-		i++;	
-	}
-	if (j > 0)
-	{	
-		check_this(c, &result[k], j);
-		check_dot(&result[0], k, j);
-		check_quotes(&result[k], k);
-		check_again(c, &result[k], k, fir);
-		check_more(c, &result[0], k, fir);
-//		check_slash(c, &result[k], j, k);
-	}	
-	return 0;
-}
-
 /*tokenize the input the first time using the "|" as an delimiter*/
-char	**tokenize_one(t_common *c, char *input, int pipe)
+char	**tokenize_one(char *input, int pipe)
 {
 	char	**result;
 	char	*token;
@@ -635,7 +393,6 @@ char	**tokenize_one(t_common *c, char *input, int pipe)
 		token = ft_strtok(NULL, "|");
 	}
 	result[index] = NULL;
-	check_result(c, result[0]);
 	return (result);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/30 15:55:26 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 13:16:53 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,7 @@ int	tokenize(t_common *c)
 	int		size;
 
 	size = count_pipes(c->raw_prompt);
-	arr = tokenize_one(c->raw_prompt, size + 1);
+	arr = tokenize_one(c, c->raw_prompt, size + 1);
 	i = 0;
     while (arr[i])
 	{

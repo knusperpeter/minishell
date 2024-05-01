@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/29 16:41:49 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 13:14:27 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,7 @@ int			ft_parsing(t_common *c);
 int			open_io(t_list *io, t_cmd_table *cmd_node);
 int			ft_execute(t_common *c);
 void		ft_printerrno(char *s);
-char		**tokenize_one(char *input, int pipe);
-char    	**prep_input(char *input);
+char		**tokenize_one(t_common *c, char *input, int pipe);
 void		add_to_list(char **token, t_list *lst);
 t_list_d	*ft_lstnew_d(void *content);
 t_list_d	*ft_lstlast_d(t_list_d *lst);

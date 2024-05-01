@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/22 17:45:41 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 13:45:49 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void	prompt(t_common *c)
  * Description: Initializes the data for the main loop of the shell.
  * Parameter: c - The common structure containing the shell data.
  */
-void	init_loop_data(t_common *c){
+void	init_loop_data(t_common *c)
+{
 	c->raw_prompt = NULL;
 	c->tokens = NULL;
 	c->cmd_struct = NULL;
@@ -65,7 +66,7 @@ int	ft_loop(t_common *c)
 	while (1)
 	{
 		init_loop_data(c);
-//		interactive();
+		interactive();
 		prompt(c);
 		non_interactive();
 //		ft_putstr_fd(c->raw_prompt, 1);
