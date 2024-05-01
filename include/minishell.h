@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 19:54:22 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 20:26:13 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,8 @@ int			nb_esc_char(char *str, int index);
 void		ft_expansion(t_common *c, t_list_d *cmds);
 char		*get_expansion_value(t_common *c, char *str, int i, int *varsize);
 char		*get_expanded_str(char *str, char *envvalue, int i, int varsize);
-void	heredoc_expansion(t_common *c, t_io_red *io, char **str);
+void		heredoc_expansion(t_common *c, t_io_red *io, char **str);
+int			has_expansion(t_common *c, char *str);
 
 //lexer
 void    	error_lexer(char *s, int i);

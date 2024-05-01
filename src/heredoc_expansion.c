@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:00:59 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 20:01:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 20:25:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ void	heredoc_expansion(t_common *c, t_io_red *io, char **str)
 
 	if (!io->expand_heredoc)
 		return ;
-	expanded_str = expand_str(c, *str);
-	free(*str);
-	*str = expanded_str;
+	while (has_expansion(c, *str))
+	{
+		expanded_str = expand_str(c, *str);
+		free(*str);
+		*str = expanded_str;
+	}
 }
