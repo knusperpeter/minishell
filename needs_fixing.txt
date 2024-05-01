@@ -21,3 +21,11 @@ lexer_new.c cases:
 
 export x=""ls -l""      >> valgrind
 export x="ls \"-l\""    >>ms: x=ls \-l\     bash: x=ls "-l"
+
+
+TESTER segfault:
+
+echo '$USER' "$USER" "text  ' text"
+
+touch "
+"

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 17:48:04 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 18:30:39 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,9 @@ static t_env *get_env_node(t_common *c, char *str, int i)
 	char	*var;
 
 	length = ft_varsize(str, i);
-	var = malloc(length + 1);
+	var = ft_substr(str, i, length);
 	if (!var)
 		return (printf("malloc-error"), NULL);
-	ft_strlcpy(var, &str[i], length);
 	env = c->env;
 	while (env)
 	{
@@ -105,7 +104,7 @@ static t_env *get_env_node(t_common *c, char *str, int i)
 			return(free(var), env);
 		env = env->next;
 	}
-	return (NULL);
+	return (free(var), NULL);
 }
 
 char	*get_expansion_value(t_common *c, char *str, int i, int *varsize)
