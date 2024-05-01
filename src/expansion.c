@@ -73,7 +73,7 @@ char	*get_expanded_str(char *str, char *envvalue, int i, int varsize)
 	return (res);
 }
 
-int	varsize(char *str, int i)
+int	ft_varsize(char *str, int i)
 {
 	int		length;
 
@@ -92,7 +92,7 @@ static t_env *get_env_node(t_common *c, char *str, int i)
 	t_env	*env;
 	char	*var;
 
-	length = varsize(str, i);
+	length = ft_varsize(str, i);
 	var = malloc(length + 1);
 	if (!var)
 		return (printf("malloc-error"), NULL);
@@ -120,7 +120,7 @@ char	*get_expansion_value(t_common *c, char *str, int i, int *varsize)
 	{
 		env_node = get_env_node(c, str, i);
 		if (!env_node)
-			return (NULL);
+			return (*varsize = ft_varsize(str, i), "");
 		return (*varsize = ft_strlen(env_node->variable), env_node->value);
 	}
 	return (NULL);
