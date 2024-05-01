@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/04/30 15:57:36 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 16:22:55 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void	handle_fds_parent(t_common *c, int *fd)
  */
 void ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
 {
-	if (cmd->read_fd == -1 || cmd->write_fd == -1) // check if really -1 if wrong
+	if (cmd->read_fd == -1 || cmd->write_fd == -1)
 		dprintf(2, "error opening file");
 	if (cmd->read_fd != STDIN)
 	{
@@ -189,7 +189,7 @@ void ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
 		if (dup2(fd[1], STDOUT) == -1)
 			ft_printerrno("4");
 	}
-	close_fds(c, fd, cmd);
+	close_fds(c, fd, cmd);// if builtin, do i need to make it different?
 }
 
 /**

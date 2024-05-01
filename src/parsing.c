@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/01 13:16:53 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/01 17:31:47 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 void	init_io(t_io_red *io)
 {
 	io->heredoc_limiter = NULL;
+	io->expand_heredoc = 0;
 	io->infile = NULL;
 	io->outfile = NULL;
 }

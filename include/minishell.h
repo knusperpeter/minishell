@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 13:14:27 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/01 17:25:37 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct s_io_red
 	char			*infile;
 	char			*outfile;
 	char			*heredoc_limiter;
+	int				expand_heredoc;
 }	t_io_red;
 
 // Inputs and what attributes come with them is locatedhere.

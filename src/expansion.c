@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/30 23:09:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/01 17:48:04 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,11 +164,11 @@ void	ft_expand_cmds(t_common *c, t_list *curr)
 		while (has_expansion(c, curr->content))
 		{
 			tmp = ft_strdup(curr->content);
-			if (curr->content)
-			{
-				free(curr->content);
-				curr->content = NULL;
-			}
+			//if (curr->content)
+			//{
+			//	free(curr->content);
+			//	curr->content = NULL;
+			//}
 			curr->content = expand_str(c, tmp);
 			free(tmp);
 		}
@@ -198,7 +198,7 @@ void	ft_expand_io(t_common *c, t_list *curr)
 			}
 			else if (io->type == REDIR_OUT || io->type == APPEND)
 			{
-				while(has_expansion(c, io->infile))
+				while(has_expansion(c, io->outfile))
 				{
 					tmp = ft_strdup(io->outfile);
 					free(io->outfile);
@@ -294,7 +294,8 @@ char	*ft_rm_quotes_str(char *str)
  */
 void	ft_rm_quotes_io(t_list *io_lst)
 {
-	t_io_red *io;
+	t_io_red	*io;
+	int			limiter_len;
 
 	while (io_lst)
 	{
@@ -303,6 +304,13 @@ void	ft_rm_quotes_io(t_list *io_lst)
 			return ;
 		io->infile = ft_rm_quotes_str(io->infile);
 		io->outfile = ft_rm_quotes_str(io->outfile);
+		if (io->heredoc_limiter)
+		{
+			limiter_len = ft_strlen(io->heredoc_limiter);
+			io->heredoc_limiter = ft_rm_quotes_str(io->heredoc_limiter);
+			if ((int)ft_strlen(io->heredoc_limiter) != limiter_len)
+				io->expand_heredoc = 1;
+		}
 		io_lst = io_lst->next;
 	}
 }
