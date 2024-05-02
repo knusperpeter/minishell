@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 20:33:37 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/22 01:51:16 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/02 16:11:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,4 @@ void	ft_lst_d_clear(t_list_d **lst, void (*del)(void *))
 		ft_lst_d_delone (*lst, del);
 		*lst = save;
 	}
-	free(*lst);
 }

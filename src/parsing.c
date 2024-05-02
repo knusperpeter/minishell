@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/01 19:57:20 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/02 15:50:39 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,7 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 int	tokenize(t_common *c)
 {
 	t_list	*cmd_tok;
+	t_token	*token;
 	char	**arr;
 	char	**sub_arr;
 	int		i;
@@ -250,13 +251,12 @@ int	tokenize(t_common *c)
     while (arr[i])
 	{
 		sub_arr = prep_input(arr[i++]);
-		cmd_tok = ft_lstnew(malloc(sizeof(t_token)));//make safe
-		if (!cmd_tok || !cmd_tok->content)
-		{
-			if (cmd_tok)
-				free(cmd_tok);
-			return (EXIT_FAILURE);
-		}
+		token = malloc(sizeof(t_token));
+		if (!token)
+			return (ft_clean_exit(c, "malloc-fail", 0), EXIT_FAILURE);
+		cmd_tok = ft_lstnew(token);
+		if (!cmd_tok)
+			return (free(token), ft_clean_exit(c, "malloc-fail", 0), EXIT_FAILURE);
 		add_to_list(sub_arr, cmd_tok);
 		ft_lstadd_back(&c->tokens, cmd_tok);
 		free_2d(sub_arr);
@@ -265,20 +265,17 @@ int	tokenize(t_common *c)
 	return (EXIT_SUCCESS);
 }
 
-t_list_d	*create_cmds_node()
+t_list_d	*create_cmds_node(t_common *c)
 {
 	t_list_d	*tmp_cmd;
 	t_cmd_table	*cmd_table;
 
 	cmd_table = malloc(sizeof(t_cmd_table));
 	if (!cmd_table)
-		return (perror("Error allocating memory for cmd_table\n"), NULL);
+		return (ft_clean_exit(c, "malloc-fail", 1), NULL);
 	tmp_cmd = ft_lstnew_d(cmd_table);
 	if (!tmp_cmd)
-	{
-		perror("Error initializing cmd_struct\n");
-		return (free(cmd_table), NULL);
-	}
+		return (free(cmd_table), ft_clean_exit(c, "malloc-fail", 1), NULL);
 	return (tmp_cmd);
 }
 
@@ -296,7 +293,7 @@ int	t_lst_to_struct(t_common *c)
 	cmd_token = c->tokens;
 	while (cmd_token)
 	{
-		tmp_cmd = create_cmds_node();
+		tmp_cmd = create_cmds_node(c);
 		token_to_struct(cmd_token->content, tmp_cmd->content);
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		cmd_token = cmd_token->next;

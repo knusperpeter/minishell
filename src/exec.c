@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/01 18:57:04 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/02 16:18:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,7 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 	ft_redirect_io(c, curr_cmd_table, curr, fd);
 	if (is_builtin(curr_cmd_table->str[0]))
 	{
-		ft_builtins(curr_cmd_table, c); // free & exit
+		ft_builtins(curr_cmd_table, c);
 		ft_clean_exit(c, NULL, 1);
 	}
 	else

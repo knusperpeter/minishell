@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/30 15:45:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/02 16:56:40 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ void	free_cmd_table(void *content)
 		free(table->heredoc_name);
 		table->heredoc_name = NULL;
 	}
+	free(content);
 }
 
 //Check here, since it fails
@@ -156,16 +157,12 @@ void	free_all(t_common *c, int cleanup_loop)
 {
 //	t_env	*node;
 	//rl_clear_history();
-	if (c)
-	{
-		if (cleanup_loop)
-			ft_cleanup_loop(c);
-		if (c->env)
-			free_env_nodes(c->env);
-		if (c->exitstatus_str)
-			free(c->exitstatus_str);
-//		free(c);
-	}
+	if (cleanup_loop)
+		ft_cleanup_loop(c);
+	if (c->env)
+		free_env_nodes(c->env);
+	if (c->exitstatus_str)
+		free(c->exitstatus_str);
 	rl_clear_history();
 }
 

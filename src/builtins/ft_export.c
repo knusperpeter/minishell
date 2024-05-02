@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/02 12:53:06 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/02 12:58:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,9 @@ void sort_env(t_env *env)
 				temp_var = i->variable;
 				temp_val = i->value;
 				temp_flag = i->flag;
-
 				i->variable = j->variable;
 				i->value = j->value;
 				i->flag = j->flag;
-
 				j->variable = temp_var;
 				j->value = temp_val;
 				j->flag = temp_flag;
