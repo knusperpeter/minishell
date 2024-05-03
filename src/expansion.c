@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/03 17:32:52 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/03 19:03:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,36 @@ char	*expand_str(t_common *c, char *str)
 	return (NULL);
 }
 
+void	ft_split_cmd(t_list *curr)
+{
+	int		i;
+	char	**tmp;
+	t_list	*list;
+	t_list	*new_list;
+	t_list	*original_next;
+
+	tmp = ft_split(curr->content, ' ');
+	//protect
+	i = 0;
+	list = curr;
+	original_next = curr->next;
+	free(list->content);
+	list->content = tmp[i];
+	while (tmp[i])
+	{
+		if (tmp[i + 1])
+		{
+			new_list = ft_lstnew(tmp[i + 1]);
+			new_list->next = list->next;
+			list->next = new_list;
+			list = list->next;
+		}
+		i++;
+	}
+	list->next = original_next;
+	free(tmp);
+}
+
 void	ft_expand_cmds(t_common *c, t_list *curr)
 {
 	char	*tmp;
@@ -176,6 +206,10 @@ void	ft_expand_cmds(t_common *c, t_list *curr)
 			tmp = ft_strdup(curr->content);
 			free(curr->content);
 			curr->content = expand_str(c, tmp);
+			if (ft_strchr(curr->content, ' '))
+			{
+				ft_split_cmd(curr);
+			}
 			free(tmp);
 		}
 		curr = curr->next;
