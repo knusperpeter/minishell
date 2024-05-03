@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 13:45:49 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/03 16:12:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@
 void	prompt(t_common *c)
 {
 	if (isatty(fileno(stdin)))
+	{
 		c->raw_prompt = readline("minishell🔮: 🚬🦦❯ ");
+		if (c->raw_prompt)
+			add_history(c->raw_prompt);
+	}
 	else
 	{
 		char *line;

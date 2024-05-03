@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/02 15:50:39 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/03 13:54:55 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,7 @@ int	tokenize(t_common *c)
 	size = count_pipes(c->raw_prompt);
 	arr = tokenize_one(c, c->raw_prompt, size + 1);
 	i = 0;
-    while (arr[i])
+	while (arr[i])
 	{
 		sub_arr = prep_input(arr[i++]);
 		token = malloc(sizeof(t_token));
@@ -331,16 +331,6 @@ int	ft_parsing(t_common *c)
 		printf("Tokenize error\n");
 	if (t_lst_to_struct(c))
 		printf("Token_to_struct error\n");
-//TEST
-/* 	t_list_d	*cmd_list = NULL;
-	cmd_list = ft_lstnew_d(malloc(sizeof(t_cmd_table)));
-	t_cmd_table *test = cmd_list->content;
-	test->cmds = ft_lstnew(malloc(sizeof(t_list)));
-	t_list		*cmds = test->cmds;
-	cmds->content = "\"'$USER\"''";
-	ft_expansion(c->env, cmd_list);
-	ft_rm_quotes(cmd_list); */
-//END
 	cmd_str = c->cmd_struct;
 	ft_expansion(c, cmd_str);
 	cmd_str = c->cmd_struct;

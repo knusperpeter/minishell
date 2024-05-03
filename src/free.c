@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/02 16:56:40 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/03 13:58:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@ void	free_tokens(void *content)
 {
 	t_token	*token;
 	t_token	*tmp;
-	
+
+	if (!content)
+		return;
 	tmp = (t_token *)content;
 	while (tmp)
 	{

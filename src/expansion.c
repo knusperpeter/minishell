@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 19:57:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/03 16:07:20 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,28 @@ char	*get_expanded_str(char *str, char *envvalue, int i, int varsize)
 {
 	char	*res;
 	char	*tmp;
+	char	*old_res;
 
+	tmp = NULL;
 	res = ft_substr(str, 0, i);
 	//protect
 	if (envvalue)
 	{
 		tmp = ft_strjoin(res, envvalue);
+		free(res);
+		res = NULL;
 		//protect
 	}
-	if (res)
-		free(res);
-	res = ft_strjoin(tmp, &str[i + varsize + 1]);
-	//portekt
+	old_res = res;
+	if (tmp)
+	{
+		res = ft_strjoin(tmp, &str[i + varsize + 1]);
+		free(tmp);
+		tmp = NULL;
+	//protect
+	}
+	if (old_res)
+		free(old_res);
 	return (res);
 }
 

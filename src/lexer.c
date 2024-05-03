@@ -152,7 +152,11 @@ void	add_to_list(char **token, t_list *lst)
 		else if (status <= 0)
 			index++;
 		if (last == NULL)
+		{
+			if (lst->content)
+				free(lst->content);
 			lst->content = tmp;
+		}
 		else
 			last->next = tmp;
 		last = tmp;
@@ -208,6 +212,7 @@ char	**tokenize_input(char *input)
 		token = ft_strtok(NULL, " ");
 	}
 	result[index] = NULL;
+	free(input);
 	return (result);
 }
 
