@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/03 16:07:20 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/03 17:32:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char	*get_expanded_str(char *str, char *envvalue, int i, int varsize)
 	}
 	if (old_res)
 		free(old_res);
+	free(envvalue);
 	return (res);
 }
 
@@ -124,13 +125,13 @@ char	*get_expansion_value(t_common *c, char *str, int i, int *varsize)
 	if (str[i + 1] == '?')
 		return (*varsize = 1, ft_itoa(c->exitstatus));
 	else if (str[i + 1] == '$')
-		return (*varsize = 1, "1589302");
+		return (*varsize = 1, ft_strdup("1589302"));
 	else if (str[++i])
 	{
 		env_node = get_env_node(c, str, i);
 		if (!env_node)
-			return (*varsize = ft_varsize(str, i), "");
-		return (*varsize = ft_strlen(env_node->variable), env_node->value);
+			return (*varsize = ft_varsize(str, i), ft_strdup(""));
+		return (*varsize = ft_strlen(env_node->variable), ft_strdup(env_node->value));
 	}
 	return (NULL);
 }
@@ -173,11 +174,7 @@ void	ft_expand_cmds(t_common *c, t_list *curr)
 		while (has_expansion(c, curr->content))
 		{
 			tmp = ft_strdup(curr->content);
-			//if (curr->content)
-			//{
-			//	free(curr->content);
-			//	curr->content = NULL;
-			//}
+			free(curr->content);
 			curr->content = expand_str(c, tmp);
 			free(tmp);
 		}

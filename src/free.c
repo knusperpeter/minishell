@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/03 13:58:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/03 17:25:34 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,12 @@ void	free_io_red(void *content)
 void	free_cmd_lst(t_list **lst)
 {
 	t_list	*tmp;
+	
 	while (lst && *lst)
 	{
 		tmp = (*lst)->next;
+		if ((*lst)->content)
+			free((*lst)->content);
 		free(*lst);
 		*lst = tmp;
 	}

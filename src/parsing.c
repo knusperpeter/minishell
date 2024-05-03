@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/03 13:54:55 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/03 17:29:46 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,13 +191,16 @@ void	cmdtok_to_node(t_token *tok, t_cmd_table *cmd)
 {
 	t_list	*cmd_list;
 	t_token	*tmp;
+	char	*tmp_cmd;
 
 	tmp = tok;
 	while (tmp)
 	{
 		if (tmp->type == VOID)
 		{
-			cmd_list = ft_lstnew(tmp->data);
+			tmp_cmd = ft_strdup(tmp->data);
+			//protect
+			cmd_list = ft_lstnew(tmp_cmd);
 			if (!cmd_list)
 			{
 				ft_printerrno("cmdtok_to_node: ");

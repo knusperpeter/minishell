@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 13:58:48 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/03 17:47:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	get_set_path(t_env *env, char *variable, char **path)
 int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 {
 	int		size;
+	char	*tmp;
 
 	size = ft_strlen(args[1]);
 	if (args[1] && args[2])
@@ -57,13 +58,19 @@ int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 	else if (!ft_strncmp(args[1], "..", size))
 	{
 		*path = ft_strdup(*oldpwd);
+		tmp = *path;
 		*path = ft_strjoin(*path, "/..");
+		free(tmp);
 	}
 	else
 	{
 		*path = ft_strdup(*oldpwd);
+		tmp = *path;
 		*path = ft_strjoin(*path, "/");
+		free(tmp);
+		tmp = *path;
 		*path = ft_strjoin(*path, args[1]);
+		free(tmp);
 	}
 	return (0);
 }
