@@ -98,6 +98,12 @@ Pipeline:
 	ls | cat << stop | ls -la | cat << stop1
 		ms:	prints wrong output
 		bash:	not
+		
+	echo hi > in >> out | cat <out
+		ms 	3hi
+			out: 	(empty)
+		bash 	hi
+			out:	hi
 
 SCMD:
 	""
