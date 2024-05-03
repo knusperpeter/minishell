@@ -3,61 +3,110 @@
 .ls ./ls ./ ./libft/
 
 
-heredoc expansion{
-	<< 1 cat
-	> $x
-	> 1
-	123
-	
-	<< "1" cat
-	> $x
-	> 1
-	$x
-}
-
-exit not working sometimes. why?
-
 lexer_new.c cases:
 
 export x=""ls -l""      >> valgrind
 export x="ls \"-l\""    >>ms: x=ls \-l\     bash: x=ls "-l"
 
+IMPLEMENT:
+only Redirect 	-> does not create file so far
+		-> check if redir is a directory
 
-TESTER segfault:
+TESTER fails:
 
-/bin/echo $"42$"
-	ms: 	42
-	bash:	42$
+	/bin/echo $"42$"
+		ms: 	42
+		bash:	42$
 
-/bin/echo "cat lol.c '|' cat > lol.c"
-	ms:		cat lol.c '
-	bash:	cat lol.c '|' cat > lol.c
+	/bin/echo "cat lol.c '|' cat > lol.c"
+		ms:		cat lol.c '
+		bash:	cat lol.c '|' cat > lol.c
 
-echo '$USER' "$USER" "text  ' text"
-	ms:		segfault
-	bash:	$USER caigner text  ' text
+	echo '$USER' "$USER" "text  ' text"
+		ms:		segfault
+		bash:	$USER caigner text  ' text
 
-/bin/echo $USER =intergalaktikus miaf*szomez
-	ms: 	caigner =intergalaktikus miaf * szomez
-	bash:	caigner =intergalaktikus miaf*szomez
+	/bin/echo $USER =intergalaktikus miaf*szomez
+		ms: 	caigner =intergalaktikus miaf * szomez
+		bash:	caigner =intergalaktikus miaf*szomez
 
 
-/bin/echo "'totally logical'"
-	ms:		'totally logical"
-	bash:	'totally logical'
+	/bin/echo "'totally logical'"
+		ms:		'totally logical"
+		bash:	'totally logical'
 
-">>" asd
-	ms: 	>>: No such file or directory
-	bash:	>>: command not found
+	<< $USER\n
+		ms:	->heredoc
+		bash:	\n->heredoc
+		
+	export T="l"
+	$Ts -a
+		ms:	no error message
+		bash:	-a: command not found
 
->> '$USER'
-	ms: 	nothing
-	bash:	creates '$USER'
-touch "
-"
-	ms:
-	bash: 
+	cd --
+		ms:	double error message
+		bash:	egal
 
-echo " cat ' lol.c"
+	">>" asd
+		ms: 	>>: No such file or directory
+		bash:	>>: command not found
 
+	>> '$USER'
+		ms: 	nothing
+		bash:	creates '$USER'
+	touch "
+	"
+		ms:
+		bash: 
+
+	echo " cat ' lol.c"
+	
+	unset PATH
+	cd /bin
+	ls
+		ms: 	nothing -> direct path to command not executable...
+		bash:	execute command from pwd
+	
+Builtins:
+	echo cd ~
+		ms: 	cd ~
+		bash:	cd /home/caigner
+		
+	cd -
+		ms:	changes dir
+		bash:	changes dir & prints pwd
+	
+	env what
+		ms:	executes env
+		bash:	env: ‘what’: No such file or directory
+		
+	export TEST+=100
+		ms:	errormessage
+		bash:	adds value to the back of the existing value
+	
+	unset TES;T
+		ms:	nothing
+		bash:	T: command not found
+		
+	unset -TEST
+		ms:	nothing
+		bash:	errormessage:	bash: unset: -T: invalid option ...
+
+
+Pipeline:
+	ls | cat << stop | ls -la | cat << stop1
+		ms:	prints wrong output
+		bash:	not
+
+SCMD:
+	""
+		ms:	wrong message, wrong stuff printed out
+		bash:	error message
+
+Syntax:
+
+	/bin/cat <Makefile >
+		ms: cat makefile..
+		bash: syntax error
 
