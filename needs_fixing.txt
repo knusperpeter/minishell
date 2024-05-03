@@ -4,15 +4,15 @@
 
 
 heredoc expansion{
-    << 1 cat
-    > $x
-    > 1
-    123
-    
-    << "1" cat
-    > $x
-    > 1
-    $x
+	<< 1 cat
+	> $x
+	> 1
+	123
+	
+	<< "1" cat
+	> $x
+	> 1
+	$x
 }
 
 exit not working sometimes. why?
@@ -25,9 +25,39 @@ export x="ls \"-l\""    >>ms: x=ls \-l\     bash: x=ls "-l"
 
 TESTER segfault:
 
-echo '$USER' "$USER" "text  ' text"
+/bin/echo $"42$"
+	ms: 	42
+	bash:	42$
 
+/bin/echo "cat lol.c '|' cat > lol.c"
+	ms:		cat lol.c '
+	bash:	cat lol.c '|' cat > lol.c
+
+echo '$USER' "$USER" "text  ' text"
+	ms:		segfault
+	bash:	$USER caigner text  ' text
+
+/bin/echo $USER =intergalaktikus miaf*szomez
+	ms: 	caigner =intergalaktikus miaf * szomez
+	bash:	caigner =intergalaktikus miaf*szomez
+
+
+/bin/echo "'totally logical'"
+	ms:		'totally logical"
+	bash:	'totally logical'
+
+">>" asd
+	ms: 	>>: No such file or directory
+	bash:	>>: command not found
+
+>> '$USER'
+	ms: 	nothing
+	bash:	creates '$USER'
 touch "
 "
+	ms:
+	bash: 
 
 echo " cat ' lol.c"
+
+
