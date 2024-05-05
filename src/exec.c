@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/02 16:18:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/05 20:21:02 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,10 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 		c->envp = get_envp(c->env);
 		if (get_cmd_path(c, curr_cmd_table))
 			execve(curr_cmd_table->exec_path, curr_cmd_table->str, c->envp);
-		perror(curr_cmd_table->str[0]);
+		if (!is_dir(curr_cmd_table->str[0]))
+			perror(curr_cmd_table->str[0]);
+		else
+			dprintf(2, "minishell🔮: %s: Is a directory\n", curr_cmd_table->str[0]);
 	}
 	ft_clean_exit(c, NULL, 1);
 }

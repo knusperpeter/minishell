@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/03 17:25:34 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/05 18:49:53 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void	free_io_red(void *content)
 		free(io->infile);
 	if (io->outfile)
 		free(io->outfile);
+	free(io);
 }
 /**
  * Function: free_cmd_lst

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/22 01:50:31 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/05 18:01:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ char	**ft_get_paths(t_env *env)
 	tmp = env;
 	while (tmp && ft_strncmp(tmp->variable, "PATH", 5))
 		tmp = tmp->next;
+	if (!tmp)
+		return (NULL);
 	paths = ft_split(tmp->value, ':');
 	if (!paths)
 		return (NULL);
@@ -88,7 +90,7 @@ int	add_path(t_cmd_table *cmd, char **paths)
 	i = 0;
 	if (cmd && cmd->str && cmd->str[0])
 	{
-		if (access(cmd->str[0], F_OK | X_OK | R_OK) == 0)//!is_dir(...)?
+		if (access(cmd->str[0], F_OK | X_OK | R_OK) == 0 && !is_dir(cmd->str[0])) //!is_dir(...)?
 		{
 			cmd->exec_path = ft_strdup(cmd->str[0]);
 			if (!cmd->exec_path)
@@ -112,6 +114,25 @@ int	add_path(t_cmd_table *cmd, char **paths)
 	}
 	return (0);
 }
+
+int	is_path_or_pwd(t_cmd_table *cmd, t_env *env)
+{
+	t_env	*tmp;
+	char	*path;
+	
+	if (cmd->str[0] && cmd->str[0][0] == '/' && !is_dir(cmd->str[0]))
+	{
+		cmd->exec_path = ft_strdup(cmd->str[0]);
+		return (1);
+	}
+	tmp = env;
+	while (tmp && ft_strncmp(tmp->variable, "PWD", 4))
+		tmp = tmp->next;
+	path = join_path(cmd->str[0], tmp->value);
+	if (!access(path, F_OK | X_OK | R_OK) && !is_dir(path))
+		return (cmd->exec_path = path, 1);
+	return (free(path), 0);
+}
 /**
  * Function: get_cmd_path
  * Description: Gets the full path of the command in the command table.
@@ -124,11 +145,14 @@ int	get_cmd_path(t_common *c, t_cmd_table *cmd)
 {
 	char	**paths;
 
-
 	// if cmd not found exit child
 	paths = ft_get_paths(c->env);
 	if (!paths)
+	{
+		if (is_path_or_pwd(cmd, c->env))
+			return (1);
 		return (0);
+	}
 	if (!add_path(cmd, paths))
 		return(0);
 	free_2d(paths);

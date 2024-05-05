@@ -78,3 +78,18 @@ Syntax:
 		ms: cat makefile..
 		bash: syntax error
 
+	ls | cat Makefile | cat << "asd" > out
+		works but not if it is like this:
+	ls|cat Makefile|cat<<"asd">out
+			why???
+
+
+
+	tabs will execute ls, why?
+
+	cd "$H"O"ME"/Desktop/
+	echo $?
+		--> leaks!!!!
+
+	cd --
+		--> leaks!!!!

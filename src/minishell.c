@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/03 16:12:41 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/05 19:36:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	prompt(t_common *c)
 {
 	if (isatty(fileno(stdin)))
 	{
-		c->raw_prompt = readline("minishell🔮: 🚬🦦❯ ");
+		c->raw_prompt = readline("minishell ❯ ");
 		if (c->raw_prompt)
 			add_history(c->raw_prompt);
 	}
@@ -123,6 +123,8 @@ int	main(int ac, char **av, char **envp)
 	(void)		ac;
 	(void)		av;
 
+	if (!envp[0] || !envp)
+		return (1);
 	init_minishell(&c, envp);
 	ft_loop(&c);
 	free_all(&c, 0);

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/03 17:29:46 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/05 18:47:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,13 +145,11 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 	t_list		*red_node;
 	t_io_red	*tmp;
 
-	red_node = ft_lstnew(malloc(sizeof(t_io_red)));
-	if (!red_node || !red_node->content)
-	{
-		if (red_node)
-			free(red_node);
+	tmp = malloc(sizeof(t_io_red));
+	//protect
+	red_node = ft_lstnew(tmp);
+	if (!red_node)
 		return (ft_putstr_fd("Error initializing t_list in red_to_node\n", 1), 1);
-	}
 	init_io(red_node->content);
 	tmp = red_node->content;
 	if(token->type == REDIR_IN || token->type == HEREDOC)

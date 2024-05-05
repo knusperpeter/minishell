@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/22 17:36:30 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/05 18:14:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int	check_arg(t_common *c, char **arg)
 //to hand back the exit status from subshell, use waitpid in parent process?
 void	ft_exit(t_common *c, char **cmd)
 {
-	printf("exit\n");
+	dprintf(2, "exit\n");
 	if (cmd)
 		if (cmd[1])
 			if (check_arg(c, cmd) == 1)

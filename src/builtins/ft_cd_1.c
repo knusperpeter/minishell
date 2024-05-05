@@ -6,9 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/03 17:47:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/05 20:20:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+//cd /bin goes to /usr/bin
+// needs fixing
 
 #include "../../include/minishell.h"
 
@@ -109,12 +112,16 @@ int	ft_cd(char **args, t_common *c)
 	{
 		free(path);
 		print_error(errorno, args[1]);
+		free(oldpwd);
 		return (EXIT_FAILURE);
 	}
 	free(path);
 	path = getcwd(NULL, 0);
 	if (!path)
+	{
+		free(oldpwd);
 		return (print_error(errorno, args[1]), 1);
+	}
 	set_env_value(c->env, "OLDPWD", oldpwd);
 	set_env_value(c->env, "PWD", path);
 	free(oldpwd);
