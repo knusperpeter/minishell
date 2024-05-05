@@ -3,31 +3,20 @@
 .ls ./ls ./ ./libft/
 
 
-heredoc expansion{
-	<< 1 cat
-	> $x
-	> 1
-	123
-	
-	<< "1" cat
-	> $x
-	> 1
-	$x
-}
-
-exit not working sometimes. why?
-
 lexer_new.c cases:
 
 export x=""ls -l""      >> valgrind
 export x="ls \"-l\""    >>ms: x=ls \-l\     bash: x=ls "-l"
 
+IMPLEMENT:
+only Redirect 	-> does not create file so far
+		-> check if redir is a directory
 
-TESTER segfault:
+TESTER fails:
 
-/bin/echo $"42$"
-	ms: 	42
-	bash:	42$
+	/bin/echo $"42$"
+		ms: 	42
+		bash:	42$
 
 ++++/bin/echo "cat lol.c '|' cat > lol.c"					+++ fixed issue with mixed quotes. It now checks for corresponding quote //miheider (04.05.2024)
 	++++ms:		cat lol.c '
@@ -46,18 +35,41 @@ TESTER segfault:
 	++++ms:		'totally logical"
 	++++bash:	'totally logical'
 
-">>" asd
-	ms: 	>>: No such file or directory
-	bash:	>>: command not found
+	<< $USER\n
+		ms:	->heredoc
+		bash:	\n->heredoc
+		
+	export T="l"
+	$Ts -a
+		ms:	no error message
+		bash:	-a: command not found
 
->> '$USER'
-	ms: 	nothing
-	bash:	creates '$USER'
-touch "
-"
-	ms:
-	bash: 
+	cd --
+		ms:	double error message
+		bash:	egal
 
 ++++echo " cat ' lol.c"										+++ fixed segfaults in lexer //miheider (04.05.2024)
 
+
+Pipeline:
+	ls | cat << stop | ls -la | cat << stop1
+		ms:	prints wrong output
+		bash:	not
+		
+	echo hi > in >> out | cat <out
+		ms 	3hi
+			out: 	(empty)
+		bash 	hi
+			out:	hi
+
+SCMD:
+	""
+		ms:	wrong message, wrong stuff printed out
+		bash:	error message
+
+Syntax:
+
+	/bin/cat <Makefile >
+		ms: cat makefile..
+		bash: syntax error
 
