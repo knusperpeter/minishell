@@ -33,9 +33,9 @@ TESTER segfault:
 	++++ms:		cat lol.c '
 	++++bash:	cat lol.c '|' cat > lol.c
 
-echo '$USER' "$USER" "text  ' text"
-	ms:		segfault
-	bash:	$USER caigner text  ' text
+++++echo '$USER' "$USER" "text  ' text"						+++ fixed segfaults in lexer //miheider (04.05.2024)
+	++++ms:		segfault
+	++++bash:	$USER caigner text  ' text
 
 ++++/bin/echo $USER =intergalaktikus miaf*szomez			+++ removed * as a special character //miheider(04.05.2024) +++
 	++++ms: 	caigner =intergalaktikus miaf * szomez
