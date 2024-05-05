@@ -38,10 +38,10 @@ int	check_char(char *character)
 	int		i;
 
 	i = 0;
-	special = "*[]()<>#";
+	special = "[]()<>#";
 	if (*character == '\'' || *character == '\"')
 		return (2);
-	while (i < 9)
+	while (i < 8)
 	{
 		if (special[i] == *character)
 			return (1);
@@ -50,23 +50,48 @@ int	check_char(char *character)
 	return (0);
 }
 
-/*This functions handles the quotes section for the ft_strtok function*/
-char	*quotes_in_strtok(char *str, const char *delim)
+int is_delim(char c, const char *delim) 
 {
-	int	in_quotes;
+    while (*delim) 
+	{
+        if (c == *delim)
+            return (1);
+        delim++;
+    }
+    return (0);
+}
+
+/*This functions handles the quotes section for the ft_strtok function*/
+char *quotes_in_strtok(char *str, const char *delim) 
+{
+    int		in_quotes;
+    char	quote_type; 
 
 	in_quotes = 0;
-	while (*str)
+	quote_type = '\0';
+    while (*str) 
 	{
-		if (*str == '\"' || *str == '\'')
-			in_quotes = !in_quotes;
-		if (!in_quotes && ft_strchr(delim, *str))
-			break ;
-		if (!in_quotes && *str == '\0')
-			error_lexer("\"", 5);
-		str++;
-	}
-	return (str);
+        if (*str == '\"' && quote_type != '\'') 
+		{
+            in_quotes = !in_quotes;
+            if (!in_quotes)
+                quote_type = '\0'; // Reset the quote type
+            else
+                quote_type = '\"'; // Inside double quotes
+        } 
+		else if (*str == '\'' && quote_type != '\"') 
+		{
+            in_quotes = !in_quotes;
+            if (!in_quotes)
+                quote_type = '\0'; // Reset the quote type
+            else
+                quote_type = '\''; // Inside single quotes
+        }
+        if (!in_quotes && is_delim(*str, delim))
+            break;
+        str++;
+    }
+    return (str);
 }
 
 /*tokenizing the input; rebuilt the original function strtok and 
@@ -179,7 +204,7 @@ int	check_tokens(char *input)
 		if (input[i] == '\'' || input[i] == '\"')
 		{
 			i++;
-			while (input[i] != '\'' && input[i] != '\"')
+			while (input[i] && input[i] != '\'' && input[i] != '\"')
 				i++;
 		}
 		if (input[i] && strchr(WHITESPACE, input[i]))

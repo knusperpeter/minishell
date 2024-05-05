@@ -29,22 +29,22 @@ TESTER segfault:
 	ms: 	42
 	bash:	42$
 
-/bin/echo "cat lol.c '|' cat > lol.c"
-	ms:		cat lol.c '
-	bash:	cat lol.c '|' cat > lol.c
+++++/bin/echo "cat lol.c '|' cat > lol.c"					+++ fixed issue with mixed quotes. It now checks for corresponding quote //miheider (04.05.2024)
+	++++ms:		cat lol.c '
+	++++bash:	cat lol.c '|' cat > lol.c
 
 echo '$USER' "$USER" "text  ' text"
 	ms:		segfault
 	bash:	$USER caigner text  ' text
 
-/bin/echo $USER =intergalaktikus miaf*szomez
-	ms: 	caigner =intergalaktikus miaf * szomez
-	bash:	caigner =intergalaktikus miaf*szomez
+++++/bin/echo $USER =intergalaktikus miaf*szomez			+++ removed * as a special character //miheider(04.05.2024) +++
+	++++ms: 	caigner =intergalaktikus miaf * szomez
+	++++bash:	caigner =intergalaktikus miaf*szomez
 
 
-/bin/echo "'totally logical'"
-	ms:		'totally logical"
-	bash:	'totally logical'
+++++/bin/echo "'totally logical'"							+++ fixed issue with mixed quotes. It now checks for corresponding quote //miheider (04.05.2024) 
+	++++ms:		'totally logical"
+	++++bash:	'totally logical'
 
 ">>" asd
 	ms: 	>>: No such file or directory
@@ -58,6 +58,6 @@ touch "
 	ms:
 	bash: 
 
-echo " cat ' lol.c"
+++++echo " cat ' lol.c"										+++ fixed segfaults in lexer //miheider (04.05.2024)
 
 
