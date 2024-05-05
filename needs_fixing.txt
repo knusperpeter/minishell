@@ -52,6 +52,11 @@ TESTER fails:
 
 
 Pipeline:
+	unset PATH
+	/bin/ls
+		ms:	nothing
+		bash:	ls output
+
 	ls | cat << stop | ls -la | cat << stop1
 		ms:	prints wrong output
 		bash:	not
