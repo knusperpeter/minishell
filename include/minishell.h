@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/05 20:20:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/06 19:13:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ typedef struct common_data
 	t_list_d			*cmd_struct;
 	t_list				*tokens;
 	unsigned int		exitstatus;
-	char				*exitstatus_str;
+	// char				*exitstatus_str;
 	char				*raw_prompt;
 	int					old_pipe;
 }	t_common;
@@ -158,12 +158,12 @@ void    	interactive(void);
 void		non_interactive(void);
 
 // builtins
-int			ft_pwd(void);
+int			ft_pwd(t_common *c);
 int			ft_env(t_env *env);
 int			ft_unset(char **args, t_common *c);
 void		ft_exit(t_common *c, char **cmd);
 int			ft_export(char **args, t_env *env);
-int			ft_echo(char **args);
+int			ft_echo(t_common *c, char **args);
 void		set_env_value(t_env *env, char *variable, char *value);
 int			ft_cd(char **args, t_common *c);
 

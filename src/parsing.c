@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/05 18:47:43 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/06 14:43:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,10 +254,10 @@ int	tokenize(t_common *c)
 		sub_arr = prep_input(arr[i++]);
 		token = malloc(sizeof(t_token));
 		if (!token)
-			return (ft_clean_exit(c, "malloc-fail", 0), EXIT_FAILURE);
+			return (c->exitstatus = 1, ft_clean_exit(c, "malloc-fail", 0), EXIT_FAILURE);
 		cmd_tok = ft_lstnew(token);
 		if (!cmd_tok)
-			return (free(token), ft_clean_exit(c, "malloc-fail", 0), EXIT_FAILURE);
+			return (c->exitstatus = 1, free(token), ft_clean_exit(c, "malloc-fail", 0), EXIT_FAILURE);
 		add_to_list(sub_arr, cmd_tok);
 		ft_lstadd_back(&c->tokens, cmd_tok);
 		free_2d(sub_arr);
@@ -273,10 +273,10 @@ t_list_d	*create_cmds_node(t_common *c)
 
 	cmd_table = malloc(sizeof(t_cmd_table));
 	if (!cmd_table)
-		return (ft_clean_exit(c, "malloc-fail", 1), NULL);
+		return (c->exitstatus = 1, ft_clean_exit(c, "malloc-fail", 1), NULL);
 	tmp_cmd = ft_lstnew_d(cmd_table);
 	if (!tmp_cmd)
-		return (free(cmd_table), ft_clean_exit(c, "malloc-fail", 1), NULL);
+		return (c->exitstatus = 1, free(cmd_table), ft_clean_exit(c, "malloc-fail", 1), NULL);
 	return (tmp_cmd);
 }
 

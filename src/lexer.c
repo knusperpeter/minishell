@@ -457,7 +457,7 @@ int	check_dot(char *result, int k, int j)
 				i++;
 			}
 			ft_putstr_fd(": command not found\n", 2);
-			exit (127);
+			exit (127);//dont exit, c->exitstatus= 2, 126 or 127 //chris
 		}
 	}
 	return (0);	

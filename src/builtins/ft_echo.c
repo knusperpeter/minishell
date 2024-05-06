@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:15 by caigner           #+#    #+#             */
-/*   Updated: 2024/04/22 17:00:07 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/06 19:12:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	check_nl(char *arg)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_echo(char **args)
+int	ft_echo(t_common *c, char **args)
 {
 	int	i;
 	int	nl;
@@ -55,5 +55,6 @@ int	ft_echo(char **args)
 	}
 	if (!nl)
 		printf("\n");
+	c->exitstatus = 0;
 	return (EXIT_SUCCESS);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/27 13:56:42 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/06 18:50:24 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,6 @@ void	error_lexer(char *s, int i)
 			ft_putstr_fd("❌ minishell: syntax error near unexpected token `|'\n", 2);
 		else if (*s == '|' && i > 3)
 			ft_putstr_fd("❌ minishell: syntax error near unexpected token `||'\n", 2);
-		exit (2);
+		exit (2); //comment chris: not exit, but set exitstatus to 2!!
 //	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 23:07:09 by chris             #+#    #+#             */
-/*   Updated: 2024/02/13 23:10:38 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/06 16:11:09 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	set_env_value(t_env *env, char *variable, char *value)
 		{
 			free(env->value);
 			env->value = ft_strdup(value);
-			return ;
+			break ;
 		}
 		env = env->next;
 	}

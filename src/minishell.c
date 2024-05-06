@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/05 19:36:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/06 19:01:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
  */
 void	prompt(t_common *c)
 {
+	// c->exitstatus = 0;
 	if (isatty(fileno(stdin)))
 	{
 		c->raw_prompt = readline("minishell ❯ ");
@@ -54,7 +55,7 @@ void	init_loop_data(t_common *c)
 	c->tokens = NULL;
 	c->cmd_struct = NULL;
 	c->envp = NULL;
-	c->exitstatus_str = NULL;
+	// c->exitstatus_str = NULL;
 	c->subshell_level = 0;
 	c->old_pipe = 0;
 }
@@ -67,6 +68,7 @@ void	init_loop_data(t_common *c)
  */
 int	ft_loop(t_common *c)
 {
+	c->exitstatus = 0;
 	while (1)
 	{
 		init_loop_data(c);

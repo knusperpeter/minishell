@@ -3,23 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/22 01:50:04 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/06 17:05:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ft_pwd(void)
+int	ft_pwd(t_common *c)
 {
-	char	*buf;
+	t_env	*tmp;
 
-	buf = getcwd(NULL, 0);
-	if (!buf)
-		return (perror("Error getting current directory\n"), EXIT_FAILURE);
-	printf("%s\n", buf);
-	free(buf);
+	tmp = c->env;
+	while (tmp)
+	{
+		if (!tmp)
+		{
+			c->exitstatus = 1;
+			return(ft_putstr_fd("minishell: OLDPWD not set\n", 2), 1);
+		}
+		if (!strncmp(tmp->variable, "PWD", 4))
+		{
+			c->exitstatus = 0;
+			return (printf("%s\n", tmp->value), 0);
+		}
+		tmp = tmp->next;
+	}
 	return (EXIT_SUCCESS);
 }

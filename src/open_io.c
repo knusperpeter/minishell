@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 19:54:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/06 18:29:07 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 		ft_printerrno(io->heredoc_limiter);
 	while (1)
 	{
-		write(1, "heredoc> ", 9);
+		write(1, "> ", 2);
 		if (get_next_line_heredoc(0, &buf, 0) < 0)
 			exit (1);
 		if (buf == NULL || *buf == '\0')
@@ -75,8 +75,8 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	
 	if (io->type == HEREDOC)
 	{
-		fd = open(cmd_node->heredoc_name, O_CREAT | O_WRONLY
-				| O_TRUNC, 0644);
+		fd = open(cmd_node->heredoc_name, O_CREAT | O_RDWR
+				| O_EXCL, S_IRUSR | S_IWUSR);
 		here_doc(c, io, cmd_node, &fd);
 	}
 	else
@@ -98,10 +98,10 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 	
 	if (io->type == REDIR_OUT)
 		fd = open(io->outfile, O_WRONLY | O_TRUNC
-				| O_CREAT, S_IRUSR | S_IWUSR);
+				| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	else
 		fd = open(io->outfile, O_WRONLY | O_APPEND
-				| O_CREAT, S_IRUSR | S_IWUSR);
+				| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1)
 	{
 		ft_printerrno("filename");

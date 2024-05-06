@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/05 20:21:02 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/06 19:14:05 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 	if (!tmp)
 		return (perror("Error initializing cmd\n"), EXIT_FAILURE);
 	if (check_cmd("pwd", tmp))
-		/* c->exitstatus =  */ft_pwd();
+		/* c->exitstatus =  */ft_pwd(c);
 	else if (check_cmd("export", tmp))
 		c->exitstatus = ft_export(tmp->str, c->env);
 	else if (check_cmd("env", tmp))
@@ -54,7 +54,7 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 	else if (check_cmd("unset", tmp))
 		/* c->exitstatus =  */ft_unset(tmp->str, c);
 	else if (check_cmd("echo", tmp))
-		/* c->exitstatus =  */ft_echo(tmp->str);
+		/* c->exitstatus =  */ft_echo(c, tmp->str);
 	else if (check_cmd("cd", cmd))
 		c->exitstatus = ft_cd(tmp->str, c);
 	else
@@ -225,14 +225,13 @@ void	wait_all_childs(t_common *c)
 {
 	t_list_d	*tmp;
 	t_cmd_table	*curr;
-	int			wstatus;
 
 	// change to from left to right
 	tmp = c->cmd_struct;
 	while (tmp)
 	{
 		curr = tmp->content;
-		waitpid(curr->id, &wstatus, 0);
+		waitpid(curr->id, (int *)&c->exitstatus, 0);
 		if(WIFEXITED(c->exitstatus))
 			c->exitstatus = WEXITSTATUS(c->exitstatus);
 		else if(WIFSIGNALED(c->exitstatus))
@@ -269,7 +268,7 @@ int	ft_check_builtin(t_cmd_table *cmd)
 void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 {
 	if (!open_io(c, curr_cmd_table->io_red, curr_cmd_table))
-		ft_clean_exit(c, NULL, 1);
+		return (c->exitstatus = 127, ft_clean_exit(c, NULL, 1));
 	ft_redirect_io(c, curr_cmd_table, curr, fd);
 	if (is_builtin(curr_cmd_table->str[0]))
 	{
@@ -282,10 +281,14 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 		if (get_cmd_path(c, curr_cmd_table))
 			execve(curr_cmd_table->exec_path, curr_cmd_table->str, c->envp);
 		if (!is_dir(curr_cmd_table->str[0]))
+		{
+			c->exitstatus = 127;
 			perror(curr_cmd_table->str[0]);
+		}
 		else
 			dprintf(2, "minishell🔮: %s: Is a directory\n", curr_cmd_table->str[0]);
 	}
+//	c->exitstatus = 127;
 	ft_clean_exit(c, NULL, 1);
 }
 

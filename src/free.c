@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/05 18:49:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/06 19:18:51 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,19 +167,14 @@ void	free_all(t_common *c, int cleanup_loop)
 		ft_cleanup_loop(c);
 	if (c->env)
 		free_env_nodes(c->env);
-	if (c->exitstatus_str)
-		free(c->exitstatus_str);
 	rl_clear_history();
 }
 
 void	ft_clean_exit(t_common *c, char *msg, int cleanup_loop)
 {
-	int	exitstatus;
-
-	exitstatus = c->exitstatus;
 	if (msg)
 		printf("%s\n", msg);
 //	close_all_pipes(c);
 	free_all(c, cleanup_loop);
-	exit(exitstatus);
+	exit(c->exitstatus);
 }

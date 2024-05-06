@@ -93,3 +93,9 @@ Syntax:
 
 	cd --
 		--> leaks!!!!
+
+	export += ...
+		-> does not do the trick
+
+
+	exitstatus in den Builtins auf null setzen!! look at ft_echo
