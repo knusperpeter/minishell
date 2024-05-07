@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/05 18:14:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 16:08:50 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	ft_numeric_arg(t_common *c, char **arg)
 		return (1);	
 	if (!valid_num(arg[1]) || overflows_ll(arg[1]))
 	{
-		ft_putstr_fd("❌ minishell: exit: ", 2);
+		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(arg[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 		return (c->exitstatus = 2, 0);
@@ -124,7 +124,7 @@ int	check_arg(t_common *c, char **arg)
 	if (arg[2])
 	{
 		c->exitstatus = 1;
-		return (ft_putstr_fd("❌ minishell: exit: too many arguments\n", 2), 1);// don't exit in this case
+		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 1);// don't exit in this case
 	}
 	else if (arg[1])
 		c->exitstatus = ft_atoll(arg[1]) % 256;//check if negative nums might appear
@@ -134,7 +134,7 @@ int	check_arg(t_common *c, char **arg)
 //to hand back the exit status from subshell, use waitpid in parent process?
 void	ft_exit(t_common *c, char **cmd)
 {
-	dprintf(2, "exit\n");
+	ft_putstr_fd("exit\n", 2);
 	if (cmd)
 		if (cmd[1])
 			if (check_arg(c, cmd) == 1)
