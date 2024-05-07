@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/07 19:18:59 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 20:06:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	int		size;
 
 	equals = ft_strchr(envp, '=');
+	if (equals)
+		if (*(equals - 1) == '+')
+			equals -= 1;
 	size = ft_get_var_size(envp, equals);
 	node->variable = malloc(sizeof(char) * (size + 1));
 	if (!node->variable)
@@ -45,6 +48,8 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	node->flag = 0;
 	if (equals)
 	{
+		if (*equals == '+')
+			equals++;
 		node->value = ft_strdup(equals + 1);
 		if (!node->value)
 			return (EXIT_FAILURE);

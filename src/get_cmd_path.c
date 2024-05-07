@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/05 18:01:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 20:36:17 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,10 @@ int	get_cmd_path(t_common *c, t_cmd_table *cmd)
 		return (0);
 	}
 	if (!add_path(cmd, paths))
-		return(0);
+	{
+		free_2d(paths);		
+		return (0);
+	}
 	free_2d(paths);
 	return (1);
 }

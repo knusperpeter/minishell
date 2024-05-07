@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/07 19:13:40 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 20:45:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,35 +68,33 @@ int	is_valid_env(char *env)
 	i = 0;
 	while (env[i] && env[i] != '=')
 	{
-		if (!ft_isalnum(env[i]) && env[i] != '_')
+		if (!ft_isalnum(env[i]) && env[i] != '_' && (env[i] != '+' && env[i + 1] != '='))
 			return (-2);
 		i++;
 	}
 	if (env[i] == '=')
 		return (0);
-	// if (env[i] == '+' && env[i + 1] == '=')
-	// 	return (2);
 	return (1);
 }
 
-// void	add_to_var(t_env *env, char *arg)
-// {
-// 	char	*tmp;
+void	add_to_var(t_env *env, char *arg)
+{
+	char	*tmp;
 
-// 	if (env->value)
-// 	{
-// 		tmp = ft_strjoin(env->value, arg);
-// 		//protect
-// 		free(env->value);
-// 		env->value = tmp;
-// 	}
-// 	else
-// 	{
-// 		env->value = ft_strdup(arg);
-// 		//protect
-// 	}
-// 	env->flag = 0;
-// }
+	if (env->value)
+	{
+		tmp = ft_strjoin(env->value, arg);
+		//protect
+		free(env->value);
+		env->value = tmp;
+	}
+	else
+	{
+		env->value = ft_strdup(arg);
+		//protect
+	}
+	env->flag = 0;
+}
 
 int	already_in_env(char *args, t_env *env, int errorno)
 {
@@ -105,11 +103,13 @@ int	already_in_env(char *args, t_env *env, int errorno)
 	len = 0;
 	while (args[len] && args[len] != '=')
 		len++;
+	if (len != 0 && args[len - 1] == '+')
+		len--;
 	while (env)
 	{
 		if (!ft_strncmp(args, env->variable, len) && !env->variable[len])
 		{
-			if (errorno == 0)
+			if (errorno == 0 && args[len] == '=')
 			{
 				if (env->value)
 					free(env->value);
@@ -118,8 +118,8 @@ int	already_in_env(char *args, t_env *env, int errorno)
 					exit(EXIT_FAILURE);
 				env->flag = 0;
 			}
-			// else if (errorno == 2)
-			// 	add_to_var(env, &args[len + 2]);
+			else if (errorno == 0 && args[len] == '+')
+			 	add_to_var(env, &args[len + 2]);
 			return (EXIT_FAILURE);
 		}
 		env = env->next;
