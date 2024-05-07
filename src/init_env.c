@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/03/22 01:50:35 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/07 19:18:59 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_init_env(t_env *node, char *envp, t_env *prev)
 	node->variable = malloc(sizeof(char) * (size + 1));
 	if (!node->variable)
 		return (EXIT_FAILURE);
-	ft_strlcpy(node->variable, envp, size +1);
+	ft_strlcpy(node->variable, envp, size + 1);
 	node->flag = 0;
 	if (equals)
 	{

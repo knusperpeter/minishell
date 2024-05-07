@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/02 12:58:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 19:13:40 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ int	is_valid_env(char *env)
 {
 	int	i;
 
+	if (env[0] == '-')
+		return (-3);
 	if (!ft_isalpha(env[0]) && env[0] != '_')
 		return (-1);
 	i = 0;
@@ -72,8 +74,29 @@ int	is_valid_env(char *env)
 	}
 	if (env[i] == '=')
 		return (0);
+	// if (env[i] == '+' && env[i + 1] == '=')
+	// 	return (2);
 	return (1);
 }
+
+// void	add_to_var(t_env *env, char *arg)
+// {
+// 	char	*tmp;
+
+// 	if (env->value)
+// 	{
+// 		tmp = ft_strjoin(env->value, arg);
+// 		//protect
+// 		free(env->value);
+// 		env->value = tmp;
+// 	}
+// 	else
+// 	{
+// 		env->value = ft_strdup(arg);
+// 		//protect
+// 	}
+// 	env->flag = 0;
+// }
 
 int	already_in_env(char *args, t_env *env, int errorno)
 {
@@ -95,6 +118,8 @@ int	already_in_env(char *args, t_env *env, int errorno)
 					exit(EXIT_FAILURE);
 				env->flag = 0;
 			}
+			// else if (errorno == 2)
+			// 	add_to_var(env, &args[len + 2]);
 			return (EXIT_FAILURE);
 		}
 		env = env->next;
@@ -117,8 +142,27 @@ void	add_variable_to_env(t_env *env, char *args, int errorno)
 	prev->next = new;
 }
 
+static void print_error(t_common *c, char *arg, int i)
+{
+	if (i == -1 || i == -2)
+	{
+		c->exitstatus = 1;
+		ft_putstr_fd("minishell: export: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+	}
+	else if (i == -3)
+	{
+		c->exitstatus = 2;
+		ft_putstr_fd("minishell: export: ", 2);
+		ft_putchar_fd(arg[0], 2);
+		ft_putchar_fd(arg[1], 2);		
+		ft_putstr_fd(": invalid option\n", 2);
+	}
+}
+
 //export hallo+=lol oder auch export += $hallo$hallo$hallo
-int	ft_export(char **args, t_env *env)
+int	ft_export(t_common *c, char **args, t_env *env)
 {
 	int	i;
 	int	errorno;
@@ -130,15 +174,11 @@ int	ft_export(char **args, t_env *env)
 	i = 1;
 	while (args[i])
 	{
+		errorno = 0;
 		errorno = is_valid_env(args[i]);
 		if (errorno < 0)
-		{
-			ft_putstr_fd("minishell: export: `", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			return (EXIT_FAILURE);
-		}
-		if (!already_in_env(args[i], env, errorno))
+			print_error(c, args[i], errorno);
+		if (!already_in_env(args[i], env, errorno) && errorno >= 0)
 			add_variable_to_env(env, args[i], errorno);
 		i++;
 	}

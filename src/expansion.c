@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/06 19:16:50 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 16:45:40 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,20 @@ void	ft_split_cmd(t_list *curr)
 	free(tmp);
 }
 
+int	split_command(t_list *lst)
+{
+	char	*str;
+	int		last;
+
+	str = lst->content;
+	last = ft_strlen(str) - 1;
+	if (ft_strchr("\'\"", str[0]) && ft_strchr("\'\"", str[last]))
+		return(0);
+	if (ft_strchr(lst->content, ' '))
+		return (1);
+	return (0);
+}
+
 void	ft_expand_cmds(t_common *c, t_list *curr)
 {
 	char	*tmp;
@@ -206,7 +220,7 @@ void	ft_expand_cmds(t_common *c, t_list *curr)
 			tmp = ft_strdup(curr->content);
 			free(curr->content);
 			curr->content = expand_str(c, tmp);
-			if (ft_strchr(curr->content, ' '))
+			if (split_command(curr))
 			{
 				ft_split_cmd(curr);
 			}

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/06 19:13:52 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 17:33:30 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,10 +159,10 @@ void		non_interactive(void);
 
 // builtins
 int			ft_pwd(t_common *c);
-int			ft_env(t_env *env);
+int			ft_env(char **args, t_env *env);
 int			ft_unset(char **args, t_common *c);
 void		ft_exit(t_common *c, char **cmd);
-int			ft_export(char **args, t_env *env);
+int			ft_export(t_common *c, char **args, t_env *env);
 int			ft_echo(t_common *c, char **args);
 void		set_env_value(t_env *env, char *variable, char *value);
 int			ft_cd(char **args, t_common *c);

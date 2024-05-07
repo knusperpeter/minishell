@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/06 19:14:05 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 17:34:49 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 	if (check_cmd("pwd", tmp))
 		/* c->exitstatus =  */ft_pwd(c);
 	else if (check_cmd("export", tmp))
-		c->exitstatus = ft_export(tmp->str, c->env);
+		/* c->exitstatus =  */ft_export(c, tmp->str, c->env);
 	else if (check_cmd("env", tmp))
-		/* c->exitstatus =  */ft_env(c->env);
+		c->exitstatus = ft_env(tmp->str, c->env);
 	else if (check_cmd("exit", tmp))
 		ft_exit(c, tmp->str);
 	else if (check_cmd("unset", tmp))
