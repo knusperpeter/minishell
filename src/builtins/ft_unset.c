@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:45 by caigner           #+#    #+#             */
-/*   Updated: 2024/02/14 18:17:16 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/08 15:44:44 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,20 @@ int	ft_unset(char **args, t_common *c)
 	int	i;
 
 	i = 1;
+	if (args[1])
+	{
+		if (args[1][0] == '-')
+		{
+			ft_putstr_fd("minishell: unset: -", 2);
+			ft_putchar_fd(args[1][1], 2);
+			ft_putstr_fd(": invalid option\n", 2);
+			return (c->exitstatus = 2, 2);
+		}
+	}
 	while (args[i])
 	{
 		check_and_unset(args[i], c->env);
 		i++;
 	}
-	return (EXIT_SUCCESS);
+	return (c->exitstatus = 0, EXIT_SUCCESS);
 }

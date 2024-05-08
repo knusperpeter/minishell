@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/07 17:18:14 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/08 16:01:09 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,8 @@ int	valid_num(char *arg)
 
 int	ft_numeric_arg(t_common *c, char **arg)
 {	
-	if (!arg[1] || !arg[1][0])
-		return (1);	
+//	if (!arg[1][0])
+//		return (1);	
 	if (!valid_num(arg[1]) || overflows_ll(arg[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
@@ -123,7 +123,7 @@ int	check_arg(t_common *c, char **arg)
 		return (2);
 	if (arg[2])
 	{
-		c->exitstatus = 2;
+		c->exitstatus = 1;
 		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 1);// don't exit in this case
 	}
 	else if (arg[1])

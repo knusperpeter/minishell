@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/07 20:45:43 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/08 15:24:06 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,14 @@ int	is_valid_env(char *env)
 	i = 0;
 	while (env[i] && env[i] != '=')
 	{
-		if (!ft_isalnum(env[i]) && env[i] != '_' && (env[i] != '+' && env[i + 1] != '='))
-			return (-2);
+		if (!ft_isalnum(env[i]) && env[i] != '_')
+		{
+			if (env[i] == '+' && env[i + 1] == '=')
+				return (0);
+			else
+				return (-2);
+		
+		}
 		i++;
 	}
 	if (env[i] == '=')
