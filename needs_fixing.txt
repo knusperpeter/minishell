@@ -2,6 +2,12 @@
 
 .ls ./ls ./ ./libft/
 
+"" ->still prints tests
+
+| echo hi -> leaks because of exit in tokinzing
+
+echo hi | echo hi |	->conditional jumps in cmdtok_to_node
+
 
 lexer_new.c cases:
 
@@ -18,23 +24,6 @@ TESTER fails:
 		ms: 	42
 		bash:	42$
 
-++++/bin/echo "cat lol.c '|' cat > lol.c"					+++ fixed issue with mixed quotes. It now checks for corresponding quote //miheider (04.05.2024)
-	++++ms:		cat lol.c '
-	++++bash:	cat lol.c '|' cat > lol.c
-
-++++echo '$USER' "$USER" "text  ' text"						+++ fixed segfaults in lexer //miheider (04.05.2024)
-	++++ms:		segfault
-	++++bash:	$USER caigner text  ' text
-
-++++/bin/echo $USER =intergalaktikus miaf*szomez			+++ removed * as a special character //miheider(04.05.2024) +++
-	++++ms: 	caigner =intergalaktikus miaf * szomez
-	++++bash:	caigner =intergalaktikus miaf*szomez
-
-
-++++/bin/echo "'totally logical'"							+++ fixed issue with mixed quotes. It now checks for corresponding quote //miheider (04.05.2024) 
-	++++ms:		'totally logical"
-	++++bash:	'totally logical'
-
 	<< $USER\n
 		ms:	->heredoc
 		bash:	\n->heredoc
@@ -47,9 +36,6 @@ TESTER fails:
 	cd --
 		ms:	double error message
 		bash:	egal
-
-++++echo " cat ' lol.c"										+++ fixed segfaults in lexer //miheider (04.05.2024)
-
 
 Pipeline:
 	unset PATH

@@ -207,7 +207,7 @@ int	check_tokens(char *input)
 			while (input[i] && input[i] != '\'' && input[i] != '\"')
 				i++;
 		}
-		if (input[i] && strchr(WHITESPACE, input[i]))
+		if (input[i] && ft_strchr(WHITESPACE, input[i]))
 			space++;
 		i++;
 	}
@@ -259,7 +259,7 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 				(*i)++;
 				(*j)++;
 			}
-			if (input[*i] && strchr(WHITESPACE, input[*i]))
+			if (input[*i] && ft_strchr(WHITESPACE, input[*i]))
 				return (-10);
 		}
 	}
@@ -269,7 +269,7 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 				&& check_char(&input[*(i) - 1]) == 1)
 				|| (check_char(&input[*i]) == 1
 				&& check_char(&input[*(i) - 1]) == 0
-				&& !strchr(WHITESPACE, input[(*i) - 1]))
+				&& !ft_strchr(WHITESPACE, input[(*i) - 1]))
 				|| (check_char(&input[*i]) == 1
 				&& check_char(&input[*(i) - 1]) == 1
 				&& input[*i] != input[*(i) - 1]))
@@ -305,19 +305,19 @@ char	**set_up_array(int cc, char *input)
 	i = 0;
 	j = 0;
 	new_string = allocate_memory(cc);
-	while (input[i] && strchr(WHITESPACE, input[i]))
+	while (input[i] && ft_strchr(WHITESPACE, input[i]))
 		i++;
 	while (input[i])
 	{
-		while (input[i] && !strchr(WHITESPACE, input[i]))
+		while (input[i] && !ft_strchr(WHITESPACE, input[i]))
 		{
 			if (no_space_array(&i, &j, input, new_string) < 0)
 				break ;
 		}
-		while (input[i] && strchr(WHITESPACE, input[i]))
+		while (input[i] && ft_strchr(WHITESPACE, input[i]))
 			i++;
 		if (i > 0)
-			if (input[i] != '\0' && strchr(WHITESPACE, input[i - 1]))
+			if (input[i] != '\0' && ft_strchr(WHITESPACE, input[i - 1]))
 				new_string[j++] = ' ';
 	}
 	new_string[j] = '\0';
@@ -336,13 +336,13 @@ void	count_up(int *i, int *cc)
 beeded to allocate memory for the norminized string.*/
 void	prep_input_three(int i, int *cc, char *input)
 {
-	if (i > 0 && *cc != 0 && input[i] && !strchr(WHITESPACE, input[i])
-		&& strchr(WHITESPACE, input[i - 1]) && (input[i] != '\'' || input[i] != '\"'))
+	if (i > 0 && *cc != 0 && input[i] && !ft_strchr(WHITESPACE, input[i])
+		&& ft_strchr(WHITESPACE, input[i - 1]) && (input[i] != '\'' || input[i] != '\"'))
 		(*cc)++;
-	if (i > 0 && *cc != 0 && input[i] && strchr(WHITESPACE, input[i])
+	if (i > 0 && *cc != 0 && input[i] && ft_strchr(WHITESPACE, input[i])
 		&& (input[i + 1] == '\'' || input[i + 1] == '\"'))
 		(*cc)++;
-	if (input[i] && !strchr(WHITESPACE, input[i]))
+	if (input[i] && !ft_strchr(WHITESPACE, input[i]))
 		(*cc)++;
 	if (input[i] == '<' && (input[i + 1] == '\'' || input[i + 1] == '\"'))
 		(*cc)--;
@@ -350,10 +350,10 @@ void	prep_input_three(int i, int *cc, char *input)
 
 int	prep_input_two(int *i, int *cc, char *input)
 {
-	if (*i > 0 && !strchr(WHITESPACE, input[*(i) - 1]))
+	if (*i > 0 && !ft_strchr(WHITESPACE, input[*(i) - 1]))
 		(*cc)--;
 	count_up(i, cc);
-	if (*i > 1 && !strchr(WHITESPACE, input[*(i) - 2]))
+	if (*i > 1 && !ft_strchr(WHITESPACE, input[*(i) - 2]))
 		(*cc)++;
 	while (input[*i] != '\0' && input[*i] != '\'' && input[*i] != '\"')
 	{
@@ -363,7 +363,7 @@ int	prep_input_two(int *i, int *cc, char *input)
 	}
 	if (input[*i] != '\0')
 	{
-		if (input[*(i) + 1] != '\0' || !strchr(WHITESPACE, input[*(i) + 1]))
+		if (input[*(i) + 1] != '\0' || !ft_strchr(WHITESPACE, input[*(i) + 1]))
 			count_up(i, cc);
 		else if (input[*(i) + 1] != '\0')
 			return (-9);
@@ -374,10 +374,10 @@ int	prep_input_two(int *i, int *cc, char *input)
 void	prep_input_one(int i, int *cc, char *input)
 {
 	if (i > 0 && *cc != 0 && check_char(&input[i]) == 1
-			&& !strchr(WHITESPACE, input[i - 1]) && input[i] != input[i - 1]
+			&& !ft_strchr(WHITESPACE, input[i - 1]) && input[i] != input[i - 1]
 			&& (input[i - 1] != '\'' || input[i - 1] != '\"'))
 		(*cc)++;
-	if (input[i] && check_char(&input[i]) == 1 && !strchr(WHITESPACE, input[i + 1])
+	if (input[i] && check_char(&input[i]) == 1 && !ft_strchr(WHITESPACE, input[i + 1])
 		&& check_char(&input[i + 1]) != 1 && input[i + 1] != '\0'
 		&& (input[i] != '\'' || input[i] != '\"'))
 		(*cc)++;
@@ -390,7 +390,7 @@ char	**prep_input(char *input)
 
 	i = 0;
 	cc = 0;
-	while (input[i] && strchr(WHITESPACE, input[i]))
+	while (input[i] && ft_strchr(WHITESPACE, input[i]))
 		i++;
 	while (input[i])
 	{
@@ -676,9 +676,9 @@ void	error_check_pipes(int *i, int *pipe, char *input)
 	(*i)++;
 	if (input[*i] == '\0')
 		error_lexer("|", 2);
-	while (input[*i] && strchr(WHITESPACE, input[*i]))
+	while (input[*i] && ft_strchr(WHITESPACE, input[*i]))
 	{
-		if (input[*i] && strchr(WHITESPACE, input[*i]) && input[*(i)] == '\0')
+		if (input[*i] && ft_strchr(WHITESPACE, input[*i]) && input[*(i)] == '\0')
 			error_lexer("|", 2);
 		(*i)++;
 	}
@@ -730,7 +730,7 @@ int	count_pipes(char *input)
 
 	i = 0;
 	pipe = 0;
-	while (input[i] && strchr(WHITESPACE, input[i]))
+	while (input[i] && ft_strchr(WHITESPACE, input[i]))
 		i++;
 	if (input[i] == '|' && !ignore_pipe(input, i))
 		error_lexer("|", 3);

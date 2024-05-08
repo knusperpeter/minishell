@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/08 15:24:06 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/08 17:13:46 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void sort_env(t_env *env)
 		t_env *j = i->next;
 		while (j != NULL)
 		{
-			if (strcmp(i->variable, j->variable) > 0)
+			if (ft_strncmp(i->variable, j->variable, sizeof(j->variable) + 1) > 0)
 			{
 				temp_var = i->variable;
 				temp_val = i->value;

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/07 16:45:40 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/08 17:14:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ static t_env *get_env_node(t_common *c, char *str, int i)
 	env = c->env;
 	while (env)
 	{
-		if (!strncmp(env->variable, var, ft_strlen(var))
+		if (!ft_strncmp(env->variable, var, ft_strlen(var))
 				&& (int)ft_strlen(env->variable) == length)
 			return(free(var), env);
 		env = env->next;
