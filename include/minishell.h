@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/07 17:33:30 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/08 17:50:42 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <string.h>
 # include <signal.h>
 # include <termios.h>
+# include <sys/ioctl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -36,7 +37,8 @@
 # define STDOUT 1
 # define STDERR 2
 
-//volatile	g_signal = 0;
+
+extern int	g_signal;
 
 typedef enum e_type
 {
@@ -154,8 +156,9 @@ int			check_char(char *character);
 int			check_token(char *token);
 
 //signals
-void    	interactive(void);
-void		non_interactive(void);
+void    	interactive(t_common *c);
+void    	interactive_here(t_common *c);
+void		non_interactive(t_common *c);
 
 // builtins
 int			ft_pwd(t_common *c);

@@ -571,24 +571,25 @@ int	check_more(t_common *c, char *result, int k, char fir)
 	}							// free stuff
 	return (0);
 }
-/*
-int	check_slash(t_common *c, char *result, int j, int k)
+
+int	check_that(t_common *c, char *result, int k)
 {
-	j = k;
-	int i;
-	int status;
+	int	status;
 
 	status = 0;
-	i = 0;
-	if (result[k] == '/' && (result[k + j + 1] == ' ' || result[j + k + 1] == '\0'))
+	if (result[k] == '<' && result[k + 1] == '>')
 	{
-		while (i < j)
+		k += 2;
+		while (result[k] == ' ' || (result[k] >= 9 && result[k] <= 13) || result[k] == '\0')
 		{
-			printf("status: %d", 2);
-			write(2, &result[k], 1);
-			i++;
+			if (result[k] == '\0')
+			{
+				status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
+				break;
+			}
+			else
+				k++;
 		}
-		status = ft_putstr_fd(": Is a directory\n", 2);
 	}
 	if (status)
 	{
@@ -597,7 +598,7 @@ int	check_slash(t_common *c, char *result, int j, int k)
 	    exit (2);
 	}							// free stuff
 	return (0);
-}*/
+}
 
 int check_result(t_common *c, char *result)
 {
@@ -618,8 +619,6 @@ int check_result(t_common *c, char *result)
 		fir = result[i];
 	else if (result[i] == '\"')
 		fir = result[i];
-	else if (result[i] == '/')
-		fir = result[i];
 	else
 		return (0);
 	k = i;
@@ -632,6 +631,7 @@ int check_result(t_common *c, char *result)
 			break;
 		i++;	
 	}
+	check_that(c, &result[k], k);
 	if (j > 0)
 	{	
 		check_this(c, &result[k], j);
@@ -639,9 +639,26 @@ int check_result(t_common *c, char *result)
 		check_quotes(&result[k], k);
 		check_again(c, &result[k], k, fir);
 		check_more(c, &result[0], k, fir);
-//		check_slash(c, &result[k], j, k);
-	}	
-	return 0;
+	}
+	return (0);
+}
+
+int	check_empty_line (t_common *c, char *input, int pipe)
+{
+	int	i;
+
+	i = 0;
+	if (pipe > 1)
+		return (0);
+	while (input[i])
+	{
+		if (input[i] == ' ' || (input[i] > 9 && input[i] < 13))
+			i++;
+		else
+			return (0);
+	}
+	c->exitstatus = 131;
+	return (1);
 }
 
 /*tokenize the input the first time using the "|" as an delimiter*/
@@ -665,6 +682,8 @@ char	**tokenize_one(t_common *c, char *input, int pipe)
 		token = ft_strtok(NULL, "|");
 	}
 	result[index] = NULL;
+	if (check_empty_line(c, input, pipe))
+		exit (1);								// free und give promt back
 	check_result(c, result[0]);
 	return (result);
 }
