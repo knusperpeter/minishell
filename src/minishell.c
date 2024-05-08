@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/03 16:12:41 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 17:19:36 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
  * Description: Displays a prompt and reads a line of input from the user.
  * Returns: The line of input from the user.
  */
+int g_signal = 0;
+
 void	prompt(t_common *c)
 {
 	if (isatty(fileno(stdin)))
@@ -70,9 +72,9 @@ int	ft_loop(t_common *c)
 	while (1)
 	{
 		init_loop_data(c);
-		interactive();
+		interactive(c);
 		prompt(c);
-		non_interactive();
+		non_interactive(c);
 //		ft_putstr_fd(c->raw_prompt, 1);
 		if (!c->raw_prompt)
 			break ;

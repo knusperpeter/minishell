@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_io.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 19:54:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/07 19:41:12 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 
 	if (*(fd) == -1)
 		ft_printerrno(io->heredoc_limiter);
-	while (1)
+	while (g_signal == 0)
 	{
 		write(1, "heredoc> ", 9);
 		if (get_next_line_heredoc(0, &buf, 0) < 0)
@@ -75,9 +75,16 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	
 	if (io->type == HEREDOC)
 	{
+		interactive_here(c);
 		fd = open(cmd_node->heredoc_name, O_CREAT | O_WRONLY
 				| O_TRUNC, 0644);
 		here_doc(c, io, cmd_node, &fd);
+		non_interactive(c);
+		if (c->exitstatus == 130)
+		{
+			ft_cleanup_loop(c);	
+			exit (c->exitstatus);
+		}
 	}
 	else
 		fd = open(io->infile, O_RDONLY);
