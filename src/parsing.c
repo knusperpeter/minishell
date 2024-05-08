@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/06 14:43:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/08 18:10:29 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,8 @@ int	tokenize(t_common *c)
 
 	size = count_pipes(c->raw_prompt);
 	arr = tokenize_one(c, c->raw_prompt, size + 1);
+	if(!arr)
+		return (EXIT_FAILURE);
 	i = 0;
 	while (arr[i])
 	{
@@ -328,8 +330,7 @@ void	ft_cmd_args_to_2d(t_list_d *cmd_table)
 int	ft_parsing(t_common *c)
 {
 	t_list_d	*cmd_str;
-	if (tokenize(c) == EXIT_FAILURE)
-		printf("Tokenize error\n");
+	tokenize(c);
 	if (t_lst_to_struct(c))
 		printf("Token_to_struct error\n");
 	cmd_str = c->cmd_struct;

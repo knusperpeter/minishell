@@ -1,8 +1,6 @@
->Tokenizing expanded variables still missing
-
-.ls ./ls ./ ./libft/
-
 "" ->still prints tests
+
+>> '$USER' -> does not create file
 
 | echo hi -> leaks because of exit in tokinzing
 
@@ -13,6 +11,24 @@ lexer_new.c cases:
 
 export x=""ls -l""      >> valgrind
 export x="ls \"-l\""    >>ms: x=ls \-l\     bash: x=ls "-l"
+
+export T="l"
+$Ts -a
+			-> nothing happens, exitcode 0
+			bash: -a command not found; exit 127
+
+
+./ls
+
+"./"ls
+
+"./""ls"
+
+"./"''"ls"
+			->should not output ls
+
+
+
 
 IMPLEMENT:
 only Redirect 	-> does not create file so far

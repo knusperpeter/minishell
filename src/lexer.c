@@ -38,10 +38,10 @@ int	check_char(char *character)
 	int		i;
 
 	i = 0;
-	special = "[]()<>#";
+	special = "()<>";
 	if (*character == '\'' || *character == '\"')
 		return (2);
-	while (i < 8)
+	while (i < 5)
 	{
 		if (special[i] == *character)
 			return (1);
@@ -429,8 +429,8 @@ int check_this(t_common *c, char *result, int j)
 		if (status)
 		{
 			c->exitstatus = 2;
-			ft_clean_exit(c, NULL, 0);
-			exit (2);
+			ft_cleanup_loop(c);
+			return (1);
 		}
 	}						// free stuff
 	return (0);
@@ -634,7 +634,8 @@ int check_result(t_common *c, char *result)
 	check_that(c, &result[k], k);
 	if (j > 0)
 	{	
-		check_this(c, &result[k], j);
+		if (check_this(c, &result[k], j))
+			return (1);
 		check_dot(&result[0], k, j);
 		check_quotes(&result[k], k);
 		check_again(c, &result[k], k, fir);
@@ -684,7 +685,8 @@ char	**tokenize_one(t_common *c, char *input, int pipe)
 	result[index] = NULL;
 	if (check_empty_line(c, input, pipe))
 		exit (1);								// free und give promt back
-	check_result(c, result[0]);
+	if (check_result(c, result[0]))
+		return (NULL);
 	return (result);
 }
 
