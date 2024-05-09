@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/09 14:35:58 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 15:58:03 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	ft_printerrno(char *s)
 	ft_putstr_fd("minishell: ", 2);
 	if (s)
 		ft_putstr_fd(s, 2);
+	ft_putchar_fd('\n', 2);
 //	ft_putstr_fd(strerror(errno), 2);
 }
 
@@ -36,16 +37,18 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 {
 	char		*buf;
 
-	if (*(fd) == -1)
-		ft_printerrno(io->heredoc_limiter);//protect...
+	//if (*(fd) == -1)
+	//	ft_clean_exit(c, "heredoc_fail", 1);//protect...
+	(void) cmd_table;
 	while (g_signal == 0)
 	{
 		write(1, "> ", 2);
 		if (get_next_line_heredoc(0, &buf, 0) < 0)
-			ft_clean_exit(c, "heredoc failed\n", 1);
+			ft_cleanup_loop(c);
 		if (buf == NULL || *buf == '\0')
 			break ;
-		if (ft_strncmp(io->heredoc_limiter, buf, (ft_strlen(buf) - 1)) == 0)
+		if (ft_strlen(io->heredoc_limiter) == ft_strlen(buf) - 1 && \
+				!ft_strncmp(io->heredoc_limiter, buf, (ft_strlen(buf) - 1)))
 			break ;
 		heredoc_expansion(c, io, &buf);
 		write(*(fd), buf, ft_strlen(buf));
@@ -53,11 +56,10 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 	get_next_line_heredoc(0, &buf, 1);
 	free(buf);
 	close(*(fd));
-	*(fd) = open(cmd_table->heredoc_name, O_RDONLY);
-	if (cmd_table->read_fd == -1)
+	*(fd) = open(io->infile, O_RDONLY);
+	if (*fd == -1)
 	{
-		ft_printerrno(NULL);
-		unlink(cmd_table->heredoc_name);
+		unlink(io->infile);
 	}
 }
 
@@ -90,7 +92,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 		fd = open(io->infile, O_RDONLY);
 	if (fd == -1)
 	{
-		ft_printerrno("filename");
+		//ft_printerrno(io->infile);
 		return (0);
 	}
 	if (cmd_node->read_fd != 0)
@@ -111,7 +113,7 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 				| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1)
 	{
-		ft_printerrno("filename");
+		ft_printerrno(io->outfile);
 		return (0);
 	}
 	if (cmd_node->write_fd != 1)

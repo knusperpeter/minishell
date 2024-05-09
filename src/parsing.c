@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/09 13:20:22 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 15:37:08 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,7 @@ void	token_to_struct(t_common *c, t_token *token, t_cmd_table *cmd_node)
 	tmp = token;
 	init_cmd_table(cmd_node);
 	cmdtok_to_node(tmp, cmd_node);
+	tmp = token;
 	while (tmp)
 	{
 		if (tmp->type >= 1 && tmp->type <= 4)
