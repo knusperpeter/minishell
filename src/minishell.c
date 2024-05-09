@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/08 17:49:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 13:10:17 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	prompt(t_common *c)
 	// c->exitstatus = 0;
 	if (isatty(fileno(stdin)))
 	{
-		c->raw_prompt = readline("minishell ❯ ");
+		c->raw_prompt = readline("minishell> ");
 		if (c->raw_prompt)
 			add_history(c->raw_prompt);
 	}
@@ -60,6 +60,7 @@ void	init_loop_data(t_common *c)
 	// c->exitstatus_str = NULL;
 	c->subshell_level = 0;
 	c->old_pipe = 0;
+	c->heredoc_counter = 0;
 }
 
 /**

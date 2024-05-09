@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/08 17:48:15 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 14:35:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,12 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 	char		*buf;
 
 	if (*(fd) == -1)
-		ft_printerrno(io->heredoc_limiter);
+		ft_printerrno(io->heredoc_limiter);//protect...
 	while (g_signal == 0)
 	{
 		write(1, "> ", 2);
 		if (get_next_line_heredoc(0, &buf, 0) < 0)
-			exit (1);
+			ft_clean_exit(c, "heredoc failed\n", 1);
 		if (buf == NULL || *buf == '\0')
 			break ;
 		if (ft_strncmp(io->heredoc_limiter, buf, (ft_strlen(buf) - 1)) == 0)

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/08 18:10:29 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 13:20:22 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,10 @@ int	cmd_to_node(t_cmd_table *cmd_node)
  * - node: The command node.
  * Returns: 0 if successful, 1 if an error occurred.
  */
-int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
+int	input_to_node(t_common *c, t_token *token, t_io_red *tmp, t_cmd_table *node)
 {
-	static int	i;
-	char		*c;
+	char	*ch;
 
-	i = 0;
 	if (token->type == HEREDOC)
 	{
 		tmp->heredoc_limiter = ft_strdup(token->data);
@@ -108,9 +106,9 @@ int	input_to_node(t_token *token, t_io_red *tmp, t_cmd_table *node)
 			free(node->heredoc_name);
 			node->heredoc_name = NULL;
 		}
-		c = ft_itoa(i++);
-		node->heredoc_name = ft_strjoin(".heredoc_tmp", c);
-		free(c);
+		ch = ft_itoa(c->heredoc_counter++);
+		node->heredoc_name = ft_strjoin(".heredoc_tmp", ch);
+		free(ch);
 		if (!node->heredoc_name)
 			return (perror("Error initializing str in input_to_node\n"), 1);
 		tmp->infile = ft_strdup(node->heredoc_name); //CHECK IF .heredoc_tmp already EXISTS, IF YES increment i
@@ -140,7 +138,7 @@ void	init_io(t_io_red *io)
  * - node: The command node.
  * Returns: 0 if successful, 1 if an error occurred.
  */
-int	red_to_node(t_token *token, t_cmd_table *node)
+int	red_to_node(t_common *c, t_token *token, t_cmd_table *node)
 {
 	t_list		*red_node;
 	t_io_red	*tmp;
@@ -153,7 +151,7 @@ int	red_to_node(t_token *token, t_cmd_table *node)
 	init_io(red_node->content);
 	tmp = red_node->content;
 	if(token->type == REDIR_IN || token->type == HEREDOC)
-		input_to_node(token, tmp, node);
+		input_to_node(c, token, tmp, node);
 	else
 	{
 		tmp->type = token->type;
@@ -216,7 +214,7 @@ void	cmdtok_to_node(t_token *tok, t_cmd_table *cmd)
  * - token: The linked list of tokens.
  * - cmd_node: The command table structure.
  */
-void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
+void	token_to_struct(t_common *c, t_token *token, t_cmd_table *cmd_node)
 {
 	t_token	*tmp;
 
@@ -226,7 +224,7 @@ void	token_to_struct(t_token *token, t_cmd_table *cmd_node)
 	while (tmp)
 	{
 		if (tmp->type >= 1 && tmp->type <= 4)
-			red_to_node(tmp, cmd_node);
+			red_to_node(c, tmp, cmd_node);
 		tmp = tmp->next;
 	}
 }
@@ -297,7 +295,7 @@ int	t_lst_to_struct(t_common *c)
 	while (cmd_token)
 	{
 		tmp_cmd = create_cmds_node(c);
-		token_to_struct(cmd_token->content, tmp_cmd->content);
+		token_to_struct(c, cmd_token->content, tmp_cmd->content);
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		cmd_token = cmd_token->next;
 	}

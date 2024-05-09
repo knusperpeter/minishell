@@ -28,6 +28,10 @@ $Ts -a
 			->should not output ls
 
 
+unset PATH
+cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
+../bin/../bin/ls
+			->closes ms...
 
 
 IMPLEMENT:

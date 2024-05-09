@@ -6,17 +6,29 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/08 17:41:09 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 12:58:25 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ft_pwd(t_common *c)
+void	ft_printerror(t_common *c, char **args)
+{
+	c->exitstatus = 2;
+	ft_putstr_fd("minishell: pwd: -", 2);
+	ft_putchar_fd(args[1][1], 2);		
+	ft_putstr_fd(": invalid option\n", 2);
+	ft_clean_exit(c, NULL, 1);
+}
+
+int	ft_pwd(t_common *c, char **args)
 {
 	t_env	*tmp;
 
 //	invalid option error message missing
+	if (args[1])
+		if (args[1][0] == '-')
+			ft_printerror(c, args);
 	tmp = c->env;
 	while (tmp)
 	{
