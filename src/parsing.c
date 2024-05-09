@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/09 17:41:37 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 17:59:00 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,6 +342,7 @@ int	ft_parsing(t_common *c)
 	ft_expansion(c, cmd_str);
 	cmd_str = c->cmd_struct;
 	ft_rm_quotes(c->cmd_struct);
+	//io_open should be here instead of in t_lst_to_struct!!!!!
 	cmd_str = c->cmd_struct;
 	ft_cmd_args_to_2d(c->cmd_struct);
 	return (EXIT_SUCCESS);
