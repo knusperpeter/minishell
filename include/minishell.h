@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/09 13:09:56 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 17:01:16 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ typedef struct s_cmd_table
 	int					write_fd;
 	t_list				*io_red;
 	t_list				*cmds;
+	char				*infile;
+	char				*outfile;
 	char				*heredoc_name;
 	char				**str;
 	char				*exec_path;
@@ -145,6 +147,7 @@ char		*get_expanded_str(char *str, char *envvalue, int i, int varsize);
 void		heredoc_expansion(t_common *c, t_io_red *io, char **str);
 int			has_expansion(t_common *c, char *str);
 int			is_dir(char *file);
+int	open_redirections(t_common *c, t_cmd_table *cmd_node);
 
 //lexer
 void    	error_lexer(char *s, int i);

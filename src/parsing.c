@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/09 15:37:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 17:41:37 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,8 @@ void	init_cmd_table(t_cmd_table *node)
 	node->heredoc_name = NULL;
 	node->str =	NULL;
 	node->exec_path = NULL;
+	node->infile = NULL;
+	node->outfile = NULL;
 }
 /**
  * Function: cmdtok_to_node
@@ -291,6 +293,7 @@ int	t_lst_to_struct(t_common *c)
 {
 	t_list		*cmd_token;
 	t_list_d	*tmp_cmd;
+	t_cmd_table	*curr_cmd;
 
 	cmd_token = c->tokens;
 	while (cmd_token)
@@ -299,6 +302,8 @@ int	t_lst_to_struct(t_common *c)
 		token_to_struct(c, cmd_token->content, tmp_cmd->content);
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		cmd_token = cmd_token->next;
+		curr_cmd = tmp_cmd->content;
+		open_io(c, curr_cmd->io_red, curr_cmd);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -329,6 +334,7 @@ void	ft_cmd_args_to_2d(t_list_d *cmd_table)
 int	ft_parsing(t_common *c)
 {
 	t_list_d	*cmd_str;
+
 	tokenize(c);
 	if (t_lst_to_struct(c))
 		printf("Token_to_struct error\n");
