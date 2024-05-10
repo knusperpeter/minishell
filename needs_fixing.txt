@@ -14,6 +14,7 @@ ls | cat Makefile | cat << "asd" > out
 ls|cat Makefile|cat<<"asd">out
 		invalid read size 1
 
+!!!!QUOTES!!!!:
 echo "$USER'
 	ms:	caigner'
 	bash: dquote
