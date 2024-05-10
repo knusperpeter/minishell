@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/09 17:01:16 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/10 16:28:51 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,9 +150,9 @@ int			is_dir(char *file);
 int	open_redirections(t_common *c, t_cmd_table *cmd_node);
 
 //lexer
-void    	error_lexer(char *s, int i);
+int    	error_lexer(t_common *c, char *s, int i);
 int			get_cmd_path(t_common *c, t_cmd_table *cmd);
-int			count_pipes(char *input);
+int			count_pipes(t_common *c, char *input);
 char		**set_up_array(int cc, char *input);
 char		**prep_input(char *input);
 char		*ft_strtok(char *s1, const char *delim);

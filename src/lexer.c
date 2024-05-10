@@ -135,7 +135,6 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 		return (-1);
 	}
 	token->type = check_token(value[i]);
-//	printf("%s\n", (char *)token);
 	if (token->type >= 1 && token->type <= 4)
 	{
 		if (value[i + 1])
@@ -147,7 +146,6 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 		else
 		{
 			printf("minishell❌: syntax error\n");
-			//error_lexer((char *)token, ft_strlen((char *)token));
 			free(token);
 			return (-1);
 		}
@@ -424,7 +422,7 @@ int check_this(t_common *c, char *result, int j)
 			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `<'\n", 2);
 		else if (j == 4 && *result == '>')
 			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `>'\n", 2);
-		else if (j == 3 || (j == 2 && result [1] == '<' && result[2] == '\0') || result[1] == '\0')
+		else if (j == 3 || (j == 2 && result [1] == '<' && result[2] == '\0') || (j == 2 && result [1] == '>' && result[2] == '\0') || result[1] == '\0')
 			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
 		if (status)
 		{
@@ -437,7 +435,7 @@ int check_this(t_common *c, char *result, int j)
 }
 
 /*this function checks for dots as only input*/
-int	check_dot(char *result, int k, int j)
+int	check_dot(t_common *c, char *result, int k, int j)
 {
 	int i;
 
@@ -445,10 +443,12 @@ int	check_dot(char *result, int k, int j)
 	{
 		if(result[k] && result[k] == '.' && result [k + 1] == '\0')
 		{
-			ft_putstr_fd("minishell: .: filename argument required\n.: usage: . filename [arguments]", 2);
-			exit (2);
+			ft_putstr_fd("minishell: .: filename argument required\n.: usage: . filename [arguments]\n", 2);
+			c->exitstatus = 2;
+			ft_cleanup_loop(c);
+			return (1);
 		}
-		if (j > 1)
+		else if (j > 1)
 		{
 			i = 0;
 			while (result[i])
@@ -457,14 +457,16 @@ int	check_dot(char *result, int k, int j)
 				i++;
 			}
 			ft_putstr_fd(": command not found\n", 2);
-			exit (127);//dont exit, c->exitstatus= 2, 126 or 127 //chris
+			c->exitstatus = 127;
+			ft_cleanup_loop(c);
+			return (1);
 		}
 	}
 	return (0);	
 }
 
 /*this function checks for empty quote input*/
-int	check_quotes(char *result, int k)
+int	check_quotes(t_common *c, char *result, int k)
 {
 	int i;
 	
@@ -481,15 +483,15 @@ int	check_quotes(char *result, int k)
 	if (result[k + 1] == '"')
 		k++;
 	i = 0;
-	printf("%d\n", k);
 	while (i < k + 1 /*&& (result[i] != ' ' || (result[k] >= 9 && result[k] <= 13))*/)
 	{
 		write (2, &result[i], 1);
-		printf("result[%d]: %c\n", i, result[i]);
 		i++;
 	}
+	c->exitstatus = 127;
 	ft_putstr_fd (" :command not found\n", 2);
-	return (0);	
+	ft_cleanup_loop(c);
+	return (1);	
 }
 
 int	check_again(t_common *c, char *result, int k, char fir)
@@ -529,11 +531,10 @@ int	check_again(t_common *c, char *result, int k, char fir)
 		return (0);	
 	if (status)
 	{
-	    c->exitstatus = 2;
-	    ft_clean_exit(c, NULL, 0);
-	    exit (2);
+		c->exitstatus = 2;
+		ft_cleanup_loop(c);
+		return (1);
 	}
-							// free stuff*/
 	return (0);
 }
 
@@ -565,10 +566,10 @@ int	check_more(t_common *c, char *result, int k, char fir)
 		return (0);	
 	if (status)
 	{
-	    c->exitstatus = 2;
-	    ft_clean_exit(c, NULL, 0);
-	    exit (2);
-	}							// free stuff
+		c->exitstatus = 2;
+		ft_cleanup_loop(c);
+		return (1);
+	}						// free stuff
 	return (0);
 }
 
@@ -593,9 +594,9 @@ int	check_that(t_common *c, char *result, int k)
 	}
 	if (status)
 	{
-	    c->exitstatus = 2;
-	    ft_clean_exit(c, NULL, 0);
-	    exit (2);
+		c->exitstatus = 2;
+		ft_cleanup_loop(c);
+		return (1);
 	}							// free stuff
 	return (0);
 }
@@ -631,15 +632,20 @@ int check_result(t_common *c, char *result)
 			break;
 		i++;	
 	}
-	check_that(c, &result[k], k);
+	if (check_that(c, &result[k], k))
+		return (1);
 	if (j > 0)
 	{	
 		if (check_this(c, &result[k], j))
 			return (1);
-		check_dot(&result[0], k, j);
-		check_quotes(&result[k], k);
-		check_again(c, &result[k], k, fir);
-		check_more(c, &result[0], k, fir);
+		if (check_dot(c, &result[0], k, j))
+			return (1);
+		if (check_quotes(c, &result[k], k))
+			return (1);
+		if (check_again(c, &result[k], k, fir))
+			return (1);
+		if (check_more(c, &result[0], k, fir))
+			return (1);
 	}
 	return (0);
 }
@@ -679,34 +685,45 @@ char	**tokenize_one(t_common *c, char *input, int pipe)
 	index = 0;
 	while (token != NULL && index < pipe)
 	{
-		result[index++] = ft_strdup(token);
+		result[index] = ft_strdup(token);
+		if (check_empty_line(c, input, pipe))
+			return (c->exitstatus = 0, free(result[index]), free(result), NULL); //not allowed								// free und give promt back
+		if (check_result(c, result[index]))
+			return (free(result[index]), free(result), NULL);
 		token = ft_strtok(NULL, "|");
+		index++;
 	}
 	result[index] = NULL;
-	if (check_empty_line(c, input, pipe))
-		exit (1);								// free und give promt back
-	if (check_result(c, result[0]))
-		return (NULL);
 	return (result);
 }
 
 /*This is an extension for the count_pipes function. It handles the pipes 
 in case of appearance.*/
-void	error_check_pipes(int *i, int *pipe, char *input)
+int	error_check_pipes(t_common *c, int *i, int *pipe, char *input)
 {
 	(*i)++;
 	if (input[*i] == '\0')
-		error_lexer("|", 2);
+	{	
+		if (error_lexer(c, "|", 2))
+			return (1);
+	}
 	while (input[*i] && ft_strchr(WHITESPACE, input[*i]))
 	{
 		if (input[*i] && ft_strchr(WHITESPACE, input[*i]) && input[*(i)] == '\0')
-			error_lexer("|", 2);
+		{
+			if (error_lexer(c, "|", 2))
+				return (1);
+		}
 		(*i)++;
 	}
 	if (input[*i] == '|')
-		error_lexer("|", 2);
+	{	
+		if (error_lexer(c, "|", 2))
+			return (1);
+	}
 	else
 		*pipe += 1;
+	return (0);
 }
 
 int	is_in_quotes(char *str, int i)
@@ -744,7 +761,7 @@ int	ignore_pipe(char *str, int i)
 }
 
 /*count "|"-sections within the input. used for allocating memory*/
-int	count_pipes(char *input)
+int	count_pipes(t_common *c, char *input)
 {
 	int	i;
 	int	pipe;
@@ -754,7 +771,10 @@ int	count_pipes(char *input)
 	while (input[i] && ft_strchr(WHITESPACE, input[i]))
 		i++;
 	if (input[i] == '|' && !ignore_pipe(input, i))
-		error_lexer("|", 3);
+	{
+		if (error_lexer(c, "|", 3))
+			return (1);
+	}
 	while (input[i])
 	{
 		if (input[i] == '\"' || input[i] == '\'')
@@ -764,7 +784,7 @@ int	count_pipes(char *input)
 				i++;
 		}
 		if (input[i] == '|' && !ignore_pipe(input, i))
-			error_check_pipes(&i, &pipe, input);
+			error_check_pipes(c, &i, &pipe, input);
 		if (input[i])
 			i++;
 	}
