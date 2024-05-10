@@ -1,107 +1,56 @@
-"" ->still prints tests
+MICHI:
 
->> '$USER' -> does not create file
+echo hi | echo hi |
+		->Invalid read of size 1
 
-| echo hi -> leaks because of exit in tokinzing
+Syntax:
 
-echo hi | echo hi |	->conditional jumps in cmdtok_to_node
+/bin/cat <Makefile >
+	ms: syntax error and afterwards -> cat makefile..
+	bash: only syntax error
 
+ls | cat Makefile | cat << "asd" > out
+	works but not if it is like this:
+ls|cat Makefile|cat<<"asd">out
+		invalid read size 1
+
+
+CHRIS:
 
 lexer_new.c cases:
-
-export x=""ls -l""      >> valgrind
-export x="ls \"-l\""    >>ms: x=ls \-l\     bash: x=ls "-l"
-
 export T="l"
 $Ts -a
-			-> nothing happens, exitcode 0
-			bash: -a command not found; exit 127
-
+		-> Invalid read of size 1;   nothing happens, exitcode 0
+		bash: -a command not found; exit 127
 
 ./ls
-
 "./"ls
-
 "./""ls"
-
 "./"''"ls"
-			->should not output ls
-
+		->should not output ls
 
 unset PATH
 cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
 ../bin/../bin/ls
-			->closes ms...
+		-> bash executes ls in bin...
+		-> ms cmd not found
 
+<wc -l
+	exitcode:127 ist falsch
 
 IMPLEMENT:
 only Redirect 	-> does not create file so far
-		-> check if redir is a directory
+	-> check if redir is a directory
+
+ls > src
+	prints ls. should say src is a directory.
 
 TESTER fails:
+export T="l"
+$Ts -a
+	ms:	no error message
+	bash:	-a: command not found
 
-	/bin/echo $"42$"
-		ms: 	42
-		bash:	42$
-
-	<< $USER\n
-		ms:	->heredoc
-		bash:	\n->heredoc
-		
-	export T="l"
-	$Ts -a
-		ms:	no error message
-		bash:	-a: command not found
-
-	cd --
-		ms:	double error message
-		bash:	egal
-
-Pipeline:
-	unset PATH
-	/bin/ls
-		ms:	nothing
-		bash:	ls output
-
-	ls | cat << stop | ls -la | cat << stop1
-		ms:	prints wrong output
-		bash:	not
-		
-	echo hi > in >> out | cat <out
-		ms 	3hi
-			out: 	(empty)
-		bash 	hi
-			out:	hi
-
-SCMD:
-	""
-		ms:	wrong message, wrong stuff printed out
-		bash:	error message
-
-Syntax:
-
-	/bin/cat <Makefile >
-		ms: cat makefile..
-		bash: syntax error
-
-	ls | cat Makefile | cat << "asd" > out
-		works but not if it is like this:
-	ls|cat Makefile|cat<<"asd">out
-			why???
-
-
-
-	tabs will execute ls, why?
-
-	cd "$H"O"ME"/Desktop/
-	echo $?
-		--> leaks!!!!
-
-	cd --
-		--> leaks!!!!
-
-	export += ...
-		-> does not do the trick
-
-
-	exitstatus in den Builtins auf null setzen!! look at ft_echo
+cd --
+	ms:	double error message
+	bash:	egal
