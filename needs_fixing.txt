@@ -14,14 +14,30 @@ ls | cat Makefile | cat << "asd" > out
 ls|cat Makefile|cat<<"asd">out
 		invalid read size 1
 
+echo "$USER'
+	ms:	caigner'
+	bash: dquote
+
+signale-> im laufenden Porzess mit strg + \
+	-> core dumped
+
 
 CHRIS:
 
-lexer_new.c cases:
-export T="l"
-$Ts -a
-		-> Invalid read of size 1;   nothing happens, exitcode 0
-		bash: -a command not found; exit 127
+<file1 <file2 <file3 wc >file4
+		->bash: file2: Permission denied
+		->ms: 	nothing
+
+
+leerzeilen aus history raus
+
+no such file or dir -> should be command not found
+
+	lexer_new.c cases:
+	export T="l"
+	$Ts -a
+			-> Invalid read of size 1;   nothing happens, exitcode 0
+			bash: -a command not found; exit 127
 
 ./ls
 "./"ls
@@ -45,12 +61,10 @@ only Redirect 	-> does not create file so far
 ls > src
 	prints ls. should say src is a directory.
 
-TESTER fails:
-export T="l"
-$Ts -a
-	ms:	no error message
-	bash:	-a: command not found
-
 cd --
 	ms:	double error message
 	bash:	egal
+
+Set the $PATH to a multiple directory value
+(directory1:directory2) and ensure that directories 
+are checked in order from left to right.
