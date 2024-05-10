@@ -3,31 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/06 18:50:24 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 14:19:06 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	error_lexer(char *s, int i)
+int	error_lexer(t_common *c, char *s, int i)
 {
-/*	if (*s == '>' || *s == '<' || *s == '|')
+	int status;
+
+	status = 0;
+	if (*s == '|')
 	{
-		if (*s == '<' && i == 3)
-			ft_putstr_fd("❌ minishell: syntax error near unexpected token `<'\n", 2);
-		else if (*s == '<' && i > 3)
-			ft_putstr_fd("❌ minishell: syntax error near unexpected token `<<'\n", 2);
-		else if (*s == '>' && i == 3)
-			ft_putstr_fd("❌ minishell: syntax error near unexpected token `>'\n", 2);
-		else if (*s == '>' && i > 3)
-			ft_putstr_fd("❌ minishell: syntax error near unexpected token `>>'\n", 2);*/
 		if (*s == '|' && (i == 2 || i == 3))
-			ft_putstr_fd("❌ minishell: syntax error near unexpected token `|'\n", 2);
+			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `|'\n", 2);
 		else if (*s == '|' && i > 3)
-			ft_putstr_fd("❌ minishell: syntax error near unexpected token `||'\n", 2);
-		exit (2); //comment chris: not exit, but set exitstatus to 2!!
-//	}
+			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `||'\n", 2);
+		if (status)
+		{
+			c->exitstatus = 2;
+			ft_cleanup_loop(c);
+			return (1);
+		}
+	}	
+	return (0);
 }
