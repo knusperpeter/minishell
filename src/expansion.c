@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/08 17:14:43 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/09 21:01:24 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,9 +210,7 @@ int	split_command(t_list *lst)
 void	ft_expand_cmds(t_common *c, t_list *curr)
 {
 	char	*tmp;
-	int		flag;
 
-	flag = 0;
 	while (curr)
 	{
 		while (has_expansion(c, curr->content))

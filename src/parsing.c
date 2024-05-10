@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/09 17:59:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/10 11:32:30 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,7 +293,6 @@ int	t_lst_to_struct(t_common *c)
 {
 	t_list		*cmd_token;
 	t_list_d	*tmp_cmd;
-	t_cmd_table	*curr_cmd;
 
 	cmd_token = c->tokens;
 	while (cmd_token)
@@ -302,8 +301,6 @@ int	t_lst_to_struct(t_common *c)
 		token_to_struct(c, cmd_token->content, tmp_cmd->content);
 		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		cmd_token = cmd_token->next;
-		curr_cmd = tmp_cmd->content;
-		open_io(c, curr_cmd->io_red, curr_cmd);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -334,6 +331,7 @@ void	ft_cmd_args_to_2d(t_list_d *cmd_table)
 int	ft_parsing(t_common *c)
 {
 	t_list_d	*cmd_str;
+	t_cmd_table	*cmd_table;
 
 	tokenize(c);
 	if (t_lst_to_struct(c))
@@ -343,6 +341,13 @@ int	ft_parsing(t_common *c)
 	cmd_str = c->cmd_struct;
 	ft_rm_quotes(c->cmd_struct);
 	//io_open should be here instead of in t_lst_to_struct!!!!!
+	cmd_str = c->cmd_struct;
+	while (cmd_str)
+	{
+		cmd_table = cmd_str->content;
+		open_io(c, cmd_table->io_red, cmd_table);
+		cmd_str = cmd_str->next;
+	}
 	cmd_str = c->cmd_struct;
 	ft_cmd_args_to_2d(c->cmd_struct);
 	return (EXIT_SUCCESS);
