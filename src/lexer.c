@@ -676,9 +676,6 @@ int	open_quotes(t_common *c, char *result)
 	return (0);
 }
 
-
-
-
 int check_result(t_common *c, char *result)
 {
 	int		i;
