@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/09 21:01:24 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/11 20:04:12 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,8 @@ int	split_command(t_list *lst)
 
 	str = lst->content;
 	last = ft_strlen(str) - 1;
+	if (last <= 0)
+		return (0);
 	if (ft_strchr("\'\"", str[0]) && ft_strchr("\'\"", str[last]))
 		return(0);
 	if (ft_strchr(lst->content, ' '))
@@ -207,24 +209,57 @@ int	split_command(t_list *lst)
 	return (0);
 }
 
-void	ft_expand_cmds(t_common *c, t_list *curr)
+int	check_for_empty(t_cmd_table *table, t_list **curr, t_list *before)
+{
+	char	*cmd;
+
+	cmd = (*curr)->content;
+	if (!cmd[0] && before)
+	{
+		before->next = (*curr)->next;
+		free((*curr)->content);
+		free(*curr);
+		(*curr) = before->next;
+		return (1);
+	}
+	else if (!cmd[0] && !before)
+	{
+		table->cmds = (*curr)->next;
+		free((*curr)->content);
+		free(*curr);
+		(*curr) = table->cmds;
+		return (1);
+	}
+	return (0);
+}
+
+void	ft_expand_cmds(t_common *c, t_cmd_table *table, t_list **curr)
 {
 	char	*tmp;
+	t_list	*before;
 
-	while (curr)
+	before = NULL;
+	while (*curr)
 	{
-		while (has_expansion(c, curr->content))
+		while (has_expansion(c, (*curr)->content))
 		{
-			tmp = ft_strdup(curr->content);
-			free(curr->content);
-			curr->content = expand_str(c, tmp);
-			if (split_command(curr))
+			tmp = ft_strdup((*curr)->content);
+			free((*curr)->content);
+			(*curr)->content = expand_str(c, tmp);
+			if (!(*curr)->content)
+				
+			if (split_command((*curr)))
 			{
-				ft_split_cmd(curr);
+				ft_split_cmd((*curr));
 			}
 			free(tmp);
 		}
-		curr = curr->next;
+		check_for_empty(table, curr, before);
+		if (*curr)
+		{
+			before = *curr;
+			*curr = (*curr)->next;
+		}
 	}
 }
 
@@ -272,7 +307,7 @@ void	ft_expansion(t_common *c, t_list_d *cmds)
 	{
 		cmd_struct = cmds->content;
 		curr = cmd_struct->cmds;
-		ft_expand_cmds(c, curr);
+		ft_expand_cmds(c, cmd_struct, &curr);
 		if (cmd_struct->io_red)
 		{
 			curr = cmd_struct->io_red;

@@ -34,17 +34,11 @@ ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | 
 
 CHRIS:
 
-	lexer_new.c cases:
-	export T="l"
-	$Ts -a
-			-> Invalid read of size 1;   nothing happens, exitcode 0
-			bash: -a command not found; exit 127
-
-./ls
-"./"ls
-"./""ls"
-"./"''"ls"
-		->should not output ls
+lexer_new.c cases:
+export T="l"
+$Ts -a
+		-> Invalid read of size 1;   nothing happens, exitcode 0
+		bash: -a command not found; exit 127
 
 unset PATH
 cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
