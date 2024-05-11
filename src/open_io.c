@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_io.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 14:09:07 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/11 16:40:17 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 		else
 		{
 			ft_putstr_fd("minishell: ", 2);
-			perror(io->outfile);
+			perror(io->infile);
 		}
 		return (0);
 	}
