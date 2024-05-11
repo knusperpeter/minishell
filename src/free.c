@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/09 17:37:32 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 14:07:37 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,10 +126,6 @@ void	free_cmd_table(void *content)
 		ft_lstclear(&table->io_red, &free_io_red);
 	if (table->cmds)
 		free_cmd_lst(&table->cmds);
-	if (table->infile)
-		free(table->infile);
-	if (table->outfile)
-		free(table->outfile);	
 	if (table->heredoc_name)
 	{
 		unlink(table->heredoc_name);

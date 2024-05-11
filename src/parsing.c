@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/10 16:29:51 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 14:10:36 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,8 +175,8 @@ void	init_cmd_table(t_cmd_table *node)
 	node->heredoc_name = NULL;
 	node->str =	NULL;
 	node->exec_path = NULL;
-	node->infile = NULL;
-	node->outfile = NULL;
+	node->in = NULL;
+	node->out = NULL;
 }
 /**
  * Function: cmdtok_to_node

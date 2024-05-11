@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
+#    By: chris <chris@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/05/03 16:04:12 by caigner          ###   ########.fr        #
+#    Updated: 2024/05/11 10:50:53 by chris            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,9 +67,9 @@ re		: fclean all
 
 valgrind: $(NAME)
 	@echo "$(CYAN)Running $(BLUE)$(NAME)$(CYAN) under Valgrind...$(RESET)\n"
-	@valgrind --suppressions=minishell.supp --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes \
+	@valgrind --suppressions=minishell.supp --leak-check=full --track-fds=yes --show-leak-kinds=all --track-origins=yes --trace-children=yes \
 		--tool=memcheck --leak-resolution=high --undef-value-errors=yes --verbose --show-mismatched-frees=yes \
-		--read-var-info=yes --track-fds=yes ./minishell  ./$(NAME)
+		--read-var-info=yes ./minishell  ./$(NAME)
 
 # .SILENT:
 .PHONY: all clean fclean re

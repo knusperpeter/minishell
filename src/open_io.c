@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_io.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/09 17:51:02 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 14:09:07 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,13 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 		fd = open(io->infile, O_RDONLY);
 	if (fd == -1)
 	{
-		//ft_printerrno(io->infile);
+		if (errno == EISDIR)
+			dprintf(2, "minishell: %s: Is a directory\n", io->infile);
+		else
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(io->outfile);
+		}
 		return (0);
 	}
 	if (cmd_node->read_fd != 0)
@@ -112,15 +118,21 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 	else
 		fd = open(io->outfile, O_WRONLY | O_APPEND
 				| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if (fd == -1)
+	if (fd == -1 && cmd_node->id != 0)
 	{
-		ft_printerrno(io->outfile);
-		return (0);
+		if (errno == EISDIR)
+			dprintf(2, "minishell: %s: Is a directory\n", io->outfile);
+		else
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(io->outfile);
+		}
+		return (fd);
 	}
 	if (cmd_node->write_fd != 1)
 		close(cmd_node->write_fd);
 	cmd_node->write_fd = fd;
-	return (1);
+	return (fd);
 }
 
 /**
@@ -137,16 +149,12 @@ int	open_file(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 {
 	if (io->type == HEREDOC || io->type == REDIR_IN)
 	{
-		if (cmd_node->infile)
-			free(cmd_node->infile);
-		cmd_node->infile = ft_strdup(io->infile);
+		cmd_node->in = io;
 		return (open_infile(c, io, cmd_node));
 	}
 	else if (io->type == REDIR_OUT || io->type == APPEND)
 	{
-		if (cmd_node->outfile)
-			free(cmd_node->outfile);
-		cmd_node->outfile = ft_strdup(io->outfile);
+		cmd_node->out = io;
 		return (open_outfile(io, cmd_node));
 	}
 	return (1);
@@ -197,12 +205,13 @@ int	open_io(t_common *c, t_list *io_lst, t_cmd_table *cmd_node)
 	{
 		io = tmp->content;
 		ft_close_old_fd(cmd_node, tmp->content);
-		if (io->type == HEREDOC || io->type == REDIR_IN)
-			status = open_file(c, io, cmd_node);
-		else if (io->type == REDIR_OUT || io->type == APPEND)
-			status = open_file(c, io, cmd_node);
+		status = open_file(c, io, cmd_node);
 		if (status == 0)
 			unlink_heredoc(io_lst->content, cmd_node);
+		if (status == -1)
+		{
+			c->exitstatus = 1;
+		}
 //if multiple infiles -> just take the last one. This should happen already in open_file
 		tmp = tmp->next;
 	}
@@ -211,18 +220,28 @@ int	open_io(t_common *c, t_list *io_lst, t_cmd_table *cmd_node)
 
 int	open_redirections(t_common *c, t_cmd_table *cmd_node)
 {
+	t_io_red	*io;
+	
 	(void) c;
-	if (cmd_node->read_fd > 0)
+	if (cmd_node->in)
 	{
-		cmd_node->read_fd = open(cmd_node->infile, O_RDONLY);
+		io = cmd_node->in;
+		cmd_node->read_fd = open(io->infile, O_RDONLY);
 		if (cmd_node->read_fd == -1)
+		{
+			c->exitstatus = 1;
 			return (0);
+		}
 	}
-	if (cmd_node->write_fd > 1)
+	if (cmd_node->out)
 	{
-		cmd_node->write_fd = open(cmd_node->outfile, O_RDWR);
+		io = cmd_node->out;
+		cmd_node->write_fd = open_outfile(io, cmd_node);
 		if (cmd_node->write_fd == -1)
+		{
+			c->exitstatus = 1;
 			return (0);
+		}
 	}
 	return (1);
 }

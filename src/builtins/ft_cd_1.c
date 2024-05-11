@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/05 20:20:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 09:09:00 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 
 void	print_error(int errorno, char *arg)
 {
-	ft_putstr_fd("minishell🔮: cd: ", 2);
+	ft_putstr_fd("minishell: cd: ", 2);
 	if (arg && errorno == 0)
 	{
 		ft_putstr_fd(arg, 2);

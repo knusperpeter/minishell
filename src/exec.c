@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/09 17:01:50 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 13:39:07 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,7 +268,7 @@ int	ft_check_builtin(t_cmd_table *cmd)
 void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 {
 	if (!open_redirections(c, curr_cmd_table))
-		return (c->exitstatus = 127, ft_clean_exit(c, NULL, 1));
+		return (ft_clean_exit(c, NULL, 1));
 //	if (!open_io(c, curr_cmd_table->io_red, curr_cmd_table))
 //		return (c->exitstatus = 127, ft_clean_exit(c, NULL, 1));
 	ft_redirect_io(c, curr_cmd_table, curr, fd);
@@ -281,14 +281,16 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 	{
 		c->envp = get_envp(c->env);
 		if (get_cmd_path(c, curr_cmd_table))
-			execve(curr_cmd_table->exec_path, curr_cmd_table->str, c->envp);
-		if (!is_dir(curr_cmd_table->str[0]))
 		{
+			execve(curr_cmd_table->exec_path, curr_cmd_table->str, c->envp);
 			c->exitstatus = 127;
 			perror(curr_cmd_table->str[0]);
 		}
 		else
-			dprintf(2, "minishell🔮: %s: Is a directory\n", curr_cmd_table->str[0]);
+		{
+			c->exitstatus = 127;
+			dprintf(2, "minishell: %s: command not found\n", curr_cmd_table->str[0]);
+		}	
 	}
 //	c->exitstatus = 127;
 	ft_clean_exit(c, NULL, 1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/10 16:28:51 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 12:34:28 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ typedef struct s_cmd_table
 	int					write_fd;
 	t_list				*io_red;
 	t_list				*cmds;
-	char				*infile;
-	char				*outfile;
+	t_io_red			*in;
+	t_io_red			*out;
 	char				*heredoc_name;
 	char				**str;
 	char				*exec_path;
