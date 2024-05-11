@@ -1,7 +1,19 @@
 MICHI:
 
-'''''''''''''''' echo hi
-					-> invalid read
+SIGNAL: cmd+c in interactive mode (with/without text in prompt)
+					-> ms: exit code: 0
+					-> bash: 130
+		
+		cmd+d in heredoc
+					->ms: exit code 0
+					-> bash: 127
+
+++++'''''''''''''''' echo hi				michi: fixed, leads now to an error (with error code 127)
+					++++-> invalid read
+
+'''''''''echo hi
+				->gerade Anzahl an single quotes invalid read and write
+
 
 ++++echo hi | echo hi |
 		++++->Invalid read of size 1	//michi: wird nun wie error behandelt, da in bash dquote

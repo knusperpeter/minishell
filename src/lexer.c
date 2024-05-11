@@ -668,10 +668,39 @@ int	open_quotes(t_common *c, char *result)
 	}
 	if (c->open_single_quotes == 1 || c->open_double_quotes == 1)
 	{
-		ft_putstr_fd("❌ minishell: syntax error dquote'\n", 2);
+		ft_putstr_fd("❌ minishell: syntax error dquote\n", 2);
 		c->exitstatus = 2;
 		ft_cleanup_loop(c);
 		return (1);
+	}
+	return (0);
+}
+
+int	check_sq(t_common *c, char *result, int k)
+{
+	int status;
+	int sq;
+
+	status = 0;
+	sq = 0;
+	while (result[k] && (result[k] == ' ' || (result[k] >= 9 && result[k] >= 13)))
+	{
+		if (result[k] == '\'')
+		{
+			while (result[k] == '\'')
+			{
+				sq++;
+				k++;
+			}
+			if (result[k] == ' ' && sq % 2 == 0)
+			{
+				ft_putstr_fd("❌ minishell: Command '' not found.\n", 2);
+				c->exitstatus = 127;
+				ft_cleanup_loop(c);
+				return (1);
+			}
+		}
+		k++;
 	}
 	return (0);
 }
@@ -687,6 +716,8 @@ int check_result(t_common *c, char *result)
 	k = 0;
 	i = 0;
 	len = ft_strlen(result);
+	if (check_sq(c, &result[k], k))
+		return (1);
 	if (open_quotes(c, &result[0]))
 		return (1);
 	if (check_one_more(c, &result[0]))
@@ -694,6 +725,8 @@ int check_result(t_common *c, char *result)
 	while (len >= 1 && (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13)))
 		i++;
 	if (len >= 1 && (result[i] == '<' || result[i] == '>'))
+		fir = result[i];
+	else if (result[i] == '.')
 		fir = result[i];
 	else if (result[i] == '.' && (result[i + 1] == '\0' || (len >= 2 && result[i + 1] == '.')))
 		fir = result[i];
