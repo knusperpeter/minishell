@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/07 20:36:17 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 17:48:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	add_path(t_cmd_table *cmd, char **paths)
 				ft_printerrno("allocation failed at exec_path");
 			return (1);
 		}
-		else if (cmd->str && cmd->str[0] && paths)
+		else if (cmd->str && cmd->str[0] && (cmd->str[0][0] != '.' && cmd->str[0][1] != '/') && paths)
 		{
 			while (paths[i])
 			{
@@ -120,7 +120,7 @@ int	is_path_or_pwd(t_cmd_table *cmd, t_env *env)
 	t_env	*tmp;
 	char	*path;
 	
-	if (cmd->str[0] && cmd->str[0][0] == '/' && !is_dir(cmd->str[0]))
+	if (cmd->str[0] && (cmd->str[0][0] == '/' || (cmd->str[0][0] == '.' && cmd->str[0][1] == '/')) && !is_dir(cmd->str[0]))
 	{
 		cmd->exec_path = ft_strdup(cmd->str[0]);
 		return (1);
