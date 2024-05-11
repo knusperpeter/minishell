@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 14:07:37 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/11 23:17:26 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,7 @@ void	free_cmd_lst(t_list **lst)
 	while (lst && *lst)
 	{
 		tmp = (*lst)->next;
-		if ((*lst)->content)
-			free((*lst)->content);
+		free((*lst)->content);
 		free(*lst);
 		*lst = tmp;
 	}
