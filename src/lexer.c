@@ -597,9 +597,87 @@ int	check_that(t_common *c, char *result, int k)
 		c->exitstatus = 2;
 		ft_cleanup_loop(c);
 		return (1);
-	}							// free stuff
+	}	
 	return (0);
 }
+
+int	check_one_more(t_common *c, char *result)
+{
+    int i;
+    int redir;
+	int status;
+
+	i = 0;
+	redir =0;
+	status = 0;
+    while (result[i] != '\0') 
+	{
+        if (result[i] == '>') 
+		{
+            redir = 1;
+            i++;
+            while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
+                i++;
+            if (result[i] == '\0' || (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))) 
+			{
+				status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
+                break ;
+            }
+            if (result[i] == '>')
+			{
+                i++;
+                while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
+                    i++;
+            	if (result[i] == '\0' || (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))) 
+				{
+					status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
+                    break ;
+                }
+            }
+        }
+        i++;
+    }
+	if (status)
+	{
+		c->exitstatus = 2;
+		ft_cleanup_loop(c);
+		return (1);
+	}	
+	return (0);
+}
+
+int	open_quotes(t_common *c, char *result)
+{
+    int i;
+	int s_quote;
+	int d_quote;
+
+	s_quote = 0;
+	d_quote = 0;
+	c->open_single_quotes = 0;
+	c->open_double_quotes = 0;
+	i = 0;
+	while (result[i])
+	{
+		handle_quote_state(c, result[i]);
+		if (result[i] == '\"' && c->open_single_quotes == 0)
+			d_quote++;
+		else if (result[i] == '\'' && c->open_double_quotes == 0)
+			s_quote++;
+		i++;
+	}
+	if (c->open_single_quotes == 1 || c->open_double_quotes == 1)
+	{
+		ft_putstr_fd("❌ minishell: syntax error dquote'\n", 2);
+		c->exitstatus = 2;
+		ft_cleanup_loop(c);
+		return (1);
+	}
+	return (0);
+}
+
+
+
 
 int check_result(t_common *c, char *result)
 {
@@ -612,6 +690,10 @@ int check_result(t_common *c, char *result)
 	k = 0;
 	i = 0;
 	len = ft_strlen(result);
+	if (open_quotes(c, &result[0]))
+		return (1);
+	if (check_one_more(c, &result[0]))
+		return (1);
 	while (len >= 1 && (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13)))
 		i++;
 	if (len >= 1 && (result[i] == '<' || result[i] == '>'))
@@ -768,6 +850,11 @@ int	count_pipes(t_common *c, char *input)
 
 	i = 0;
 	pipe = 0;
+	if (input[ft_strlen(input) - 1] == '|')
+	{
+		if (error_lexer(c, "|", 3))
+			return (1);
+	}
 	while (input[i] && ft_strchr(WHITESPACE, input[i]))
 		i++;
 	if (input[i] == '|' && !ignore_pipe(input, i))
@@ -785,7 +872,7 @@ int	count_pipes(t_common *c, char *input)
 		}
 		if (input[i] == '|' && !ignore_pipe(input, i))
 			error_check_pipes(c, &i, &pipe, input);
-		if (input[i])
+		if (input[i] != '\0')
 			i++;
 	}
 	return (pipe);

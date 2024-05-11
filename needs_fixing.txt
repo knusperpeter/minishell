@@ -1,26 +1,25 @@
 MICHI:
 
-echo hi | echo hi |
-		->Invalid read of size 1
+'''''''''''''''' echo hi
+					-> invalid read
+
+++++echo hi | echo hi |
+		++++->Invalid read of size 1	//michi: wird nun wie error behandelt, da in bash dquote
 
 Syntax:
 
 <<"asd" cat
 	-> heredoc will not have "asd" as limitertoken, but cat. why?
 
-/bin/cat <Makefile >
-	ms: syntax error and afterwards -> cat makefile..
-	bash: only syntax error
-
 ls | cat Makefile | cat << "asd" > out
 	works but not if it is like this:
 ls|cat Makefile|cat<<"asd">out
 		invalid read size 1
 
-!!!!QUOTES!!!!:
-echo "$USER'
-	ms:	caigner'
-	bash: dquote
+++++!!!!QUOTES!!!!:
+++++echo "$USER'
+	++++ms:	caigner'
+	++++bash: dquote
 
 signale-> im laufenden Porzess mit strg + \
 	-> core dumped
