@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 17:06:43 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 23:56:02 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,11 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 		heredoc_expansion(c, io, &buf);
 		write(*(fd), buf, ft_strlen(buf));
 		free(buf);
+		buf = NULL;
 	}
 	get_next_line_heredoc(0, &buf, 1);
-	free(buf);
+	if (buf)
+		free(buf);
 	close(*(fd));
 	*(fd) = open(io->infile, O_RDONLY);
 	if (*fd == -1)
@@ -95,7 +97,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	{
 		if (errno == EISDIR)
 			dprintf(2, "minishell: %s: Is a directory\n", io->infile);
-		else
+		else if (io->type != HEREDOC)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			perror(io->infile);

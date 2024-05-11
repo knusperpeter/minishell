@@ -29,6 +29,8 @@ bei ; evtl nen syntax error, wenn nicht in quotes?
 ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
 	->syntax error, so it should not look for later commands any more, at least bash does it like that
 
+<< set cat  	+ctrl c
+				leaks!!!!!!! nach ein paar mal wird geexited.... D:
 
 
 
