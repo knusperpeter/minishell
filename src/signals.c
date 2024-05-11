@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 21:22:44 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/11 15:41:44 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/11 17:31:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	cmd_bs(int sig)
 	if (sig == SIGQUIT)
 	{
 		g_signal = SIGQUIT;
-		write (1, "^\\Quit (core dumped)\n", 22);
+		write (1, "Quit (core dumped)\n", 19);
 		(void) sig;
 	}
 	else if (sig == SIGINT)
