@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/10 16:28:51 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 16:48:59 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void		heredoc_expansion(t_common *c, t_io_red *io, char **str);
 int			has_expansion(t_common *c, char *str);
 int			is_dir(char *file);
 int	open_redirections(t_common *c, t_cmd_table *cmd_node);
-
+void	handle_quote_state(t_common *common, char c);
 //lexer
 int    	error_lexer(t_common *c, char *s, int i);
 int			get_cmd_path(t_common *c, t_cmd_table *cmd);
@@ -163,6 +163,8 @@ int			check_token(char *token);
 void    	interactive(t_common *c);
 void    	interactive_here(t_common *c);
 void		non_interactive(t_common *c);
+void		cmd_bs(int sig);
+
 
 // builtins
 int			ft_pwd(t_common *c, char **args);

@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 21:22:44 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/07 20:09:58 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/11 15:41:44 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	cmd_bs(int sig)
 		write (1, "^\\Quit (core dumped)\n", 22);
 		(void) sig;
 	}
+	else if (sig == SIGINT)
+		g_signal = 0;
 }
 
 
