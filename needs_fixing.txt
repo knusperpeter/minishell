@@ -18,10 +18,23 @@ SIGNAL: cmd+c in interactive mode (with/without text in prompt)
 ++++echo hi | echo hi |
 		++++->Invalid read of size 1	//michi: wird nun wie error behandelt, da in bash dquote
 
+
+
+
 Syntax:
 
+
+!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
 <<"asd" cat
 	-> heredoc will not have "asd" as limitertoken, but cat. why?
+
+
+echo '  ' Hello World
+	gibt error, obwohl keiner sein sollte
+!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
 
 ls | cat Makefile | cat << "asd" > out
 	works but not if it is like this:
