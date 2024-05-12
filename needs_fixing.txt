@@ -1,8 +1,8 @@
 MICHI:
 
-SIGNAL: cmd+c in interactive mode (with/without text in prompt)
-					-> ms: exit code: 0
-					-> bash: 130
+SIGNAL: ++++cmd+c in interactive mode (with/without text in prompt)  michi: fixed. correct exit code now.
+					++++-> ms: exit code: 0
+					++++-> bash: 130
 		
 		cmd+d in heredoc
 					->ms: exit code 0
@@ -27,10 +27,6 @@ Syntax:
 !!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
 <<"asd" cat
 	-> heredoc will not have "asd" as limitertoken, but cat. why?
-
-
-echo '  ' Hello World
-	gibt error, obwohl keiner sein sollte
 
 env | grep 'x='
 	-> invalid read

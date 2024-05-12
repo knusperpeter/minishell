@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/15 13:09:24 by miheider          #+#    #+#             */
-/*   Updated: 2024/04/28 19:28:00y miheider         ###   ########.fr       */
+/*   Created: 2024/05/12 15:59:40 by miheider          #+#    #+#             */
+/*   Updated: 2024/05/12 17:22:41 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,48 +50,48 @@ int	check_char(char *character)
 	return (0);
 }
 
-int is_delim(char c, const char *delim) 
+int	is_delim(char c, const char *delim)
 {
-    while (*delim) 
+	while (*delim)
 	{
-        if (c == *delim)
-            return (1);
-        delim++;
-    }
-    return (0);
+		if (c == *delim)
+			return (1);
+		delim++;
+	}
+	return (0);
 }
 
 /*This functions handles the quotes section for the ft_strtok function*/
-char *quotes_in_strtok(char *str, const char *delim) 
+char	*quotes_in_strtok(char *str, const char *delim)
 {
-    int		in_quotes;
-    char	quote_type; 
+	int		in_quotes;
+	char	quote_type;
 
 	in_quotes = 0;
 	quote_type = '\0';
-    while (*str) 
+	while (*str)
 	{
-        if (*str == '\"' && quote_type != '\'') 
+		if (*str == '\"' && quote_type != '\'')
 		{
-            in_quotes = !in_quotes;
-            if (!in_quotes)
-                quote_type = '\0'; // Reset the quote type
-            else
-                quote_type = '\"'; // Inside double quotes
-        } 
-		else if (*str == '\'' && quote_type != '\"') 
+			in_quotes = !in_quotes;
+			if (!in_quotes)
+				quote_type = '\0';
+			else
+				quote_type = '\"';
+		}
+		else if (*str == '\'' && quote_type != '\"')
 		{
-            in_quotes = !in_quotes;
-            if (!in_quotes)
-                quote_type = '\0'; // Reset the quote type
-            else
-                quote_type = '\''; // Inside single quotes
-        }
-        if (!in_quotes && is_delim(*str, delim))
-            break;
-        str++;
-    }
-    return (str);
+			in_quotes = !in_quotes;
+			if (!in_quotes)
+				quote_type = '\0';
+			else
+				quote_type = '\'';
+		}
+		if (!in_quotes && is_delim(*str, delim))
+			break ;
+		str++;
+	}
+	return (str);
 }
 
 /*tokenizing the input; rebuilt the original function strtok and 
@@ -265,10 +265,10 @@ int	no_space_array(int *i, int *j, char *input, char *new_string)
 	{
 		if ((input[*i] && check_char(&input[*i]) == 0
 				&& check_char(&input[*(i) - 1]) == 1)
-				|| (check_char(&input[*i]) == 1
+			|| (check_char(&input[*i]) == 1
 				&& check_char(&input[*(i) - 1]) == 0
 				&& !ft_strchr(WHITESPACE, input[(*i) - 1]))
-				|| (check_char(&input[*i]) == 1
+			|| (check_char(&input[*i]) == 1
 				&& check_char(&input[*(i) - 1]) == 1
 				&& input[*i] != input[*(i) - 1]))
 		{
@@ -335,7 +335,8 @@ beeded to allocate memory for the norminized string.*/
 void	prep_input_three(int i, int *cc, char *input)
 {
 	if (i > 0 && *cc != 0 && input[i] && !ft_strchr(WHITESPACE, input[i])
-		&& ft_strchr(WHITESPACE, input[i - 1]) && (input[i] != '\'' || input[i] != '\"'))
+		&& ft_strchr(WHITESPACE, input[i - 1])
+		&& (input[i] != '\'' || input[i] != '\"'))
 		(*cc)++;
 	if (i > 0 && *cc != 0 && input[i] && ft_strchr(WHITESPACE, input[i])
 		&& (input[i + 1] == '\'' || input[i + 1] == '\"'))
@@ -355,8 +356,8 @@ int	prep_input_two(int *i, int *cc, char *input)
 		(*cc)++;
 	while (input[*i] != '\0' && input[*i] != '\'' && input[*i] != '\"')
 	{
-		if (input[*(i)] == '\0') // Check for null terminator
-			break;
+		if (input[*(i)] == '\0')
+			break ;
 		count_up(i, cc);
 	}
 	if (input[*i] != '\0')
@@ -365,17 +366,18 @@ int	prep_input_two(int *i, int *cc, char *input)
 			count_up(i, cc);
 		else if (input[*(i) + 1] != '\0')
 			return (-9);
-	}	
+	}
 	return (9);
 }
 
 void	prep_input_one(int i, int *cc, char *input)
 {
 	if (i > 0 && *cc != 0 && check_char(&input[i]) == 1
-			&& !ft_strchr(WHITESPACE, input[i - 1]) && input[i] != input[i - 1]
-			&& (input[i - 1] != '\'' || input[i - 1] != '\"'))
+		&& !ft_strchr(WHITESPACE, input[i - 1]) && input[i] != input[i - 1]
+		&& (input[i - 1] != '\'' || input[i - 1] != '\"'))
 		(*cc)++;
-	if (input[i] && check_char(&input[i]) == 1 && !ft_strchr(WHITESPACE, input[i + 1])
+	if (input[i] && check_char(&input[i]) == 1
+		&& !ft_strchr(WHITESPACE, input[i + 1])
 		&& check_char(&input[i + 1]) != 1 && input[i + 1] != '\0'
 		&& (input[i] != '\'' || input[i] != '\"'))
 		(*cc)++;
@@ -403,7 +405,7 @@ char	**prep_input(char *input)
 }
 
 /*prints out the correct error message when only > or < as input*/
-int check_this(t_common *c, char *result, int j)
+int	check_this(t_common *c, char *result, int j)
 {
 	int	status;
 
@@ -411,39 +413,41 @@ int check_this(t_common *c, char *result, int j)
 	if (*result == '<' || *result == '>')
 	{
 		if (j == 6 && *result == '<')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `<<<'\n", 2);
+			status = ft_putstr_fd(MESSAGE1, 2);
 		else if (j == 6 && *result == '>')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `>>>'\n", 2);
+			status = ft_putstr_fd(MESSAGE2, 2);
 		else if (j == 5 && *result == '<')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `<<'\n", 2);
+			status = ft_putstr_fd(MESSAGE3, 2);
 		else if (j == 5 && *result == '>')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `>>'\n", 2);
+			status = ft_putstr_fd(MESSAGE4, 2);
 		else if (j == 4 && *result == '<')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `<'\n", 2);
+			status = ft_putstr_fd(MESSAGE5, 2);
 		else if (j == 4 && *result == '>')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `>'\n", 2);
-		else if (j == 3 || (j == 2 && result [1] == '<' && result[2] == '\0') || (j == 2 && result [1] == '>' && result[2] == '\0') || result[1] == '\0')
-			status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
+			status = ft_putstr_fd(MESSAGE6, 2);
+		else if (j == 3 || (j == 2 && result [1] == '<' && result[2] == '\0')
+			|| (j == 2 && result [1] == '>' && result[2] == '\0')
+			|| result[1] == '\0')
+			status = ft_putstr_fd(MESSAGE7, 2);
 		if (status)
 		{
 			c->exitstatus = 2;
 			ft_cleanup_loop(c);
 			return (1);
 		}
-	}						// free stuff
+	}
 	return (0);
 }
 
 /*this function checks for dots as only input*/
 int	check_dot(t_common *c, char *result, int k, int j)
 {
-	int i;
+	int	i;
 
 	if (result[k] == '.')
 	{
-		if(result[k] && result[k] == '.' && result [k + 1] == '\0')
+		if (result[k] && result[k] == '.' && result [k + 1] == '\0')
 		{
-			ft_putstr_fd("minishell: .: filename argument required\n.: usage: . filename [arguments]\n", 2);
+			ft_putstr_fd(MESSAGE8, 2);
 			c->exitstatus = 2;
 			ft_cleanup_loop(c);
 			return (1);
@@ -462,14 +466,14 @@ int	check_dot(t_common *c, char *result, int k, int j)
 			return (1);
 		}
 	}
-	return (0);	
+	return (0);
 }
 
 /*this function checks for empty quote input*/
 int	check_quotes(t_common *c, char *result, int k)
 {
-	int i;
-	
+	int	i;
+
 	if (result[k] == '"')
 		k++;
 	while (result[k] != '"')
@@ -483,7 +487,7 @@ int	check_quotes(t_common *c, char *result, int k)
 	if (result[k + 1] == '"')
 		k++;
 	i = 0;
-	while (i < k + 1 /*&& (result[i] != ' ' || (result[k] >= 9 && result[k] <= 13))*/)
+	while (i < k + 1)
 	{
 		write (2, &result[i], 1);
 		i++;
@@ -491,29 +495,31 @@ int	check_quotes(t_common *c, char *result, int k)
 	c->exitstatus = 127;
 	ft_putstr_fd (" :command not found\n", 2);
 	ft_cleanup_loop(c);
-	return (1);	
+	return (1);
 }
 
 int	check_again(t_common *c, char *result, int k, char fir)
 {
-	int status;
-	int len;
+	int	status;
+	int	len;
 
 	status = 0;
 	len = ft_strlen(result);
-	if ((len >= 2 && fir != '<' && fir != '>') || (len >= 2 && result[1] != ' '))
+	if ((len >= 2 && fir != '<' && fir != '>')
+		|| (len >= 2 && result[1] != ' '))
 		return (0);
-	if (len >= 2 && (result[k + 1] == ' ' || (result[k + 1] >= 9 || result[k + 1] <= 13)))
+	if (len >= 2 && (result[k + 1] == ' '
+			|| (result[k + 1] >= 9 || result[k + 1] <= 13)))
 	{
 		k++;
-		while(result[k] == ' ' || (result[k] >= 9 && result[k] <= 13))
+		while (result[k] == ' ' || (result[k] >= 9 && result[k] <= 13))
 			k++;
 	}
 	else
 		return (0);
 	if (result[k] == '<' || result[k] == '>')
 	{
-		status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `", 2);
+		status = ft_putstr_fd(MESSAGE9, 2);
 		if (result[k] == '>')
 			write(2, &result[k], 1);
 		else
@@ -528,7 +534,7 @@ int	check_again(t_common *c, char *result, int k, char fir)
 		write(2, "'", 1);
 	}
 	else
-		return (0);	
+		return (0);
 	if (status)
 	{
 		c->exitstatus = 2;
@@ -540,15 +546,17 @@ int	check_again(t_common *c, char *result, int k, char fir)
 
 int	check_more(t_common *c, char *result, int k, char fir)
 {
-	int len;
+	int	len;
 	int	status;
 
 	len = ft_strlen(result);
-	if (!(len >= 4 && result[k] == result[k + 1] && result[k] == fir && result[k + 2] == ' ' && (result[k + 3] == '<' ||  result[k + 3] == '>')))
+	if (!(len >= 4 && result[k] == result[k + 1] && result[k] == fir
+			&& result[k + 2] == ' ' && (result[k + 3] == '<'
+				|| result[k + 3] == '>')))
 		return (0);
 	if (result[k + 3] == '<' || result[k + 3] == '>')
 	{
-		status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `", 2);
+		status = ft_putstr_fd(MESSAGE9, 2);
 		if (result[k] == '>')
 			write(2, &result[k + 3], 1);
 		else
@@ -563,13 +571,13 @@ int	check_more(t_common *c, char *result, int k, char fir)
 		write(2, "'", 1);
 	}
 	else
-		return (0);	
+		return (0);
 	if (status)
 	{
 		c->exitstatus = 2;
 		ft_cleanup_loop(c);
 		return (1);
-	}						// free stuff
+	}
 	return (0);
 }
 
@@ -581,12 +589,13 @@ int	check_that(t_common *c, char *result, int k)
 	if (result[k] == '<' && result[k + 1] == '>')
 	{
 		k += 2;
-		while (result[k] == ' ' || (result[k] >= 9 && result[k] <= 13) || result[k] == '\0')
+		while (result[k] == ' ' || (result[k] >= 9
+				&& result[k] <= 13) || result[k] == '\0')
 		{
 			if (result[k] == '\0')
 			{
-				status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
-				break;
+				status = ft_putstr_fd(MESSAGE7, 2);
+				break ;
 			}
 			else
 				k++;
@@ -597,63 +606,70 @@ int	check_that(t_common *c, char *result, int k)
 		c->exitstatus = 2;
 		ft_cleanup_loop(c);
 		return (1);
-	}	
+	}
 	return (0);
 }
 
 int	check_one_more(t_common *c, char *result)
 {
-    int i;
-	int status;
+	int	i;
+	int	status;
 
 	i = 0;
 	status = 0;
-    while (result[i] != '\0') 
+	while (result[i] != '\0')
 	{
-        if (result[i] == '>') 
+		if (result[i] == '>')
 		{
-            i++;
-            while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
-                i++;
-            if (result[i] == '\0' || (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))) 
+			i++;
+			while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
+				i++;
+			if (result[i] == '\0' || (result[i] == ' '
+					|| (result[i] >= 9 && result[i] <= 13)))
 			{
-				status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
-                break ;
-            }
-            if (result[i] == '>')
+				status = ft_putstr_fd(MESSAGE7, 2);
+				break ;
+			}
+			if (result[i] == '>')
 			{
-                i++;
-                while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
-                    i++;
-            	if (result[i] == '\0' || (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))) 
+				i++;
+				while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
+					i++;
+				if (result[i] == '\0' || (result[i] == ' '
+						|| (result[i] >= 9 && result[i] <= 13)))
 				{
-					status = ft_putstr_fd("❌ minishell: syntax error near unexpected token `newline'\n", 2);
-                    break ;
-                }
-            }
-        }
-        i++;
-    }
+					status = ft_putstr_fd(MESSAGE7, 2);
+					break ;
+				}
+			}
+		}
+		i++;
+	}
 	if (status)
 	{
 		c->exitstatus = 2;
 		ft_cleanup_loop(c);
 		return (1);
-	}	
+	}
 	return (0);
+}
+
+void	init_for_open_quotes(int *s_quote, int *d_quote, int *i)
+{
+	*s_quote = 0;
+	*i = 0;
+	*d_quote = 0;
 }
 
 int	open_quotes(t_common *c, char *result)
 {
-    int i;
-	int s_quote;
-	int d_quote;
+	int	i;
+	int	s_quote;
+	int	d_quote;
 
-	s_quote = 0;
-	d_quote = 0;
+	init_for_open_quotes(&s_quote, &d_quote, &i);
 	c->open_single_quotes = 0;
 	c->open_double_quotes = 0;
-	i = 0;
 	while (result[i])
 	{
 		handle_quote_state(c, result[i]);
@@ -675,10 +691,10 @@ int	open_quotes(t_common *c, char *result)
 
 int	check_sq(t_common *c, char *result, int k)
 {
-	int sq;
+	int	sq;
 
 	sq = 0;
-	while (result[k] && (result[k] == ' ' || (result[k] >= 9 && result[k] >= 13)))
+	while (result[k])
 	{
 		if (result[k] == '\'')
 		{
@@ -695,18 +711,20 @@ int	check_sq(t_common *c, char *result, int k)
 				return (1);
 			}
 		}
+		else
+			return (0);
 		k++;
 	}
 	return (0);
 }
 
-int check_result(t_common *c, char *result)
+int	check_result(t_common *c, char *result)
 {
 	int		i;
-	int 	j;
-	int 	k;
+	int		j;
+	int		k;
 	char	fir;
-	int 	len;
+	int		len;
 
 	k = 0;
 	i = 0;
@@ -717,13 +735,15 @@ int check_result(t_common *c, char *result)
 		return (1);
 	if (check_one_more(c, &result[0]))
 		return (1);
-	while (len >= 1 && (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13)))
+	while (len >= 1 && (result[i] == ' ' || (result[i] >= 9
+				&& result[i] <= 13)))
 		i++;
 	if (len >= 1 && (result[i] == '<' || result[i] == '>'))
 		fir = result[i];
 	else if (result[i] == '.')
 		fir = result[i];
-	else if (result[i] == '.' && (result[i + 1] == '\0' || (len >= 2 && result[i + 1] == '.')))
+	else if (result[i] == '.' && (result[i + 1] == '\0'
+			|| (len >= 2 && result[i + 1] == '.')))
 		fir = result[i];
 	else if (result[i] == '\"')
 		fir = result[i];
@@ -736,13 +756,13 @@ int check_result(t_common *c, char *result)
 		if (result[i] == fir)
 			j++;
 		else
-			break;
-		i++;	
+			break ;
+		i++;
 	}
 	if (check_that(c, &result[k], k))
 		return (1);
 	if (j > 0)
-	{	
+	{
 		if (check_this(c, &result[k], j))
 			return (1);
 		if (check_dot(c, &result[0], k, j))
@@ -757,7 +777,7 @@ int check_result(t_common *c, char *result)
 	return (0);
 }
 
-int	check_empty_line (t_common *c, char *input, int pipe)
+int	check_empty_line(t_common *c, char *input, int pipe)
 {
 	int	i;
 
@@ -794,7 +814,7 @@ char	**tokenize_one(t_common *c, char *input, int pipe)
 	{
 		result[index] = ft_strdup(token);
 		if (check_empty_line(c, input, pipe))
-			return (c->exitstatus = 0, free(result[index]), free(result), NULL); //not allowed								// free und give promt back
+			return (c->exitstatus = 0, free(result[index]), free(result), NULL);
 		if (check_result(c, result[index]))
 			return (free(result[index]), free(result), NULL);
 		token = ft_strtok(NULL, "|");
@@ -810,13 +830,14 @@ int	error_check_pipes(t_common *c, int *i, int *pipe, char *input)
 {
 	(*i)++;
 	if (input[*i] == '\0')
-	{	
+	{
 		if (error_lexer(c, "|", 2))
 			return (1);
 	}
 	while (input[*i] && ft_strchr(WHITESPACE, input[*i]))
 	{
-		if (input[*i] && ft_strchr(WHITESPACE, input[*i]) && input[*(i)] == '\0')
+		if (input[*i] && ft_strchr(WHITESPACE, input[*i])
+			&& input[*(i)] == '\0')
 		{
 			if (error_lexer(c, "|", 2))
 				return (1);
@@ -824,7 +845,7 @@ int	error_check_pipes(t_common *c, int *i, int *pipe, char *input)
 		(*i)++;
 	}
 	if (input[*i] == '|')
-	{	
+	{
 		if (error_lexer(c, "|", 2))
 			return (1);
 	}
@@ -835,9 +856,11 @@ int	error_check_pipes(t_common *c, int *i, int *pipe, char *input)
 
 int	is_in_quotes(char *str, int i)
 {
-	int	inside_quotes = 0;
-	char	current_quote = '\0';
+	int		inside_quotes;
+	char	current_quote;
 
+	inside_quotes = 0;
+	current_quote = '\0';
 	while (i >= 0)
 	{
 		if (str[i] == '\'' || str[i] == '\"')
@@ -855,7 +878,7 @@ int	is_in_quotes(char *str, int i)
 		}
 		i--;
 	}
-	return inside_quotes;
+	return (inside_quotes);
 }
 
 int	ignore_pipe(char *str, int i)
@@ -868,6 +891,23 @@ int	ignore_pipe(char *str, int i)
 }
 
 /*count "|"-sections within the input. used for allocating memory*/
+void	count_pipes_cont(t_common *c, char *input, int *i, int *pipe)
+{
+	while (input[*i])
+	{
+		if (input[*i] == '\"' || input[*i] == '\'')
+		{
+			(*i)++;
+			while (input[*i] != '\"' && input[*i] == '\'')
+				(*i)++;
+		}
+		if (input[*i] == '|' && !ignore_pipe(input, *i))
+			error_check_pipes(c, i, pipe, input);
+		if (input[*i] != '\0')
+			(*i)++;
+	}
+}
+
 int	count_pipes(t_common *c, char *input)
 {
 	int	i;
@@ -887,18 +927,6 @@ int	count_pipes(t_common *c, char *input)
 		if (error_lexer(c, "|", 3))
 			return (1);
 	}
-	while (input[i])
-	{
-		if (input[i] == '\"' || input[i] == '\'')
-		{
-			i++;
-			while (input[i] != '\"' && input[i] == '\'')
-				i++;
-		}
-		if (input[i] == '|' && !ignore_pipe(input, i))
-			error_check_pipes(c, &i, &pipe, input);
-		if (input[i] != '\0')
-			i++;
-	}
+	count_pipes_cont(c, input, &i, &pipe);
 	return (pipe);
 }
