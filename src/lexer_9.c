@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 21:58:30 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/12 21:59:11 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/12 22:06:30 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	initial_checks(t_common *c, char *result)
 	char	fir;
 	int		len;
 
-	init_initial_chaecks(&i, &k, &len, result);
+	init_initial_checks(&i, &k, &len, result);
 	if (check_sq(c, &result[k], k) || open_quotes(c, &result[0])
 		|| check_one_more(c, &result[0]))
 		return (1);

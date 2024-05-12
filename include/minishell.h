@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 22:02:43 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/12 22:05:45 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,7 @@ void		count_pipes_cont(t_common *c, char *input, int *i, int *pipe);
 int			count_pipes(t_common *c, char *input);
 
 int			error_lexer(t_common *c, char *s, int i);
+int			tokenize(t_common *c);
 
 
 //parsing
