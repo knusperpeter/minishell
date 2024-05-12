@@ -1,64 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_cmd_path.c                                     :+:      :+:    :+:   */
+/*   get_cmd_path_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:24:07 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 11:29:06 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-/**
- * Function: ft_get_paths
- * Description: Retrieves the PATH environment variable and splits it into an
- * array of paths.
- * Parameter: env - The linked list of environment variables.
- * Returns: An array of paths.
- */
-char	**ft_get_paths(t_env *env)
-{
-	t_env	*tmp;
-	char	**paths;
-
-	tmp = env;
-	while (tmp && ft_strncmp(tmp->variable, "PATH", 5))
-		tmp = tmp->next;
-	if (!tmp)
-		return (NULL);
-	paths = ft_split(tmp->value, ':');
-	if (!paths)
-		return (NULL);
-	return (paths);
-}
-
-/**
- * Function: join_path
- * Description: Joins a command and a path into a full path.
- * Parameters: 
- * - cmd: The command to join.
- * - path: The path to join.
- * Returns: The full path.
- */
-char	*join_path(char *cmd, char *path)
-{
-	char	*prepath;
-	char	*fullpath;
-
-	if (cmd[0] == '/')
-		return (NULL);
-	prepath = ft_strjoin(path, "/");
-	if (!prepath)
-		return (NULL);
-	fullpath = ft_strjoin(prepath, cmd);
-	free(prepath);
-	if (!fullpath)
-		return (NULL);
-	return (fullpath);
-}
 
 /**
  * Function: is_dir
@@ -78,14 +30,13 @@ int	is_dir(char *file)
 	return (0);
 }
 
-/**
- * Function: add_path
- * Description: Adds the path to the command in the command table.
- * Parameters: 
- * - cmd: The command table.
- * - paths: The array of paths.
- * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
- */
+void	access_denied(t_cmd_table *cmd)
+{
+	cmd->exec_path = ft_strdup(cmd->str[0]);
+	if (!cmd->exec_path)
+		ft_printerrno("allocation failed at exec_path");
+}
+
 int	add_path(t_cmd_table *cmd, char **paths)
 {
 	char	*path;
@@ -95,13 +46,9 @@ int	add_path(t_cmd_table *cmd, char **paths)
 	if (cmd && cmd->str && cmd->str[0])
 	{
 		if (!access(cmd->str[0], F_OK | X_OK | R_OK) && !is_dir(cmd->str[0]))
-		{
-			cmd->exec_path = ft_strdup(cmd->str[0]);
-			if (!cmd->exec_path)
-				ft_printerrno("allocation failed at exec_path");
-			return (1);
-		}
-		else if (cmd->str && cmd->str[0] && (cmd->str[0][0] != '.' && cmd->str[0][1] != '/') && paths)
+			return (access_denied(cmd), 1);
+		else if (cmd->str && cmd->str[0] && (cmd->str[0][0] != '.'
+			&& cmd->str[0][1] != '/') && paths)
 		{
 			while (paths[i])
 			{
@@ -136,14 +83,6 @@ int	is_path_or_pwd(t_cmd_table *cmd, t_env *env)
 	return (free(path), 0);
 }
 
-/**
- * Function: get_cmd_path
- * Description: Gets the full path of the command in the command table.
- * Parameters: 
- * - c: The common structure containing the shell data.
- * - cmd: The command table.
- * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
- */
 int	get_cmd_path(t_common *c, t_cmd_table *cmd)
 {
 	char	**paths;
