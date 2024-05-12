@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/12 01:23:01 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:31:17 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,9 +257,9 @@ int	ft_count_cmds(t_list_d *cmd_struct)
 int	ft_check_builtin(t_cmd_table *cmd)
 {
 	if (cmd->str[0])
-	{	
+	{
 		if ((!ft_strncmp("export", cmd->str[0], ft_strlen(cmd->str[0]))
-			&& cmd->str[1])
+				&& cmd->str[1])
 			|| !ft_strncmp("exit", cmd->str[0], ft_strlen(cmd->str[0]))
 			|| !ft_strncmp("unset", cmd->str[0], ft_strlen(cmd->str[0]))
 			|| !ft_strncmp("cd", cmd->str[0], ft_strlen(cmd->str[0])))

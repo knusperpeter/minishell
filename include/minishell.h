@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:21:54 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:27:14 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,6 @@ void		interactive(t_common *c);
 void		interactive_here(t_common *c);
 void		non_interactive(t_common *c);
 void		cmd_bs(int sig);
-
 
 // builtins
 int			ft_pwd(t_common *c, char **args);

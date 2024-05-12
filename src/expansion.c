@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:23:12 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:30:03 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ char	*get_expansion_value(t_common *c, char *str, int i, int *varsize)
 		return (*varsize = 1, ft_strdup("1589302"));
 	else if (str[++i])
 	{
-		env_node = get_env_node(c, str, i);	
+		env_node = get_env_node(c, str, i);
 		if (!env_node)
 			return (*varsize = ft_varsize(str, i), ft_strdup(""));
 		*varsize = ft_strlen(env_node->variable);
@@ -217,7 +217,7 @@ int	split_command(t_list *lst)
 int	check_for_empty(t_cmd_table **table, t_list **curr, t_list *before)
 {
 	char	*cmd;
-	
+
 	cmd = (*curr)->content;
 	if (!cmd[0] && before)
 	{
@@ -360,7 +360,7 @@ char	*ft_rm_quotes_str(char *str)
 	while (str[i])
 	{
 		if ((str[i] == '\'' && !double_quotes) || (str[i] == '\"'
-			&& !single_quotes))
+				&& !single_quotes))
 		{
 			if (str[i] == '\'' && !single_quotes)
 				single_quotes = 1;

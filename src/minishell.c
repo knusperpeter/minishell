@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 00:39:50 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:28:06 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * Description: Displays a prompt and reads a line of input from the user.
  * Returns: The line of input from the user.
  */
-int g_signal = 0;
+int	g_signal = 0;
 
 void	prompt(t_common *c)
 {
