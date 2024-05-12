@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:28:06 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 17:45:38 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,10 @@ int	ft_loop(t_common *c)
 			break ;
 		if (c->raw_prompt[0])
 		{
-			ft_parsing(c);
-			ft_execute(c);
+			if (ft_parsing(c) != EXIT_FAILURE)
+				ft_execute(c);
+			else
+				c->exitstatus = 130;
 			ft_cleanup_loop(c);
 		}
 	}

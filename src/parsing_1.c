@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/12 17:23:29 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 17:46:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ int	ft_parsing(t_common *c)
 	while (cmd_str)
 	{
 		cmd_table = cmd_str->content;
-		open_io(c, cmd_table->io_red, cmd_table);
+		if (open_io(c, cmd_table->io_red, cmd_table) == 5)
+			return (EXIT_FAILURE);
 		cmd_str = cmd_str->next;
 	}
 	cmd_str = c->cmd_struct;

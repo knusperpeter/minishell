@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_io_1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 16:24:18 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 17:49:18 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 		here_doc(c, io, &fd);
 		non_interactive(c);
 		if (c->exitstatus == 130)
-		{
-			ft_cleanup_loop(c);
-			exit (c->exitstatus);
-		}
+			return (close(fd), 5);
 	}
 	else
 		fd = open(io->infile, O_RDONLY);
@@ -121,6 +118,8 @@ int	open_io(t_common *c, t_list *io_lst, t_cmd_table *cmd_node)
 		io = tmp->content;
 		ft_close_old_fd(cmd_node, tmp->content);
 		status = open_file(c, io, cmd_node);
+		if (status == 5)
+			return (status);
 		if (status == 0)
 			unlink_heredoc(io_lst->content, cmd_node);
 		if (status == -1)
