@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 10:47:20 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 17:01:46 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,17 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+# define MESSAGE1 "❌ minishell: syntax error near unexpected token `<<<'\n"
+# define MESSAGE2 "❌ minishell: syntax error near unexpected token `>>>'\n"
+# define MESSAGE3 "❌ minishell: syntax error near unexpected token `<<'\n"
+# define MESSAGE4 "❌ minishell: syntax error near unexpected token `>>'\n"
+# define MESSAGE5 "❌ minishell: syntax error near unexpected token `<'\n"
+# define MESSAGE6 "❌ minishell: syntax error near unexpected token `>'\n"
+# define MESSAGE7 "❌ minishell: syntax error near unexpected token `newline'\n"
+# define MESSAGE8 "minishell: .: filename argument required\n.: usage: . filename [arguments]\n"
+# define MESSAGE9 "❌ minishell: syntax error near unexpected token `"
+# define MESSAGE10 "❌ minishell: syntax error near unexpected token `|'\n"
+# define MESSAGE11 "❌ minishell: syntax error near unexpected token `||'\n"
 
 extern int	g_signal;
 
