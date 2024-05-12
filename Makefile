@@ -6,7 +6,7 @@
 #    By: chris <chris@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/05/12 10:42:31 by chris            ###   ########.fr        #
+#    Updated: 2024/05/12 11:34:54 by chris            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,14 +33,18 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/init_env.c \
 			src/lexer.c \
 			src/parsing.c \
-			src/open_io.c \
-			src/get_cmd_path.c \
+			src/open_io_1.c \
+			src/open_io_2.c \
+			src/get_cmd_path_1.c \
+			src/get_cmd_path_2.c \
 			src/exec.c \
 			src/utils_1.c \
+			src/utils_2.c \
 			src/free.c \
 			src/lexer_error.c \
 			src/signals.c \
 			src/expansion.c \
+			src/remove_quotes.c \
 			src/expansion_heredoc.c
 
 OBJECTS = $(SOURCES:.c=.o)

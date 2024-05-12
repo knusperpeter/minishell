@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 10:47:20 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 11:41:05 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,45 +117,61 @@ typedef struct common_data
 	int					old_pipe;
 }	t_common;
 
+//main
+int			ft_loop(t_common *c);
+//init_env
 int			create_list_element(void **element, size_t size);
 int			ft_init_env(t_env *node, char *envp, t_env *prev);
 int			dup_env(t_common *c, char **envp);
+//free
 void		free_2d(char **str);
 void		free_env_nodes(t_env *start);
 void		free_cmd_table(void *content);
 void		ft_cleanup_loop(t_common *c);
 void		free_all(t_common *c, int cleanup_loop);
 void		ft_clean_exit(t_common *c, char *msg, int cleanup_loop);
-int			ft_loop(t_common *c);
-int			ft_parsing(t_common *c);
+//open_io
 int			open_io(t_common *c, t_list *io, t_cmd_table *cmd_node);
+void		open_failed(t_io_red *io, char *file);
+void		unlink_heredoc(t_io_red *io, t_cmd_table *cmd);
+void		ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io);
+void		here_doc(t_common *c, t_io_red *io, int *fd);
+int			open_redirections(t_common *c, t_cmd_table *cmd_node);
+//exec
 int			ft_execute(t_common *c);
-void		ft_printerrno(char *s);
-char		**tokenize_one(t_common *c, char *input, int pipe);
-void		add_to_list(char **token, t_list *lst);
+//utils
 t_list_d	*ft_lstnew_d(void *content);
 t_list_d	*ft_lstlast_d(t_list_d *lst);
 void		ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void		ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void		ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
-void		ft_rm_quotes(t_list_d *cmds);
+void		ft_printerrno(char *s);
+//tokenize
+//expansion & quotes
+void		ft_rm_quotes(t_common *c, t_list_d *cmds);
 void		ft_expansion(t_common *c, t_list_d *cmds);
 char		*get_expansion_value(t_common *c, char *str, int i, int *varsize);
 char		*get_expanded_str(char *str, char *envvalue, int i, int varsize);
 void		heredoc_expansion(t_common *c, t_io_red *io, char **str);
 int			has_expansion(t_common *c, char *str);
-int			is_dir(char *file);
-int			open_redirections(t_common *c, t_cmd_table *cmd_node);
 void		handle_quote_state(t_common *common, char c);
-//lexer
-int			error_lexer(t_common *c, char *s, int i);
+//get_cmd_path
+int			is_dir(char *file);
+char		**ft_get_paths(t_env *env);
+char		*join_path(char *cmd, char *path);
 int			get_cmd_path(t_common *c, t_cmd_table *cmd);
+//lexer
+char		**tokenize_one(t_common *c, char *input, int pipe);
+void		add_to_list(char **token, t_list *lst);
+int			error_lexer(t_common *c, char *s, int i);
 int			count_pipes(t_common *c, char *input);
 char		**set_up_array(int cc, char *input);
 char		**prep_input(char *input);
 char		*ft_strtok(char *s1, const char *delim);
 int			check_char(char *character);
 int			check_token(char *token);
+//parsing
+int			ft_parsing(t_common *c);
 
 //signals
 void		interactive(t_common *c);

@@ -1,65 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   open_io.c                                          :+:      :+:    :+:   */
+/*   open_io_1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:25:21 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 16:24:18 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-/**
- * Function: ft_printerrno
- * Description: Prints the error message associated with the current errno value.
- * Parameter: s - An optional string to print before the error message.
- */
-void	ft_printerrno(char *s)
-{
-	ft_putstr_fd("minishell: ", 2);
-	if (s)
-		ft_putstr_fd(s, 2);
-	ft_putchar_fd('\n', 2);
-}
-
-/**
- * Function: here_doc
- * Description: Implements the here document (heredoc) feature of the shell.
- * Parameters: 
- * - limiter: The delimiter string for the heredoc.
- * - cmd_table: The command table structure.
- */
-void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
-{
-	char		*buf;
-
-	(void) cmd_table;
-	while (g_signal == 0)
-	{
-		write(1, "> ", 2);
-		if (get_next_line_heredoc(0, &buf, 0) < 0)
-			ft_cleanup_loop(c);
-		if (buf == NULL || *buf == '\0')
-			break ;
-		if (ft_strlen(io->heredoc_limiter) == ft_strlen(buf) - 1 && \
-				!ft_strncmp(io->heredoc_limiter, buf, (ft_strlen(buf) - 1)))
-			break ;
-		heredoc_expansion(c, io, &buf);
-		write(*(fd), buf, ft_strlen(buf));
-		free(buf);
-		buf = NULL;
-	}
-	get_next_line_heredoc(0, &buf, 1);
-	if (buf)
-		free(buf);
-	close(*(fd));
-	*(fd) = open(io->infile, O_RDONLY);
-	if (*fd == -1)
-		unlink(io->infile);
-}
 
 /**
  * Function: open_infile
@@ -78,7 +29,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 		interactive_here(c);
 		fd = open(cmd_node->heredoc_name, O_CREAT | O_RDWR
 				| O_EXCL, S_IRUSR | S_IWUSR);
-		here_doc(c, io, cmd_node, &fd);
+		here_doc(c, io, &fd);
 		non_interactive(c);
 		if (c->exitstatus == 130)
 		{
@@ -89,16 +40,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	else
 		fd = open(io->infile, O_RDONLY);
 	if (fd == -1)
-	{
-		if (errno == EISDIR)
-			dprintf(2, "minishell: %s: Is a directory\n", io->infile);
-		else if (io->type != HEREDOC)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			perror(io->infile);
-		}
-		return (0);
-	}
+		return (open_failed(io, io->infile), 0);
 	if (fd != 0)
 		close(fd);
 	return (1);
@@ -123,7 +65,7 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 			ft_putstr_fd("minishell: ", 2);
 			perror(io->outfile);
 		}
-		return (fd);
+		return (open_failed(io, io->outfile), fd);
 	}
 	if (fd != 1 && cmd_node->id != 0)
 		close(fd);
@@ -156,36 +98,6 @@ int	open_file(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 		return (open_outfile(io, cmd_node));
 	}
 	return (1);
-}
-
-/**
- * Function: unlink_heredoc
- * Description: Deletes the temporary file used for a heredoc.
- * Parameters: 
- * - io: The IO redirection structure.
- * - cmd: The command table structure.
- */
-void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)
-{
-	if (io->type == HEREDOC)
-		unlink(cmd->heredoc_name);
-}
-
-/**
- * Function: ft_close_old_fd
- * Description: Closes the old file descriptors before opening new ones.
- * Parameters: 
- * - cmd_node: The command table node.
- * - io: The IO redirection structure.
- */
-void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
-{
-	if ((io->type == HEREDOC || io->type == REDIR_IN)
-		&& cmd_node->read_fd != 0)
-		close(cmd_node->read_fd);
-	else if ((io->type == REDIR_OUT || io->type == APPEND)
-		&& cmd_node->write_fd != 1)
-		close(cmd_node->write_fd);
 }
 
 /**

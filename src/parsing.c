@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/11 17:06:54 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 11:40:44 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,7 +339,7 @@ int	ft_parsing(t_common *c)
 	cmd_str = c->cmd_struct;
 	ft_expansion(c, cmd_str);
 	cmd_str = c->cmd_struct;
-	ft_rm_quotes(c->cmd_struct);
+	ft_rm_quotes(c, c->cmd_struct);
 	//io_open should be here instead of in t_lst_to_struct!!!!!
 	cmd_str = c->cmd_struct;
 	while (cmd_str)
