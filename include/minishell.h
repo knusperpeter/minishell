@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 00:05:07 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:10:40 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,17 +184,70 @@ int			is_dir(char *file);
 char		**ft_get_paths(t_common *c, t_env *env);
 char		*join_path(t_common *c, char *cmd, char *path);
 int			get_cmd_path(t_common *c, t_cmd_table *cmd);
-//lexer
-int			tokenize(t_common *c);
-char		**tokenize_one(t_common *c, char *input, int pipe);
-void		add_to_list(char **token, t_list *lst);
-int			error_lexer(t_common *c, char *s, int i);
-int			count_pipes(t_common *c, char *input);
-char		**set_up_array(int cc, char *input);
-char		**prep_input(char *input);
-char		*ft_strtok(char *s1, const char *delim);
-int			check_char(char *character);
+//lexer_1
 int			check_token(char *token);
+int			check_char(char *character);
+int			is_delim(char c, const char *delim);
+char		*handle_quote(char *str, int *in_quotes, char *quote_type);
+char		*handle_single_quote(char *str, int *in_quotes, char *quote_type);
+//lexer_2
+char		*quotes_in_strtok(char *str, const char *delim);
+char		*ft_strtok(char *s1, const char *delim);
+int			create_token(t_token **token, char *data);
+int			check_and_create_token(char **value, int i, t_token **token);
+int			add_token(t_token **lst, char **value, int i, t_token **tmp);
+//lexer_3.c
+void		init_add_to_list(int *index, t_token **tmp, t_token **last);
+void		add_to_list(char **token, t_list *lst);
+int			check_tokens(char *input);
+char		**tokenize_input(char *input);
+int			process_special_character(int *i, int *j, char *input, char *new_string);
+//lexer_4.c
+int			handle_non_special_character(int *i, int *j, char *input, char *new_string);
+int			no_space_array(int *i, int *j, char *input, char *new_string);
+char		*allocate_memory(int size);
+char		**set_up_array(int cc, char *input);
+void		count_up(int *i, int *cc);
+//lexer_5.c
+void		prep_input_three(int i, int *cc, char *input);
+int			prep_input_two(int *i, int *cc, char *input);
+void		prep_input_one(int i, int *cc, char *input);
+char		**prep_input(char *input);
+int			error_and_cleanup(t_common *c, int status);
+//lexer_6.c
+int			check_this(t_common *c, char *result, int j);
+int			check_dot(t_common *c, char *result, int k, int j);
+int			check_quotes(t_common *c, char *result, int k);
+int			condition_and_error(t_common *c, char *result, int k, int status);
+int			check_again(t_common *c, char *result, int k, char fir);
+//lexer_7.c
+int			check_more_cont(t_common *c, char *result, int k, int status);
+int			check_more(t_common *c, char *result, int k, char fir);
+int			check_that(t_common *c, char *result, int k);
+int			check_condition_and_error(char *result, int *i);
+int			check_one_more(t_common *c, char *result);
+//lexer_8.c
+void		init_for_open_quotes(int *s_quote, int *d_quote, int *i);
+int			open_quotes(t_common *c, char *result);
+int			check_sq(t_common *c, char *result, int k);
+int			check_following(t_common *c, char *result, int k, char fir);
+void		init_initial_checks(int *i, int *k, int*len, char *result);
+//lexer_9.c
+int			initial_checks(t_common *c, char *result);
+int			error_check_pipes(t_common *c, int *i, int *pipe, char *input);
+char		**tokenize_one(t_common *c, char *input, int pipe);
+int			check_empty_line(t_common *c, char *input, int pipe);
+int			check_result(t_common *c, char *result);
+//lexer.c
+int			is_in_quotes(char *str, int i);
+int			ignore_pipe(char *str, int i);
+void		count_pipes_cont(t_common *c, char *input, int *i, int *pipe);
+int			count_pipes(t_common *c, char *input);
+
+int			error_lexer(t_common *c, char *s, int i);
+int			tokenize(t_common *c);
+
+
 //parsing
 int			ft_parsing(t_common *c);
 void		ft_cmd_args_to_2d(t_common *c, t_list_d *cmd_table);
