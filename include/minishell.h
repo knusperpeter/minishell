@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:27:14 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 10:47:20 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,9 @@ int			ft_pwd(t_common *c, char **args);
 int			ft_env(char **args, t_env *env);
 int			ft_unset(char **args, t_common *c);
 void		ft_exit(t_common *c, char **cmd);
+int			is_valid_env(char *env);
+void		export_print_env(t_env *env);
+void		add_to_var(t_common *c, t_env *env, char *arg);
 int			ft_export(t_common *c, char **args, t_env *env);
 int			ft_echo(t_common *c, char **args);
 void		set_env_value(t_env *env, char *variable, char *value);

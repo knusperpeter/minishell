@@ -6,7 +6,7 @@
 #    By: chris <chris@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/05/11 10:50:53 by chris            ###   ########.fr        #
+#    Updated: 2024/05/12 10:42:31 by chris            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ LIBFT_LIB	= libft.a
 SOURCES	=	src/builtins/ft_echo.c	\
 			src/builtins/ft_env.c \
 			src/builtins/ft_exit.c \
-			src/builtins/ft_export.c \
+			src/builtins/ft_export_1.c \
+			src/builtins/ft_export_2.c \
 			src/builtins/ft_pwd.c \
 			src/builtins/ft_unset.c \
 			src/builtins/ft_cd_1.c \

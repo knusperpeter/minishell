@@ -604,17 +604,14 @@ int	check_that(t_common *c, char *result, int k)
 int	check_one_more(t_common *c, char *result)
 {
     int i;
-    int redir;
 	int status;
 
 	i = 0;
-	redir =0;
 	status = 0;
     while (result[i] != '\0') 
 	{
         if (result[i] == '>') 
 		{
-            redir = 1;
             i++;
             while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
                 i++;
@@ -678,10 +675,8 @@ int	open_quotes(t_common *c, char *result)
 
 int	check_sq(t_common *c, char *result, int k)
 {
-	int status;
 	int sq;
 
-	status = 0;
 	sq = 0;
 	while (result[k] && (result[k] == ' ' || (result[k] >= 9 && result[k] >= 13)))
 	{

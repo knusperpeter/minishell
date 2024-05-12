@@ -1,109 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_export.c                                        :+:      :+:    :+:   */
+/*   ft_export_1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 00:25:41 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 10:47:05 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // declare -x VAR="value" only?
 #include "../../include/minishell.h"
 
-void	sort_env(t_env *env)
+void	replace_env_value(t_common *c, t_env *env, char *args, size_t len)
 {
-	char	*temp_var;
-	char	*temp_val;
-	int		temp;
-	t_env	*i;
-	t_env	*j;
-
-	i = env;
-	while (i != NULL)
-	{
-		j = i->next;
-		while (j != NULL)
-		{
-			temp = sizeof(j->variable) + 1;
-			if (ft_strncmp(i->variable, j->variable, temp) > 0)
-			{
-				temp_var = i->variable;
-				temp_val = i->value;
-				temp = i->flag;
-				i->variable = j->variable;
-				i->value = j->value;
-				i->flag = j->flag;
-				j->variable = temp_var;
-				j->value = temp_val;
-				j->flag = temp;
-			}
-			j = j->next;
-		}
-		i = i->next;
-	}
-}
-
-void	export_print_env(t_env *env)
-{
-	sort_env(env);
-	while (env)
-	{
-		if (!env->flag)
-			printf("declare -x %s=\"%s\"\n", env->variable, env->value);
-		else
-			printf("declare -x %s\n", env->variable);
-		env = env->next;
-	}
-}
-
-int	is_valid_env(char *env)
-{
-	int	i;
-
-	if (env[0] == '-')
-		return (-3);
-	if (!ft_isalpha(env[0]) && env[0] != '_')
-		return (-1);
-	i = 0;
-	while (env[i] && env[i] != '=')
-	{
-		if (!ft_isalnum(env[i]) && env[i] != '_')
-		{
-			if (env[i] == '+' && env[i + 1] == '=')
-				return (0);
-			else
-				return (-2);
-		}
-		i++;
-	}
-	if (env[i] == '=')
-		return (0);
-	return (1);
-}
-
-void	add_to_var(t_env *env, char *arg)
-{
-	char	*tmp;
-
 	if (env->value)
-	{
-		tmp = ft_strjoin(env->value, arg);
-		//protect
 		free(env->value);
-		env->value = tmp;
-	}
-	else
-	{
-		env->value = ft_strdup(arg);
-		//protect
-	}
+	env->value = ft_strdup(&args[len + 1]);
+	if (!env->value)
+		ft_clean_exit(c, "malloc-error", 1);
 	env->flag = 0;
 }
 
-int	already_in_env(char *args, t_env *env, int errorno)
+int	already_in_env(t_common *c, char *args, t_env *env, int errorno)
 {
 	size_t	len;
 
@@ -117,16 +37,9 @@ int	already_in_env(char *args, t_env *env, int errorno)
 		if (!ft_strncmp(args, env->variable, len) && !env->variable[len])
 		{
 			if (errorno == 0 && args[len] == '=')
-			{
-				if (env->value)
-					free(env->value);
-				env->value = ft_strdup(&args[len + 1]);
-				if (!env->value)
-					exit(EXIT_FAILURE);
-				env->flag = 0;
-			}
+				replace_env_value(c, env, args, len);
 			else if (errorno == 0 && args[len] == '+')
-				add_to_var(env, &args[len + 2]);
+				add_to_var(c, env, &args[len + 2]);
 			return (EXIT_FAILURE);
 		}
 		env = env->next;
@@ -185,7 +98,7 @@ int	ft_export(t_common *c, char **args, t_env *env)
 		errorno = is_valid_env(args[i]);
 		if (errorno < 0)
 			print_error(c, args[i], errorno);
-		if (!already_in_env(args[i], env, errorno) && errorno >= 0)
+		if (!already_in_env(c, args[i], env, errorno) && errorno >= 0)
 			add_variable_to_env(env, args[i], errorno);
 		i++;
 	}
