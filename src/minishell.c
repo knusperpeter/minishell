@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 17:45:38 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 17:54:16 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	prompt(t_common *c)
 		c->raw_prompt = ft_strtrim(line, "\n");
 		free(line);
 	}
+}
 /* 	char	*line;
 
 	interactive();
@@ -44,7 +45,6 @@ void	prompt(t_common *c)
 	if (line) // second condition is redundant
 		add_history(line);
 	return (line); */
-}
 
 /**
  * Function: init_loop_data

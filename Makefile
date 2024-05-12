@@ -6,7 +6,7 @@
 #    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/05/12 17:24:29 by caigner          ###   ########.fr        #
+#    Updated: 2024/05/12 17:56:15 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,8 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/exec.c \
 			src/utils_1.c \
 			src/utils_2.c \
-			src/free.c \
+			src/free_1.c \
+			src/free_2.c \
 			src/lexer_error.c \
 			src/signals.c \
 			src/expansion.c \

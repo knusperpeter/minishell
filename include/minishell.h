@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 17:33:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 17:57:46 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,8 @@ int			ft_init_env(t_env *node, char *envp, t_env *prev);
 int			dup_env(t_common *c, char **envp);
 //free
 void		free_2d(char **str);
+void		free_tokens(void *content);
+void		free_io_red(void *content);
 void		free_env_nodes(t_env *start);
 void		free_cmd_table(void *content);
 void		ft_cleanup_loop(t_common *c);
