@@ -31,6 +31,9 @@ Syntax:
 
 echo '  ' Hello World
 	gibt error, obwohl keiner sein sollte
+
+env | grep 'x='
+	-> invalid read
 !!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 

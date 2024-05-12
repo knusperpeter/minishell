@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: chris <chris@student.42.fr>                +#+  +:+       +#+         #
+#    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/05/12 11:34:54 by chris            ###   ########.fr        #
+#    Updated: 2024/05/12 17:24:29 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,9 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/minishell.c \
 			src/init_env.c \
 			src/lexer.c \
-			src/parsing.c \
+			src/parsing_1.c \
+			src/parsing_2.c \
+			src/parsing_3.c \
 			src/open_io_1.c \
 			src/open_io_2.c \
 			src/get_cmd_path_1.c \

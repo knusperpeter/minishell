@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 11:41:05 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 17:28:39 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void		ft_lst_d_add_back(t_list_d **lst, t_list_d *neu);
 void		ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void		ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void		ft_printerrno(char *s);
-//tokenize
+int			get_env_size(t_env *env);
 //expansion & quotes
 void		ft_rm_quotes(t_common *c, t_list_d *cmds);
 void		ft_expansion(t_common *c, t_list_d *cmds);
@@ -161,6 +161,7 @@ char		**ft_get_paths(t_env *env);
 char		*join_path(char *cmd, char *path);
 int			get_cmd_path(t_common *c, t_cmd_table *cmd);
 //lexer
+int			tokenize(t_common *c);
 char		**tokenize_one(t_common *c, char *input, int pipe);
 void		add_to_list(char **token, t_list *lst);
 int			error_lexer(t_common *c, char *s, int i);
@@ -172,7 +173,8 @@ int			check_char(char *character);
 int			check_token(char *token);
 //parsing
 int			ft_parsing(t_common *c);
-
+void		ft_cmd_args_to_2d(t_list_d *cmd_table);
+int			red_to_node(t_common *c, t_token *token, t_cmd_table *node);
 //signals
 void		interactive(t_common *c);
 void		interactive_here(t_common *c);
