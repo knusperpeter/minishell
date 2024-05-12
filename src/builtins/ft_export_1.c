@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 10:47:05 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/13 01:02:24 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	already_in_env(t_common *c, char *args, t_env *env, int errorno)
 	return (EXIT_SUCCESS);
 }
 
-void	add_variable_to_env(t_env *env, char *args, int errorno)
+void	add_variable_to_env(t_common *c, t_env *env, char *args, int errorno)
 {
 	t_env	*new;
 	t_env	*prev;
@@ -55,8 +55,8 @@ void	add_variable_to_env(t_env *env, char *args, int errorno)
 	prev = env;
 	while (prev->next)
 		prev = prev->next;
-	create_list_element((void **) &new, sizeof(t_env));
-	if (ft_init_env(new, args, prev) == EXIT_FAILURE)
+	create_list_element(c, (void **) &new, sizeof(t_env));
+	if (ft_init_env(c, new, args, prev) == EXIT_FAILURE)
 		perror("malloc failed");
 	new->flag = errorno;
 	prev->next = new;
@@ -99,7 +99,7 @@ int	ft_export(t_common *c, char **args, t_env *env)
 		if (errorno < 0)
 			print_error(c, args[i], errorno);
 		if (!already_in_env(c, args[i], env, errorno) && errorno >= 0)
-			add_variable_to_env(env, args[i], errorno);
+			add_variable_to_env(c, env, args[i], errorno);
 		i++;
 	}
 	return (EXIT_SUCCESS);

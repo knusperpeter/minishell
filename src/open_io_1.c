@@ -6,20 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 17:49:18 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 22:00:48 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/**
- * Function: open_infile
- * Description: Opens the input file for a command.
- * Parameters: 
- * - io: The IO redirection structure.
- * - cmd_node: The command table node.
- * Returns: 0 if successful, EXIT_FAILURE if an error occurred.
- */
 int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 {
 	int		fd;
@@ -66,22 +58,9 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 	}
 	if (fd != 1 && cmd_node->id != 0)
 		close(fd);
-	//if (cmd_node->write_fd != 1)
-	//	close(cmd_node->write_fd);
-	//cmd_node->write_fd = fd;
 	return (fd);
 }
 
-/**
- * Function: open_file
- * Description: Opens the file for IO redirection.
- * Parameters: 
- * - io: The IO redirection structure.
- * - cmd_node: The command table node.
- * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
- */
-
-//ACHTUNG: ich kann erst öffnen, wenn expanded wurde!!!
 int	open_file(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 {
 	if (io->type == HEREDOC || io->type == REDIR_IN)
@@ -97,14 +76,6 @@ int	open_file(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	return (1);
 }
 
-/**
- * Function: open_io
- * Description: Opens the files for IO redirection for a command.
- * Parameters: 
- * - io: The list of IO redirection structures.
- * - cmd_node: The command table node.
- * Returns: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurred.
- */
 int	open_io(t_common *c, t_list *io_lst, t_cmd_table *cmd_node)
 {
 	t_list		*tmp;

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:20:30 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 17:29:20 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 00:09:09 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,19 @@ int	input_to_node(t_common *c, t_token *token, t_io_red *tmp, t_cmd_table *node)
 
 	if (token->type == HEREDOC)
 	{
-		tmp->heredoc_limiter = ft_strdup(token->data);
+		tmp->heredoc_limiter = ft_protect(c, ft_strdup(token->data), 0, 0, 0);
 		if (node->heredoc_name)
 		{
 			free(node->heredoc_name);
 			node->heredoc_name = NULL;
 		}
 		ch = ft_itoa(c->heredoc_counter++);
-		node->heredoc_name = ft_strjoin(".heredoc_tmp", ch);
+		node->heredoc_name = ft_protect(c, ft_strjoin(".heredoc_tmp", ch), ch, 0, 0);
 		free(ch);
-		if (!node->heredoc_name)
-			return (perror("Error initializing str in input_to_node\n"), 1);
-		tmp->infile = ft_strdup(node->heredoc_name);
-		//CHECK IF .heredoc_tmp already EXISTS, IF YES increment i
+		tmp->infile = ft_protect(c, ft_strdup(node->heredoc_name),0 , 0, 0);
 	}
 	else
-		tmp->infile = ft_strdup(token->data);
+		tmp->infile = ft_protect(c, ft_strdup(token->data), 0, 0, 0);
 	tmp->type = token->type;
 	return (EXIT_SUCCESS);
 }
@@ -51,11 +48,8 @@ int	red_to_node(t_common *c, t_token *token, t_cmd_table *node)
 	t_list		*red_node;
 	t_io_red	*tmp;
 
-	tmp = malloc(sizeof(t_io_red));
-	//protect
-	red_node = ft_lstnew(tmp);
-	if (!red_node)
-		return (ft_putstr_fd("Error in red_to_node\n", 1), 1);
+	tmp = ft_protect(c, malloc(sizeof(t_io_red)), 0, 0, 0);
+	red_node = ft_protect(c, ft_lstnew(tmp), tmp, 0, 0);
 	init_io(red_node->content);
 	tmp = red_node->content;
 	if (token->type == REDIR_IN || token->type == HEREDOC)
@@ -63,7 +57,7 @@ int	red_to_node(t_common *c, t_token *token, t_cmd_table *node)
 	else
 	{
 		tmp->type = token->type;
-		tmp->outfile = ft_strdup(token->data);
+		tmp->outfile = ft_protect(c, ft_strdup(token->data), tmp, red_node, 0);
 	}
 	ft_lstadd_back(&node->io_red, red_node);
 	return (EXIT_SUCCESS);

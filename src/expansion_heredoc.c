@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_expansion.c                                :+:      :+:    :+:   */
+/*   expansion_heredoc.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:00:59 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/01 20:25:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 21:40:47 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static char	*expand_str(t_common *c, char *str)
+static char	*expand_str_hd(t_common *c, char *str)
 {
 	int		i;
 	int		varsize;
 	char	*new;
-	char	*envvalue;
 
 	if (!str)
 		return (NULL);
@@ -27,8 +26,7 @@ static char	*expand_str(t_common *c, char *str)
 	{
 		if (str[i] == '$' && !ft_strchr(WHITESPACE, str[i + 1]))
 		{
-			envvalue = get_expansion_value(c, str, i, &varsize);
-			new = get_expanded_str(str, envvalue, i, varsize);
+			new = get_expanded_str(c, str, i, varsize);
 			return (new);
 		}
 		i++;
@@ -44,7 +42,7 @@ void	heredoc_expansion(t_common *c, t_io_red *io, char **str)
 		return ;
 	while (has_expansion(c, *str))
 	{
-		expanded_str = expand_str(c, *str);
+		expanded_str = expand_str_hd(c, *str);
 		free(*str);
 		*str = expanded_str;
 	}

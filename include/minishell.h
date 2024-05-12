@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 17:57:46 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 00:05:07 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,19 @@ typedef struct common_data
 
 //main
 int			ft_loop(t_common *c);
+//exec
+void		wait_all_childs(t_common *c);
+int			is_builtin(char *cmd);
+char		**get_envp(t_common *c, t_env *env);
+void		close_fds(t_common *c, int *fd, t_cmd_table *cmd);
+int			ft_count_cmds(t_list_d *cmd_struct);
+int			ft_builtins(t_cmd_table *cmd, t_common *c);
+void		ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd);
+void		handle_fds_parent(t_common *c, int *fd);
+int			ft_execute(t_common *c);
 //init_env
-int			create_list_element(void **element, size_t size);
-int			ft_init_env(t_env *node, char *envp, t_env *prev);
+int			create_list_element(t_common *c, void **element, size_t size);
+int			ft_init_env(t_common *c, t_env *node, char *envp, t_env *prev);
 int			dup_env(t_common *c, char **envp);
 //free
 void		free_2d(char **str);
@@ -150,8 +160,6 @@ void		unlink_heredoc(t_io_red *io, t_cmd_table *cmd);
 void		ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io);
 void		here_doc(t_common *c, t_io_red *io, int *fd);
 int			open_redirections(t_common *c, t_cmd_table *cmd_node);
-//exec
-int			ft_execute(t_common *c);
 //utils
 t_list_d	*ft_lstnew_d(void *content);
 t_list_d	*ft_lstlast_d(t_list_d *lst);
@@ -160,18 +168,21 @@ void		ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void		ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void		ft_printerrno(char *s);
 int			get_env_size(t_env *env);
+void		*ft_protect(t_common *c, void *p1, void *p2, void *p3, void *p4);
 //expansion & quotes
 void		ft_rm_quotes(t_common *c, t_list_d *cmds);
+char		*expand_str(t_common *c, char *str);
+int			check_split(t_common *c, t_cmd_table **t, t_list **a, t_list *b);
 void		ft_expansion(t_common *c, t_list_d *cmds);
 char		*get_expansion_value(t_common *c, char *str, int i, int *varsize);
-char		*get_expanded_str(char *str, char *envvalue, int i, int varsize);
+char		*get_expanded_str(t_common *c, char *str, int i, int varsize);
 void		heredoc_expansion(t_common *c, t_io_red *io, char **str);
 int			has_expansion(t_common *c, char *str);
 void		handle_quote_state(t_common *common, char c);
 //get_cmd_path
 int			is_dir(char *file);
-char		**ft_get_paths(t_env *env);
-char		*join_path(char *cmd, char *path);
+char		**ft_get_paths(t_common *c, t_env *env);
+char		*join_path(t_common *c, char *cmd, char *path);
 int			get_cmd_path(t_common *c, t_cmd_table *cmd);
 //lexer
 int			tokenize(t_common *c);
@@ -186,8 +197,9 @@ int			check_char(char *character);
 int			check_token(char *token);
 //parsing
 int			ft_parsing(t_common *c);
-void		ft_cmd_args_to_2d(t_list_d *cmd_table);
+void		ft_cmd_args_to_2d(t_common *c, t_list_d *cmd_table);
 int			red_to_node(t_common *c, t_token *token, t_cmd_table *node);
+void		init_cmd_table(t_cmd_table *node);
 //signals
 void		interactive(t_common *c);
 void		interactive_here(t_common *c);

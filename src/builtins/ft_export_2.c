@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 10:41:34 by chris             #+#    #+#             */
-/*   Updated: 2024/05/12 10:50:05 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/13 01:05:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,17 +94,11 @@ void	add_to_var(t_common *c, t_env *env, char *arg)
 
 	if (env->value)
 	{
-		tmp = ft_strjoin(env->value, arg);
-		if (!tmp)
-			ft_clean_exit(c, "malloc-error", 1);
+		tmp = ft_protect(c, ft_strjoin(env->value, arg), env->value, 0, 0);
 		free(env->value);
 		env->value = tmp;
 	}
 	else
-	{
-		env->value = ft_strdup(arg);
-		if (!env->value)
-			ft_clean_exit(c, "malloc-error", 1);
-	}
+		env->value = ft_protect(c, ft_strdup(arg), 0, 0, 0);
 	env->flag = 0;
 }

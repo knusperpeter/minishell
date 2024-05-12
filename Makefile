@@ -6,7 +6,7 @@
 #    By: caigner <caigner@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/05/12 17:56:15 by caigner          ###   ########.fr        #
+#    Updated: 2024/05/12 21:13:54 by caigner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,14 +39,18 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/open_io_2.c \
 			src/get_cmd_path_1.c \
 			src/get_cmd_path_2.c \
-			src/exec.c \
+			src/exec_1.c \
+			src/exec_2.c \
+			src/exec_3.c \
 			src/utils_1.c \
 			src/utils_2.c \
 			src/free_1.c \
 			src/free_2.c \
 			src/lexer_error.c \
 			src/signals.c \
-			src/expansion.c \
+			src/expansion_1.c \
+			src/expansion_2.c \
+			src/expansion_3.c \
 			src/remove_quotes.c \
 			src/expansion_heredoc.c
 

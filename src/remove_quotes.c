@@ -3,23 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 11:37:09 by chris             #+#    #+#             */
-/*   Updated: 2024/05/12 11:49:16 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/13 00:13:03 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-char	*ft_str_wo_quotes(char *str)
-{
-	char	*value;
-
-	value = NULL;
-	value = ft_strdup(str);
-	return (value);
-}
 
 char	*ft_rm_quotes_str(t_common *c, char *str)
 {
@@ -36,7 +27,7 @@ char	*ft_rm_quotes_str(t_common *c, char *str)
 	{
 		if ((str[i] == '\'' && !c->open_double_quotes) || (str[i] == '\"'
 				&& !c->open_single_quotes))
-            handle_quote_state(c, str[i]);
+			handle_quote_state(c, str[i]);
 		else
 			str[j++] = str[i];
 		i++;

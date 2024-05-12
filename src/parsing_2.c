@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:53:44 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 17:53:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 00:07:38 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,9 @@ int	tokenize(t_common *c)
 	i = 0;
 	while (arr[i])
 	{
+		token = ft_protect(c, malloc(sizeof(t_token)), 0, 0, 0);
 		sub_arr = prep_input(arr[i++]);
-		token = malloc(sizeof(t_token));
-		if (!token)
-			return (c->exitstatus = 1, ft_clean_exit(c, "malloc-fail", 0), 1);
-		cmd_tok = ft_lstnew(token);
-		if (!cmd_tok)
-			return (c->exitstatus = 1, free(token),
-				ft_clean_exit(c, "malloc-fail", 0), 1);
+		cmd_tok = ft_protect(c, ft_lstnew(token), token, 0, 0);
 		add_to_list(sub_arr, cmd_tok);
 		ft_lstadd_back(&c->tokens, cmd_tok);
 		free_2d(sub_arr);
@@ -41,7 +36,7 @@ int	tokenize(t_common *c)
 	return (free_2d(arr), EXIT_SUCCESS);
 }
 
-int	cmd_to_node(t_cmd_table *cmd_node)
+int	cmd_to_node(t_common *c, t_cmd_table *cmd_node)
 {
 	int			i;
 	t_list		*cmd_tok;
@@ -50,16 +45,12 @@ int	cmd_to_node(t_cmd_table *cmd_node)
 	cmd_tmp = cmd_node;
 	cmd_tok = cmd_tmp->cmds;
 	i = ft_lstsize(cmd_tok);
-	cmd_tmp->str = malloc(sizeof(char **) * (i + 1));
-	if (!cmd_tmp->str)
-		return (perror("Error initializing str in cmd_to_node\n"), 1);
+	cmd_tmp->str = ft_protect(c, malloc(sizeof(char **) * (i + 1)), 0, 0, 0);
 	cmd_tok = cmd_tmp->cmds;
 	i = 0;
 	while (cmd_tok)
 	{
-		cmd_tmp->str[i] = ft_strdup(cmd_tok->content);
-		if (!cmd_tmp->str[i])
-			printf("FIX, cmd_to_node\n");
+		cmd_tmp->str[i] = ft_protect(c, ft_strdup(cmd_tok->content), 0, 0, 0);
 		i++;
 		cmd_tok = cmd_tok->next;
 	}
@@ -67,14 +58,28 @@ int	cmd_to_node(t_cmd_table *cmd_node)
 	return (EXIT_SUCCESS);
 }
 
-void	ft_cmd_args_to_2d(t_list_d *cmd_table)
+void	ft_cmd_args_to_2d(t_common *c, t_list_d *cmd_table)
 {
 	t_list_d	*tmp;
 
 	tmp = cmd_table;
 	while (tmp)
 	{
-		cmd_to_node(tmp->content);
+		cmd_to_node(c, tmp->content);
 		tmp = tmp->next;
 	}
+}
+
+void	init_cmd_table(t_cmd_table *node)
+{
+	node->read_fd = 0;
+	node->write_fd = 1;
+	node->id = -1;
+	node->cmds = NULL;
+	node->io_red = NULL;
+	node->heredoc_name = NULL;
+	node->str = NULL;
+	node->exec_path = NULL;
+	node->in = NULL;
+	node->out = NULL;
 }

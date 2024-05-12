@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:19:10 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/13 00:51:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,15 @@
 
 #include "../../include/minishell.h"
 
-void	join_path_else(char **path, char *oldpwd, char *args)
+void	join_path_else(t_common *c, char **path, char *oldpwd, char *args)
 {
 	char	*tmp;
 
-	*path = ft_strdup(oldpwd);
-	tmp = *path;
-	*path = ft_strjoin(*path, "/");
+	tmp = ft_protect(c, ft_strdup(oldpwd), 0, 0, 0);
+	*path = ft_protect(c, ft_strjoin(tmp, "/"), tmp, 0, 0);
 	free(tmp);
 	tmp = *path;
-	*path = ft_strjoin(*path, args);
+	*path = ft_protect(c, ft_strjoin(tmp, args), tmp, 0, 0);
 	free(tmp);
 }
 
@@ -41,18 +40,18 @@ int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 	else if (!ft_strncmp(args[1], "-", size))
 		return (get_set_path(c->env, "OLDPWD", path));
 	else if (args[1][0] == '/')
-		*path = ft_strdup(args[1]);
+		*path = ft_protect(c, ft_strdup(args[1]), 0, 0, 0);
 	else if (!ft_strncmp(args[1], ".", size))
-		*path = ft_strdup(*oldpwd);
+		*path = ft_protect(c, ft_strdup(*oldpwd), 0, 0, 0);
 	else if (!ft_strncmp(args[1], "..", size))
 	{
-		*path = ft_strdup(*oldpwd);
+		*path = ft_protect(c, ft_strdup(*oldpwd), 0, 0, 0);
 		tmp = *path;
-		*path = ft_strjoin(*path, "/..");
+		*path = ft_protect(c, ft_strjoin(*path, "/.."), tmp, 0, 0);
 		free(tmp);
 	}
 	else
-		return (join_path_else(path, *oldpwd, args[1]), 0);
+		return (join_path_else(c, path, *oldpwd, args[1]), 0);
 	return (0);
 }
 

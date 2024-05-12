@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:16:47 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/13 00:55:11 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_sign(char c)
 	return (0);
 }
 
-char	*get_llstr(char *arg, int i, int num_len)
+char	*get_llstr(t_common *c, char *arg, int i, int num_len)
 {
 	char	*str;
 	int		j;
@@ -35,7 +35,7 @@ char	*get_llstr(char *arg, int i, int num_len)
 			minus = 1;
 		j++;
 	}
-	str = malloc(sizeof(char) * (num_len + minus + 1));
+	str = ft_protect(c, malloc(sizeof(char) * (num_len + minus + 1)), 0, 0, 0);
 	if (str == NULL)
 		return (NULL);
 	j = 0;
@@ -47,7 +47,7 @@ char	*get_llstr(char *arg, int i, int num_len)
 	return (str);
 }
 
-int	overflows_ll(char *arg)
+int	overflows_ll(t_common *c, char *arg)
 {
 	int		i;
 	char	*num;
@@ -65,8 +65,8 @@ int	overflows_ll(char *arg)
 	num_len = 0;
 	while (ft_isdigit(arg[i + num_len]))
 		num_len++;
-	s = get_llstr(arg, i, num_len);
-	num = ft_lltoa(ft_atoll(s));
+	s = get_llstr(c, arg, i, num_len);
+	num = ft_protect(c, ft_lltoa(ft_atoll(s)), s, 0, 0);
 	if (ft_strncmp(s, num, num_len))
 		return (free(s), free(num), 1);
 	return (free(s), free(num), 0);
@@ -109,7 +109,7 @@ void	ft_exit(t_common *c, char **cmd)
 		{
 			if (!cmd[1])
 				c->exitstatus = 0;
-			if (!valid_num(cmd[1]) || overflows_ll(cmd[1]))
+			if (!valid_num(cmd[1]) || overflows_ll(c, cmd[1]))
 			{
 				ft_putstr_fd("minishell: exit: ", 2);
 				ft_putstr_fd(cmd[1], 2);

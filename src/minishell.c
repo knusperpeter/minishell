@@ -6,17 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 17:54:16 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 00:33:57 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/**
- * Function: prompt
- * Description: Displays a prompt and reads a line of input from the user.
- * Returns: The line of input from the user.
- */
 int	g_signal = 0;
 
 void	prompt(t_common *c)
@@ -36,21 +31,7 @@ void	prompt(t_common *c)
 		free(line);
 	}
 }
-/* 	char	*line;
 
-	interactive();
-	line = readline("minishell🔮: 🚬🦦❯ "); // check rl_redisplay
-	if (line == NULL)
-		ft_exit(c, NULL);
-	if (line) // second condition is redundant
-		add_history(line);
-	return (line); */
-
-/**
- * Function: init_loop_data
- * Description: Initializes the data for the main loop of the shell.
- * Parameter: c - The common structure containing the shell data.
- */
 void	init_loop_data(t_common *c)
 {
 	c->raw_prompt = NULL;

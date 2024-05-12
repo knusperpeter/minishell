@@ -8,18 +8,6 @@ SIGNAL: ++++cmd+c in interactive mode (with/without text in prompt)  michi: fixe
 					->ms: exit code 0
 					-> bash: 127
 
-++++'''''''''''''''' echo hi				michi: fixed, leads now to an error (with error code 127)
-					++++-> invalid read
-
-'''''''''echo hi
-				->gerade Anzahl an single quotes invalid read and write
-
-
-++++echo hi | echo hi |
-		++++->Invalid read of size 1	//michi: wird nun wie error behandelt, da in bash dquote
-
-
-
 
 Syntax:
 
@@ -40,21 +28,12 @@ ls | cat Makefile | cat << "asd" > out
 ls|cat Makefile|cat<<"asd">out
 		invalid read size 1
 
-++++!!!!QUOTES!!!!:
-++++echo "$USER'
-	++++ms:	caigner'
-	++++bash: dquote
-
-++++signale-> im laufenden Porzess mit strg + \ 		michi: signale funktionieren im Groben - genaue Testung und ggf Anpassung notwendig
-	++++-> core dumped
-
-++++bei ; evtl nen syntax error, wenn nicht in quotes?	michi: lexer prüft auf offene " oder ' und returned mit error-message
 
 ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
 	->syntax error, so it should not look for later commands any more, at least bash does it like that
 
 << set cat  	+ctrl c
-				leaks!!!!!!! nach ein paar mal wird geexited.... D:
+				command dannach funktioniert nicht.... D:
 
 
 
@@ -66,7 +45,14 @@ cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
 		-> bash executes ls in bin...
 		-> ms cmd not found
 
+env -i ./minishell does not open even open
+
+dprintf entfernen!!!
+
 IMPLEMENT:
+
+ls > $HOME
+	-> doppelte error message!!!!!!
 
 cd --
 	ms:	double error message
