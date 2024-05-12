@@ -678,7 +678,7 @@ int	check_sq(t_common *c, char *result, int k)
 	int sq;
 
 	sq = 0;
-	while (result[k] && (result[k] == ' ' || (result[k] >= 9 && result[k] >= 13)))
+	while (result[k] /*&& (result[k] == ' ' || (result[k] >= 9 && result[k] >= 13))*/)
 	{
 		if (result[k] == '\'')
 		{
@@ -695,6 +695,8 @@ int	check_sq(t_common *c, char *result, int k)
 				return (1);
 			}
 		}
+		else
+			return (0);
 		k++;
 	}
 	return (0);

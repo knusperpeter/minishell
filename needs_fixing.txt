@@ -29,9 +29,9 @@ Syntax:
 	-> heredoc will not have "asd" as limitertoken, but cat. why?
 
 
-echo '  ' Hello World
-	gibt error, obwohl keiner sein sollte
-!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
+++++echo '  ' Hello World			michi: fixed, behaves like bash now (for the cases i have tested, correct exit code).
+	++++gibt error, obwohl keiner sein sollte
+++++!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
