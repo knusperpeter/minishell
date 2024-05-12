@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/12 01:10:00 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:23:01 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,20 +256,27 @@ int	ft_count_cmds(t_list_d *cmd_struct)
 
 int	ft_check_builtin(t_cmd_table *cmd)
 {
-	if ((!ft_strncmp("export", cmd->str[0], ft_strlen(cmd->str[0]))
+	if (cmd->str[0])
+	{	
+		if ((!ft_strncmp("export", cmd->str[0], ft_strlen(cmd->str[0]))
 			&& cmd->str[1])
-		|| !ft_strncmp("exit", cmd->str[0], ft_strlen(cmd->str[0]))
-		|| !ft_strncmp("unset", cmd->str[0], ft_strlen(cmd->str[0]))
-		|| !ft_strncmp("cd", cmd->str[0], ft_strlen(cmd->str[0])))
-		return (1);
+			|| !ft_strncmp("exit", cmd->str[0], ft_strlen(cmd->str[0]))
+			|| !ft_strncmp("unset", cmd->str[0], ft_strlen(cmd->str[0]))
+			|| !ft_strncmp("cd", cmd->str[0], ft_strlen(cmd->str[0])))
+			return (1);
+	}
 	return (0);
 }
 
 void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 {
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	if (!open_redirections(c, curr_cmd_table))
 		return (ft_clean_exit(c, NULL, 1));
 	ft_redirect_io(c, curr_cmd_table, curr, fd);
+	if (!curr_cmd_table->str[0])
+		ft_clean_exit(c, NULL, 1);
 	if (is_builtin(curr_cmd_table->str[0]))
 	{
 		ft_builtins(curr_cmd_table, c);

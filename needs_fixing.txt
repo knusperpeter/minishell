@@ -1,57 +1,65 @@
 MICHI:
 
-echo hi | echo hi |
-		->Invalid read of size 1
+SIGNAL: cmd+c in interactive mode (with/without text in prompt)
+					-> ms: exit code: 0
+					-> bash: 130
+		
+		cmd+d in heredoc
+					->ms: exit code 0
+					-> bash: 127
+
+++++'''''''''''''''' echo hi				michi: fixed, leads now to an error (with error code 127)
+					++++-> invalid read
+
+'''''''''echo hi
+				->gerade Anzahl an single quotes invalid read and write
+
+
+++++echo hi | echo hi |
+		++++->Invalid read of size 1	//michi: wird nun wie error behandelt, da in bash dquote
+
+
+
 
 Syntax:
 
+
+!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
 <<"asd" cat
 	-> heredoc will not have "asd" as limitertoken, but cat. why?
 
-/bin/cat <Makefile >
-	ms: syntax error and afterwards -> cat makefile..
-	bash: only syntax error
+
+echo '  ' Hello World
+	gibt error, obwohl keiner sein sollte
+!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
 
 ls | cat Makefile | cat << "asd" > out
 	works but not if it is like this:
 ls|cat Makefile|cat<<"asd">out
 		invalid read size 1
 
-!!!!QUOTES!!!!:
-echo "$USER'
-	ms:	caigner'
-	bash: dquote
+++++!!!!QUOTES!!!!:
+++++echo "$USER'
+	++++ms:	caigner'
+	++++bash: dquote
 
-signale-> im laufenden Porzess mit strg + \
-	-> core dumped
+++++signale-> im laufenden Porzess mit strg + \ 		michi: signale funktionieren im Groben - genaue Testung und ggf Anpassung notwendig
+	++++-> core dumped
 
-bei ; evtl nen syntax error, wenn nicht in quotes?
+++++bei ; evtl nen syntax error, wenn nicht in quotes?	michi: lexer prüft auf offene " oder ' und returned mit error-message
 
 ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
 	->syntax error, so it should not look for later commands any more, at least bash does it like that
 
+<< set cat  	+ctrl c
+				leaks!!!!!!! nach ein paar mal wird geexited.... D:
 
 
 
 CHRIS:
-
-<file1 <file2 <file3 wc >file4
-		->bash: file2: Permission denied
-		->ms: 	nothing
-
-no such file or dir -> should be command not found
-
-	lexer_new.c cases:
-	export T="l"
-	$Ts -a
-			-> Invalid read of size 1;   nothing happens, exitcode 0
-			bash: -a command not found; exit 127
-
-./ls
-"./"ls
-"./""ls"
-"./"''"ls"
-		->should not output ls
 
 unset PATH
 cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
@@ -59,15 +67,7 @@ cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
 		-> bash executes ls in bin...
 		-> ms cmd not found
 
-<wc -l
-	exitcode:127 ist falsch
-
 IMPLEMENT:
-only Redirect 	-> does not create file so far
-	-> check if redir is a directory
-
-ls > src
-	prints ls. should say src is a directory.
 
 cd --
 	ms:	double error message

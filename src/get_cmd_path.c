@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 00:47:27 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:24:07 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	add_path(t_cmd_table *cmd, char **paths)
 				ft_printerrno("allocation failed at exec_path");
 			return (1);
 		}
-		else if (cmd->str && cmd->str[0] && paths)
+		else if (cmd->str && cmd->str[0] && (cmd->str[0][0] != '.' && cmd->str[0][1] != '/') && paths)
 		{
 			while (paths[i])
 			{

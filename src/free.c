@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 01:14:06 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:23:26 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,7 @@ void	free_cmd_lst(t_list **lst)
 	while (lst && *lst)
 	{
 		tmp = (*lst)->next;
-		if ((*lst)->content)
-			free((*lst)->content);
+		free((*lst)->content);
 		free(*lst);
 		*lst = tmp;
 	}

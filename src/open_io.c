@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 00:34:25 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:25:21 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,11 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 		heredoc_expansion(c, io, &buf);
 		write(*(fd), buf, ft_strlen(buf));
 		free(buf);
+		buf = NULL;
 	}
 	get_next_line_heredoc(0, &buf, 1);
-	free(buf);
+	if (buf)
+		free(buf);
 	close(*(fd));
 	*(fd) = open(io->infile, O_RDONLY);
 	if (*fd == -1)
@@ -90,16 +92,16 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	{
 		if (errno == EISDIR)
 			dprintf(2, "minishell: %s: Is a directory\n", io->infile);
-		else
+		else if (io->type != HEREDOC)
 		{
 			ft_putstr_fd("minishell: ", 2);
-			perror(io->outfile);
+			perror(io->infile);
 		}
 		return (0);
 	}
-	if (cmd_node->read_fd != 0)
-		close(cmd_node->read_fd);
-	return(cmd_node->read_fd = fd, 1);
+	if (fd != 0)
+		close(fd);
+	return (1);
 }
 
 int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
@@ -123,9 +125,11 @@ int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 		}
 		return (fd);
 	}
-	if (cmd_node->write_fd != 1)
-		close(cmd_node->write_fd);
-	cmd_node->write_fd = fd;
+	if (fd != 1 && cmd_node->id != 0)
+		close(fd);
+	//if (cmd_node->write_fd != 1)
+	//	close(cmd_node->write_fd);
+	//cmd_node->write_fd = fd;
 	return (fd);
 }
 
