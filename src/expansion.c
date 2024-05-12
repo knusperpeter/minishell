@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/09 21:01:24 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 00:57:09 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	has_expansion(t_common *c, char *str)
 {
 	char	*curr_dollar;
 	int		i;
-	
+
 	i = 0;
 	c->open_double_quotes = 0;
 	c->open_single_quotes = 0;
@@ -42,7 +42,8 @@ int	has_expansion(t_common *c, char *str)
 	while (str[i] && curr_dollar)
 	{
 		handle_quote_state(c, str[i]);
-		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
+		if (str[i] == '$' && !c->open_single_quotes
+			&& !ft_strchr(WHITESPACE, str[i + 1]))
 		{
 			if (curr_dollar == &str[i])
 				return (1);
@@ -97,7 +98,7 @@ int	ft_varsize(char *str, int i)
 	return (length);
 }
 
-static t_env *get_env_node(t_common *c, char *str, int i)
+static t_env	*get_env_node(t_common *c, char *str, int i)
 {
 	int		length;
 	t_env	*env;
@@ -111,8 +112,8 @@ static t_env *get_env_node(t_common *c, char *str, int i)
 	while (env)
 	{
 		if (!ft_strncmp(env->variable, var, ft_strlen(var))
-				&& (int)ft_strlen(env->variable) == length)
-			return(free(var), env);
+			&& (int)ft_strlen(env->variable) == length)
+			return (free(var), env);
 		env = env->next;
 	}
 	return (free(var), NULL);
@@ -131,7 +132,8 @@ char	*get_expansion_value(t_common *c, char *str, int i, int *varsize)
 		env_node = get_env_node(c, str, i);
 		if (!env_node)
 			return (*varsize = ft_varsize(str, i), ft_strdup(""));
-		return (*varsize = ft_strlen(env_node->variable), ft_strdup(env_node->value));
+		*varsize = ft_strlen(env_node->variable);
+		return (ft_strdup(env_node->value));
 	}
 	return (NULL);
 }
@@ -152,7 +154,8 @@ char	*expand_str(t_common *c, char *str)
 	while (str[i])
 	{
 		handle_quote_state(c, str[i]);
-		if (str[i] == '$' && !c->open_single_quotes && !ft_strchr(WHITESPACE, str[i + 1]))
+		if (str[i] == '$' && !c->open_single_quotes
+			&& !ft_strchr(WHITESPACE, str[i + 1]))
 		{
 			envvalue = get_expansion_value(c, str, i, &varsize);
 			new = get_expanded_str(str, envvalue, i, varsize);
@@ -201,7 +204,7 @@ int	split_command(t_list *lst)
 	str = lst->content;
 	last = ft_strlen(str) - 1;
 	if (ft_strchr("\'\"", str[0]) && ft_strchr("\'\"", str[last]))
-		return(0);
+		return (0);
 	if (ft_strchr(lst->content, ' '))
 		return (1);
 	return (0);
@@ -233,14 +236,14 @@ void	ft_expand_io(t_common *c, t_list *curr)
 	t_io_red	*io;
 	char		*tmp;
 
-	while(curr)
+	while (curr)
 	{
 		io = curr->content;
 		if (io)
 		{
 			if (io->type == REDIR_IN)
 			{
-				while(has_expansion(c, io->infile))
+				while (has_expansion(c, io->infile))
 				{
 					tmp = ft_strdup(io->infile);
 					free(io->infile);
@@ -250,7 +253,7 @@ void	ft_expand_io(t_common *c, t_list *curr)
 			}
 			else if (io->type == REDIR_OUT || io->type == APPEND)
 			{
-				while(has_expansion(c, io->outfile))
+				while (has_expansion(c, io->outfile))
 				{
 					tmp = ft_strdup(io->outfile);
 					free(io->outfile);
@@ -265,8 +268,8 @@ void	ft_expand_io(t_common *c, t_list *curr)
 
 void	ft_expansion(t_common *c, t_list_d *cmds)
 {
-	t_cmd_table *cmd_struct;
-	t_list      *curr;
+	t_cmd_table	*cmd_struct;
+	t_list		*curr;
 
 	while (cmds)
 	{
@@ -280,7 +283,6 @@ void	ft_expansion(t_common *c, t_list_d *cmds)
 		}
 		cmds = cmds->next;
 	}
-	//c->exitstatus = 0;
 }
 
 /**
@@ -300,14 +302,15 @@ char	*ft_str_wo_quotes(char *str)
 
 /**
  * Function: ft_rm_quotes_strtmp2
- * Description: Removes the quotes from the start and end of a string, if present.
+ * Description: Removes the quotes from the start and end of a string,if present
  * Parameters: str - The original string.
- * Returns: A new string with the quotes removed, or the original string if no quotes were present.
+ * Returns: A new string with the quotes removed, or the original string if no
+ * quotes were present.
  */
 char	*ft_rm_quotes_str(char *str)
 {
 	int		i;
-	int 	j;
+	int		j;
 	int		single_quotes;
 	int		double_quotes;
 
@@ -319,7 +322,8 @@ char	*ft_rm_quotes_str(char *str)
 	j = 0;
 	while (str[i])
 	{
-		if ((str[i] == '\'' && !double_quotes) || (str[i] == '\"' && !single_quotes))
+		if ((str[i] == '\'' && !double_quotes) || (str[i] == '\"'
+			&& !single_quotes))
 		{
 			if (str[i] == '\'' && !single_quotes)
 				single_quotes = 1;
@@ -341,9 +345,11 @@ char	*ft_rm_quotes_str(char *str)
 
 /**
  * Function: ft_rm_quotes_io
- * Description: Removes the quotes from the start and end of the filenames in each I/O redirection in the list.
+ * Description: Removes the quotes from the start and end of the filenames in
+ * each I/O redirection in the list.
  * Parameters: io_lst - The linked list of I/O redirections.
- * This function iterates over the I/O redirection list and removes quotes from the filenames.
+ * This function iterates over the I/O redirection list and removes quotes from
+ * the filenames.
  */
 void	ft_rm_quotes_io(t_list *io_lst)
 {
@@ -370,9 +376,11 @@ void	ft_rm_quotes_io(t_list *io_lst)
 
 /**
  * Function: ft_rm_in_cmd
- * Description: Removes the quotes from the start and end of the commands and filenames in a command table.
+ * Description: Removes the quotes from the start and end of the commands and
+ * filenames in a command table.
  * Parameters: cmd - The command table.
- * This function iterates over the commands and I/O redirections in the command table and removes quotes.
+ * This function iterates over the commands and I/O redirections in the command
+ * table and removes quotes.
  */
 void	ft_rm_in_cmd(t_cmd_table *cmd)
 {
@@ -393,9 +401,11 @@ void	ft_rm_in_cmd(t_cmd_table *cmd)
 
 /**
  * Function: ft_rm_quotes
- * Description: Removes the quotes from the start and end of the commands and filenames in each command table in the list.
+ * Description: Removes the quotes from the start and end of the commands and 
+ * filenames in each command table in the list.
  * Parameters: cmds - The linked list of command tables.
- * This function iterates over the command tables and removes quotes in each one.
+ * This function iterates over the command tables and removes quotes in each 
+ * one.
  */
 void	ft_rm_quotes(t_list_d *cmds)
 {

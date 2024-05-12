@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 09:09:00 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:19:10 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,17 @@
 
 #include "../../include/minishell.h"
 
-char	*get_env_value(t_env *env, char *variable)
+void	join_path_else(char **path, char *oldpwd, char *args)
 {
-	int	i;
+	char	*tmp;
 
-	while (env)
-	{
-		i = ft_strlen(env->variable);
-		if (!ft_strncmp(env->variable, variable, i) && !variable[i])
-			return (env->value);
-		env = env->next;
-	}
-	return (NULL);
-}
-
-int	get_set_path(t_env *env, char *variable, char **path)
-{
-	char	*env_value;
-
-	env_value = get_env_value(env, variable);
-	if (env_value)
-		return (*path = ft_strdup(env_value), 0);
-	else if (!ft_strncmp(variable, "HOME", 5))
-		return (-1);
-	else
-		return (-2);
+	*path = ft_strdup(oldpwd);
+	tmp = *path;
+	*path = ft_strjoin(*path, "/");
+	free(tmp);
+	tmp = *path;
+	*path = ft_strjoin(*path, args);
+	free(tmp);
 }
 
 int	get_path(char **args, char **oldpwd, char **path, t_common *c)
@@ -66,15 +52,7 @@ int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 		free(tmp);
 	}
 	else
-	{
-		*path = ft_strdup(*oldpwd);
-		tmp = *path;
-		*path = ft_strjoin(*path, "/");
-		free(tmp);
-		tmp = *path;
-		*path = ft_strjoin(*path, args[1]);
-		free(tmp);
-	}
+		return (join_path_else(path, *oldpwd, args[1]), 0);
 	return (0);
 }
 
@@ -94,7 +72,6 @@ void	print_error(int errorno, char *arg)
 		ft_putstr_fd("OLDPWD not set\n", 2);
 	if (errorno == -3)
 		ft_putstr_fd("too many arguments\n", 2);
-
 }
 
 int	ft_cd(char **args, t_common *c)
@@ -112,21 +89,16 @@ int	ft_cd(char **args, t_common *c)
 	{
 		free(path);
 		print_error(errorno, args[1]);
-		free(oldpwd);
-		return (EXIT_FAILURE);
+		return (free(oldpwd), EXIT_FAILURE);
 	}
 	free(path);
 	path = getcwd(NULL, 0);
 	if (!path)
-	{
-		free(oldpwd);
-		return (print_error(errorno, args[1]), 1);
-	}
+		return (free(oldpwd), print_error(errorno, args[1]), 1);
 	set_env_value(c->env, "OLDPWD", oldpwd);
 	set_env_value(c->env, "PWD", path);
 	free(oldpwd);
-	free(path);
-	return (0);
+	return (free(path), 0);
 }
 //	Wenn unset PWD und dann cd, ist auch OLDPWD unsetted.
 //	Wie wird PWD neu gesetzt? Wie wird OLDPWD neu gesetzt?

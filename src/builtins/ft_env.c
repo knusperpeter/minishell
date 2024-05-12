@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:57:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/07 16:54:55 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 23:57:27 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static void print_error(char *str)
+static void	print_error(char *str)
 {
 	ft_putstr_fd("env: ", 2);
 	ft_putstr_fd(str, 2);

@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 14:09:07 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 00:34:25 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	ft_printerrno(char *s)
 	if (s)
 		ft_putstr_fd(s, 2);
 	ft_putchar_fd('\n', 2);
-//	ft_putstr_fd(strerror(errno), 2);
 }
 
 /**
@@ -37,8 +36,6 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 {
 	char		*buf;
 
-	//if (*(fd) == -1)
-	//	ft_clean_exit(c, "heredoc_fail", 1);//protect...
 	(void) cmd_table;
 	while (g_signal == 0)
 	{
@@ -59,9 +56,7 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 	close(*(fd));
 	*(fd) = open(io->infile, O_RDONLY);
 	if (*fd == -1)
-	{
 		unlink(io->infile);
-	}
 }
 
 /**
@@ -75,7 +70,7 @@ void	here_doc(t_common *c, t_io_red *io, t_cmd_table *cmd_table, int *fd)
 int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 {
 	int		fd;
-	
+
 	if (io->type == HEREDOC)
 	{
 		interactive_here(c);
@@ -85,7 +80,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 		non_interactive(c);
 		if (c->exitstatus == 130)
 		{
-			ft_cleanup_loop(c);	
+			ft_cleanup_loop(c);
 			exit (c->exitstatus);
 		}
 	}
@@ -104,14 +99,13 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	}
 	if (cmd_node->read_fd != 0)
 		close(cmd_node->read_fd);
-	cmd_node->read_fd = fd;
-	return (1);
+	return(cmd_node->read_fd = fd, 1);
 }
 
 int	open_outfile(t_io_red *io, t_cmd_table *cmd_node)
 {
 	int		fd;
-	
+
 	if (io->type == REDIR_OUT)
 		fd = open(io->outfile, O_WRONLY | O_TRUNC
 				| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -159,6 +153,7 @@ int	open_file(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	}
 	return (1);
 }
+
 /**
  * Function: unlink_heredoc
  * Description: Deletes the temporary file used for a heredoc.
@@ -166,11 +161,12 @@ int	open_file(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
  * - io: The IO redirection structure.
  * - cmd: The command table structure.
  */
-void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich einfach in cleanup machen, oder?
+void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)
 {
 	if (io->type == HEREDOC)
 		unlink(cmd->heredoc_name);
 }
+
 /**
  * Function: ft_close_old_fd
  * Description: Closes the old file descriptors before opening new ones.
@@ -180,11 +176,14 @@ void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)//das kann ich tatsächlich e
  */
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 {
-		if ((io->type == HEREDOC || io->type == REDIR_IN) && cmd_node->read_fd != 0)
-			close(cmd_node->read_fd);
-		else if ((io->type == REDIR_OUT || io->type == APPEND) && cmd_node->write_fd != 1)
-			close(cmd_node->write_fd);	
+	if ((io->type == HEREDOC || io->type == REDIR_IN)
+		&& cmd_node->read_fd != 0)
+		close(cmd_node->read_fd);
+	else if ((io->type == REDIR_OUT || io->type == APPEND)
+		&& cmd_node->write_fd != 1)
+		close(cmd_node->write_fd);
 }
+
 /**
  * Function: open_io
  * Description: Opens the files for IO redirection for a command.
@@ -212,7 +211,6 @@ int	open_io(t_common *c, t_list *io_lst, t_cmd_table *cmd_node)
 		{
 			c->exitstatus = 1;
 		}
-//if multiple infiles -> just take the last one. This should happen already in open_file
 		tmp = tmp->next;
 	}
 	return (status);
@@ -221,7 +219,7 @@ int	open_io(t_common *c, t_list *io_lst, t_cmd_table *cmd_node)
 int	open_redirections(t_common *c, t_cmd_table *cmd_node)
 {
 	t_io_red	*io;
-	
+
 	(void) c;
 	if (cmd_node->in)
 	{

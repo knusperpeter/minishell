@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 02:56:18 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 14:07:37 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:14:06 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	free_2d(char **str)
 	}
 	free(str);
 }
+
 /**
  * Function: free_env_nodes
  * Description: Frees a linked list of environment variables.
@@ -50,6 +51,7 @@ void	free_env_nodes(t_env *start)
 		free(tmp);
 	}
 }
+
 /**
  * Function: free_tokens
  * Description: Frees a linked list of tokens.
@@ -61,7 +63,7 @@ void	free_tokens(void *content)
 	t_token	*tmp;
 
 	if (!content)
-		return;
+		return ;
 	tmp = (t_token *)content;
 	while (tmp)
 	{
@@ -72,6 +74,7 @@ void	free_tokens(void *content)
 		free (token);
 	}
 }
+
 /**
  * Function: free_io_red
  * Description: Frees an IO redirection structure.
@@ -80,7 +83,7 @@ void	free_tokens(void *content)
 void	free_io_red(void *content)
 {
 	t_io_red	*io;
-	
+
 	io = (t_io_red *)content;
 	if (io->heredoc_limiter)
 		free(io->heredoc_limiter);
@@ -90,6 +93,7 @@ void	free_io_red(void *content)
 		free(io->outfile);
 	free(io);
 }
+
 /**
  * Function: free_cmd_lst
  * Description: Frees a linked list of commands.
@@ -98,7 +102,7 @@ void	free_io_red(void *content)
 void	free_cmd_lst(t_list **lst)
 {
 	t_list	*tmp;
-	
+
 	while (lst && *lst)
 	{
 		tmp = (*lst)->next;
@@ -108,6 +112,7 @@ void	free_cmd_lst(t_list **lst)
 		*lst = tmp;
 	}
 }
+
 /**
  * Function: free_cmd_table
  * Description: Frees a command table structure.
@@ -115,8 +120,8 @@ void	free_cmd_lst(t_list **lst)
  */
 void	free_cmd_table(void *content)
 {
-	t_cmd_table *table;
-	
+	t_cmd_table	*table;
+
 	table = (t_cmd_table *)content;
 	if (table->str)
 		free_2d(table->str);
@@ -154,6 +159,7 @@ void	ft_cleanup_loop(t_common *c)
 	free(c->raw_prompt);
 	c->raw_prompt = NULL;
 }
+
 /**
  * Function: free_all
  * Description: Frees all allocated memory before the program ends.
@@ -161,8 +167,6 @@ void	ft_cleanup_loop(t_common *c)
  */
 void	free_all(t_common *c, int cleanup_loop)
 {
-//	t_env	*node;
-	//rl_clear_history();
 	if (cleanup_loop)
 		ft_cleanup_loop(c);
 	if (c->env)
@@ -174,7 +178,6 @@ void	ft_clean_exit(t_common *c, char *msg, int cleanup_loop)
 {
 	if (msg)
 		printf("%s\n", msg);
-//	close_all_pipes(c);
 	free_all(c, cleanup_loop);
 	exit(c->exitstatus);
 }

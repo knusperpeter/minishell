@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 13:46:17 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 00:39:50 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int g_signal = 0;
 
 void	prompt(t_common *c)
 {
-	// c->exitstatus = 0;
+	char	*line;
+
 	if (isatty(fileno(stdin)))
 	{
 		c->raw_prompt = readline("minishell> ");
@@ -30,7 +31,6 @@ void	prompt(t_common *c)
 	}
 	else
 	{
-		char *line;
 		line = get_next_line(fileno(stdin));
 		c->raw_prompt = ft_strtrim(line, "\n");
 		free(line);
@@ -57,7 +57,6 @@ void	init_loop_data(t_common *c)
 	c->tokens = NULL;
 	c->cmd_struct = NULL;
 	c->envp = NULL;
-	// c->exitstatus_str = NULL;
 	c->subshell_level = 0;
 	c->old_pipe = 0;
 	c->heredoc_counter = 0;
@@ -65,7 +64,8 @@ void	init_loop_data(t_common *c)
 
 /**
  * Function: ft_loop
- * Description: The main loop of the shell. It reads input, parses it, executes it, and cleans up.
+ * Description: The main loop of the shell. It reads input, parses it, executes
+ * it, and cleans up.
  * Parameter: c - The common structure containing the shell data.
  * Returns: 0 when the loop ends.
  */
@@ -78,12 +78,10 @@ int	ft_loop(t_common *c)
 		interactive(c);
 		prompt(c);
 		non_interactive(c);
-//		ft_putstr_fd(c->raw_prompt, 1);
 		if (!c->raw_prompt)
 			break ;
 		if (c->raw_prompt[0])
 		{
-			//non_interactive();
 			ft_parsing(c);
 			ft_execute(c);
 			ft_cleanup_loop(c);
@@ -102,7 +100,7 @@ int	ft_loop(t_common *c)
 void	init_minishell(t_common *c, char **envp)
 {
 	ft_memset(c, 0, sizeof(t_common));
-	if(envp)
+	if (envp)
 	{
 		if (!dup_env(c, envp))
 			return (perror("Error initializing environment\n"));
@@ -113,7 +111,8 @@ void	init_minishell(t_common *c, char **envp)
 
 /**
  * Function: main
- * Description: The entry point of the program. It initializes the shell, runs the main loop, and cleans up when done.
+ * Description: The entry point of the program. It initializes the shell, runs 
+ * the main loop, and cleans up when done.
  * Parameters:
  * - ac: The number of command-line arguments.
  * - av: The command-line arguments.
@@ -123,11 +122,9 @@ void	init_minishell(t_common *c, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	t_common	c;
-	// Validate size before allocation. The size variable
-	// should be validated or bounded checked before allocating memory to avoid potential integer overflows.
-	(void)		ac;
-	(void)		av;
 
+	(void) ac;
+	(void) av;
 	if (!envp[0] || !envp)
 		return (1);
 	init_minishell(&c, envp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/09 12:58:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/11 23:56:57 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_printerror(t_common *c, char **args)
 {
 	c->exitstatus = 2;
 	ft_putstr_fd("minishell: pwd: -", 2);
-	ft_putchar_fd(args[1][1], 2);		
+	ft_putchar_fd(args[1][1], 2);
 	ft_putstr_fd(": invalid option\n", 2);
 	ft_clean_exit(c, NULL, 1);
 }
@@ -25,7 +25,6 @@ int	ft_pwd(t_common *c, char **args)
 {
 	t_env	*tmp;
 
-//	invalid option error message missing
 	if (args[1])
 		if (args[1][0] == '-')
 			ft_printerror(c, args);
@@ -35,7 +34,7 @@ int	ft_pwd(t_common *c, char **args)
 		if (!tmp)
 		{
 			c->exitstatus = 1;
-			return(ft_putstr_fd("minishell: OLDPWD not set\n", 2), 1);
+			return (ft_putstr_fd("minishell: OLDPWD not set\n", 2), 1);
 		}
 		if (!ft_strncmp(tmp->variable, "PWD", 4))
 		{

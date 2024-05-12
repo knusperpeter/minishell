@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/08 16:01:09 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 01:16:47 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	overflows_ll(char *arg)
 {
 	int		i;
 	char	*num;
-    char    *s;
+	char	*s;
 	int		num_len;
 
 	i = 0;
@@ -66,10 +66,10 @@ int	overflows_ll(char *arg)
 	while (ft_isdigit(arg[i + num_len]))
 		num_len++;
 	s = get_llstr(arg, i, num_len);
-    num = ft_lltoa(ft_atoll(s));
+	num = ft_lltoa(ft_atoll(s));
 	if (ft_strncmp(s, num, num_len))
 		return (free(s), free(num), 1);
-    return(free(s), free(num), 0);
+	return (free(s), free(num), 0);
 }
 
 int	valid_num(char *arg)
@@ -99,46 +99,33 @@ int	valid_num(char *arg)
 	return (1);
 }
 
-int	ft_numeric_arg(t_common *c, char **arg)
-{	
-//	if (!arg[1][0])
-//		return (1);	
-	if (!valid_num(arg[1]) || overflows_ll(arg[1]))
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(arg[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
-		return (c->exitstatus = 2, 0);
-	}
-	return (1);
-}
-
-// this does not check for input like "exit +++" or "exit "--123-"" Maybe it
-// would be best to put this whole if statement into a sparte function.
-int	check_arg(t_common *c, char **arg)
-{
-	if (!arg[1])
-		return (c->exitstatus = 0, -1);
-	if (!ft_numeric_arg(c, arg))
-		return (2);
-	if (arg[2])
-	{
-		c->exitstatus = 1;
-		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 1);// don't exit in this case
-	}
-	else if (arg[1])
-		c->exitstatus = ft_atoll(arg[1]) % 256;//check if negative nums might appear
-	return (-1);
-}
-
 //to hand back the exit status from subshell, use waitpid in parent process?
 void	ft_exit(t_common *c, char **cmd)
 {
 	ft_putstr_fd("exit\n", 2);
 	if (cmd)
+	{
 		if (cmd[1])
-			if (check_arg(c, cmd) == 1)
+		{
+			if (!cmd[1])
+				c->exitstatus = 0;
+			if (!valid_num(cmd[1]) || overflows_ll(cmd[1]))
+			{
+				ft_putstr_fd("minishell: exit: ", 2);
+				ft_putstr_fd(cmd[1], 2);
+				ft_putstr_fd(": numeric argument required\n", 2);
+				c->exitstatus = 2;
+			}
+			if (cmd[2])
+			{
+				c->exitstatus = 1;
+				ft_putstr_fd("minishell: exit: too many args\n", 2);
 				return ;
+			}
+			else if (cmd[1])
+				c->exitstatus = ft_atoll(cmd[1]) % 256;
+		}
+	}
 	ft_clean_exit(c, NULL, 1);
 }
 

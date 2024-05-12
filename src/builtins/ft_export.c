@@ -3,40 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/08 17:13:46 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 00:25:41 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // declare -x VAR="value" only?
 #include "../../include/minishell.h"
 
-void sort_env(t_env *env)
+void	sort_env(t_env *env)
 {
-	char *temp_var;
-	char *temp_val;
-	int temp_flag;
-	t_env *i;
-	
+	char	*temp_var;
+	char	*temp_val;
+	int		temp;
+	t_env	*i;
+	t_env	*j;
+
 	i = env;
 	while (i != NULL)
 	{
-		t_env *j = i->next;
+		j = i->next;
 		while (j != NULL)
 		{
-			if (ft_strncmp(i->variable, j->variable, sizeof(j->variable) + 1) > 0)
+			temp = sizeof(j->variable) + 1;
+			if (ft_strncmp(i->variable, j->variable, temp) > 0)
 			{
 				temp_var = i->variable;
 				temp_val = i->value;
-				temp_flag = i->flag;
+				temp = i->flag;
 				i->variable = j->variable;
 				i->value = j->value;
 				i->flag = j->flag;
 				j->variable = temp_var;
 				j->value = temp_val;
-				j->flag = temp_flag;
+				j->flag = temp;
 			}
 			j = j->next;
 		}
@@ -44,7 +46,7 @@ void sort_env(t_env *env)
 	}
 }
 
-void	export_print_env(t_env *env)//add alphabetical order?
+void	export_print_env(t_env *env)
 {
 	sort_env(env);
 	while (env)
@@ -74,7 +76,6 @@ int	is_valid_env(char *env)
 				return (0);
 			else
 				return (-2);
-		
 		}
 		i++;
 	}
@@ -125,7 +126,7 @@ int	already_in_env(char *args, t_env *env, int errorno)
 				env->flag = 0;
 			}
 			else if (errorno == 0 && args[len] == '+')
-			 	add_to_var(env, &args[len + 2]);
+				add_to_var(env, &args[len + 2]);
 			return (EXIT_FAILURE);
 		}
 		env = env->next;
@@ -148,7 +149,7 @@ void	add_variable_to_env(t_env *env, char *args, int errorno)
 	prev->next = new;
 }
 
-static void print_error(t_common *c, char *arg, int i)
+static void	print_error(t_common *c, char *arg, int i)
 {
 	if (i == -1 || i == -2)
 	{
@@ -162,7 +163,7 @@ static void print_error(t_common *c, char *arg, int i)
 		c->exitstatus = 2;
 		ft_putstr_fd("minishell: export: ", 2);
 		ft_putchar_fd(arg[0], 2);
-		ft_putchar_fd(arg[1], 2);		
+		ft_putchar_fd(arg[1], 2);
 		ft_putstr_fd(": invalid option\n", 2);
 	}
 }

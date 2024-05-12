@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 20:33:37 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/02 16:11:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/12 00:40:24 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ t_list_d	*ft_lstlast_d(t_list_d *lst)
 	t_list_d	*tmp;
 
 	tmp = lst;
-	
 	if (!tmp)
 		return (NULL);
 	while (tmp)

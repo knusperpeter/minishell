@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 12:34:28 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/11 23:54:44 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
-
 
 extern int	g_signal;
 
@@ -118,7 +117,6 @@ typedef struct common_data
 	int					old_pipe;
 }	t_common;
 
-
 int			create_list_element(void **element, size_t size);
 int			ft_init_env(t_env *node, char *envp, t_env *prev);
 int			dup_env(t_common *c, char **envp);
@@ -147,10 +145,10 @@ char		*get_expanded_str(char *str, char *envvalue, int i, int varsize);
 void		heredoc_expansion(t_common *c, t_io_red *io, char **str);
 int			has_expansion(t_common *c, char *str);
 int			is_dir(char *file);
-int	open_redirections(t_common *c, t_cmd_table *cmd_node);
+int			open_redirections(t_common *c, t_cmd_table *cmd_node);
 
 //lexer
-int    	error_lexer(t_common *c, char *s, int i);
+int			error_lexer(t_common *c, char *s, int i);
 int			get_cmd_path(t_common *c, t_cmd_table *cmd);
 int			count_pipes(t_common *c, char *input);
 char		**set_up_array(int cc, char *input);
@@ -160,8 +158,8 @@ int			check_char(char *character);
 int			check_token(char *token);
 
 //signals
-void    	interactive(t_common *c);
-void    	interactive_here(t_common *c);
+void		interactive(t_common *c);
+void		interactive_here(t_common *c);
 void		non_interactive(t_common *c);
 
 // builtins
@@ -173,6 +171,7 @@ int			ft_export(t_common *c, char **args, t_env *env);
 int			ft_echo(t_common *c, char **args);
 void		set_env_value(t_env *env, char *variable, char *value);
 int			ft_cd(char **args, t_common *c);
+int			get_set_path(t_env *env, char *variable, char **path);
 
 //int	ft_execute_builtins(t_cmd_table *cmd, t_common *c);
 

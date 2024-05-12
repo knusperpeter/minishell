@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/11 13:39:07 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/12 01:10:00 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,21 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 	if (!tmp)
 		return (perror("Error initializing cmd\n"), EXIT_FAILURE);
 	if (check_cmd("pwd", tmp))
-		/* c->exitstatus =  */ft_pwd(c, tmp->str);
+		ft_pwd(c, tmp->str);
 	else if (check_cmd("export", tmp))
-		/* c->exitstatus =  */ft_export(c, tmp->str, c->env);
+		ft_export(c, tmp->str, c->env);
 	else if (check_cmd("env", tmp))
 		c->exitstatus = ft_env(tmp->str, c->env);
 	else if (check_cmd("exit", tmp) && c->cmd_count == 1)
 		ft_exit(c, tmp->str);
 	else if (check_cmd("unset", tmp))
-		/* c->exitstatus =  */ft_unset(tmp->str, c);
+		ft_unset(tmp->str, c);
 	else if (check_cmd("echo", tmp))
-		/* c->exitstatus =  */ft_echo(c, tmp->str);
+		ft_echo(c, tmp->str);
 	else if (check_cmd("cd", cmd))
 		c->exitstatus = ft_cd(tmp->str, c);
 	else
-	 	return (0);
+		return (0);
 	return (1);
 }
 
@@ -132,7 +132,7 @@ char	**get_envp(t_env *env)
  * Closes read and write file descriptors in the command table, previous descriptor, and both descriptors in the array.
  */
 void	close_fds(t_common *c, int *fd, t_cmd_table *cmd)
-{	
+{
 	if (cmd->read_fd != STDIN)
 		close(cmd->read_fd);
 	if (cmd->write_fd != STDOUT)
@@ -140,9 +140,9 @@ void	close_fds(t_common *c, int *fd, t_cmd_table *cmd)
 	if (c->old_pipe)
 		close(c->old_pipe);
 	if (c->cmd_count > 1)
-		close(fd[0]); //if more than 1 cmd
+		close(fd[0]);
 	if (c->cmd_count > 1)
-		close(fd[1]); //if more than 1 cmd
+		close(fd[1]);
 }
 
 /**
@@ -165,14 +165,14 @@ void	handle_fds_parent(t_common *c, int *fd)
  * @param c: Common structure, cmd: Command table, i: Current command index, fd: File descriptors, old_pipe: Previous pipe.
  * Handles error checking and redirection for both input and output.
  */
-void ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
+void	ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
 {
 	if (cmd->read_fd == -1 || cmd->write_fd == -1)
 		dprintf(2, "error opening file");
 	if (cmd->read_fd != STDIN)
 	{
 		if (dup2(cmd->read_fd, STDIN) == -1)
-			ft_printerrno("1\n"); //check error and exit 
+			ft_printerrno("1\n"); //check error and exit
 	}
 	else if (c->old_pipe != 0 && c->cmd_count != 1)
 	{
@@ -189,7 +189,7 @@ void ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
 		if (dup2(fd[1], STDOUT) == -1)
 			ft_printerrno("4");
 	}
-	close_fds(c, fd, cmd);// if builtin, do i need to make it different?
+	close_fds(c, fd, cmd);
 }
 
 /**
@@ -200,7 +200,7 @@ void ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
 int	is_builtin(char *cmd)
 {
 	int	size;
-	
+
 	if (!cmd)
 		return (0);
 	size = ft_strlen(cmd);
@@ -226,15 +226,14 @@ void	wait_all_childs(t_common *c)
 	t_list_d	*tmp;
 	t_cmd_table	*curr;
 
-	// change to from left to right
 	tmp = c->cmd_struct;
 	while (tmp)
 	{
 		curr = tmp->content;
 		waitpid(curr->id, (int *)&c->exitstatus, 0);
-		if(WIFEXITED(c->exitstatus))
+		if (WIFEXITED(c->exitstatus))
 			c->exitstatus = WEXITSTATUS(c->exitstatus);
-		else if(WIFSIGNALED(c->exitstatus))
+		else if (WIFSIGNALED(c->exitstatus))
 			c->exitstatus = 128 + WTERMSIG(c->exitstatus);
 		tmp = tmp->next;
 	}
@@ -242,7 +241,7 @@ void	wait_all_childs(t_common *c)
 
 int	ft_count_cmds(t_list_d *cmd_struct)
 {
-	int		count;
+	int			count;
 	t_list_d	*tmp;
 
 	count = 0;
@@ -257,7 +256,8 @@ int	ft_count_cmds(t_list_d *cmd_struct)
 
 int	ft_check_builtin(t_cmd_table *cmd)
 {
-	if ((!ft_strncmp("export", cmd->str[0], ft_strlen(cmd->str[0])) && cmd->str[1])
+	if ((!ft_strncmp("export", cmd->str[0], ft_strlen(cmd->str[0]))
+			&& cmd->str[1])
 		|| !ft_strncmp("exit", cmd->str[0], ft_strlen(cmd->str[0]))
 		|| !ft_strncmp("unset", cmd->str[0], ft_strlen(cmd->str[0]))
 		|| !ft_strncmp("cd", cmd->str[0], ft_strlen(cmd->str[0])))
@@ -269,8 +269,6 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 {
 	if (!open_redirections(c, curr_cmd_table))
 		return (ft_clean_exit(c, NULL, 1));
-//	if (!open_io(c, curr_cmd_table->io_red, curr_cmd_table))
-//		return (c->exitstatus = 127, ft_clean_exit(c, NULL, 1));
 	ft_redirect_io(c, curr_cmd_table, curr, fd);
 	if (is_builtin(curr_cmd_table->str[0]))
 	{
@@ -289,20 +287,20 @@ void	execute_child(t_common *c, t_cmd_table *curr_cmd_table, int curr, int *fd)
 		else
 		{
 			c->exitstatus = 127;
-			dprintf(2, "minishell: %s: command not found\n", curr_cmd_table->str[0]);
-		}	
+			dprintf(2, "minishell: %s: command not found\n",
+				curr_cmd_table->str[0]);
+		}
 	}
-//	c->exitstatus = 127;
 	ft_clean_exit(c, NULL, 1);
 }
 
 int	execute_cmds(t_common *c)
 {
-	int	curr;
-	int	fd[2];
-	t_list_d *curr_cmd;
-	t_cmd_table *curr_cmd_table;
-	
+	int			curr;
+	int			fd[2];
+	t_list_d	*curr_cmd;
+	t_cmd_table	*curr_cmd_table;
+
 	curr = 1;
 	c->old_pipe = 0;
 	curr_cmd = c->cmd_struct;
@@ -321,26 +319,25 @@ int	execute_cmds(t_common *c)
 		curr++;
 		curr_cmd = curr_cmd->next;
 	}
-//	close(c->old_pipe); // close c->old_pipe? why not :(
 	return (EXIT_SUCCESS);
 }
 
 int	ft_execute(t_common *c)
 {
 	int	status;
-	
+
 	c->cmd_count = ft_count_cmds(c->cmd_struct);
 	if (c->cmd_count == 1 && ft_check_builtin(c->cmd_struct->content))
 	{
 		ft_builtins(c->cmd_struct->content, c);
 		return (EXIT_SUCCESS);
 	}
-	else//
-	{//
+	else
+	{
 		status = execute_cmds(c);
 		wait_all_childs(c);
-	}//
+	}
 	if (status == EXIT_FAILURE)
-		return(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
