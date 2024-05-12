@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 11:30:56 by chris             #+#    #+#             */
-/*   Updated: 2024/05/12 23:50:13 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	**ft_get_paths(t_common *c, t_env *env)
 		tmp = tmp->next;
 	if (!tmp)
 		return (NULL);
-	paths = ft_protect(c, ft_split(tmp->value, ':'), 0, 0, 0);
+	paths = ft_protect(c, ft_split(tmp->value, ':'), 0, 0);
 	return (paths);
 }
 
@@ -33,8 +33,8 @@ char	*join_path(t_common *c, char *cmd, char *path)
 
 	if (cmd[0] == '/')
 		return (NULL);
-	prepath = ft_protect(c, ft_strjoin(path, "/"), 0, 0, 0);
-	fullpath = ft_protect(c, ft_strjoin(prepath, cmd), prepath, 0, 0);
+	prepath = ft_protect(c, ft_strjoin(path, "/"), 0, 0);
+	fullpath = ft_protect(c, ft_strjoin(prepath, cmd), prepath, 0);
 	free(prepath);
 	return (fullpath);
 }

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/13 00:05:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	cmdtok_to_node(t_common *c, t_token *tok, t_cmd_table *cmd)
 	{
 		if (tmp->type == VOID)
 		{
-			tmp_cmd = ft_protect(c, ft_strdup(tmp->data), 0, 0, 0);
-			cmd_list = ft_protect(c, ft_lstnew(tmp_cmd), tmp_cmd, 0, 0);
+			tmp_cmd = ft_protect(c, ft_strdup(tmp->data), 0, 0);
+			cmd_list = ft_protect(c, ft_lstnew(tmp_cmd), tmp_cmd, 0);
 			ft_lstadd_back(&cmd->cmds, cmd_list);
 		}
 		tmp = tmp->next;
@@ -52,8 +52,8 @@ t_list_d	*create_cmds_node(t_common *c)
 	t_list_d	*tmp_cmd;
 	t_cmd_table	*cmd_table;
 
-	cmd_table = ft_protect(c, malloc(sizeof(t_cmd_table)), 0, 0, 0);
-	tmp_cmd = ft_protect(c, ft_lstnew_d(cmd_table), cmd_table, 0, 0);
+	cmd_table = ft_protect(c, malloc(sizeof(t_cmd_table)), 0, 0);
+	tmp_cmd = ft_protect(c, ft_lstnew_d(cmd_table), cmd_table, 0);
 	return (tmp_cmd);
 }
 

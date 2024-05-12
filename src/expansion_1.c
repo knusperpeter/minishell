@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 19:49:04 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 23:24:42 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	expand_name(t_common *c, t_io_red *io)
 	{
 		while (has_expansion(c, io->infile))
 		{
-			tmp = ft_protect(c, ft_strdup(io->infile), 0, 0, 0);
+			tmp = ft_protect(c, ft_strdup(io->infile), 0, 0);
 			free(io->infile);
 			io->infile = expand_str(c, tmp);
 			free(tmp);
@@ -76,7 +76,7 @@ void	expand_name(t_common *c, t_io_red *io)
 	{
 		while (has_expansion(c, io->outfile))
 		{
-			tmp = ft_protect(c, ft_strdup(io->outfile), 0, 0, 0);
+			tmp = ft_protect(c, ft_strdup(io->outfile), 0, 0);
 			free(io->outfile);
 			io->outfile = expand_str(c, tmp);
 			free(tmp);

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 22:00:48 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:15:34 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	if (io->type == HEREDOC)
 	{
 		interactive_here(c);
-		fd = open(cmd_node->heredoc_name, O_CREAT | O_RDWR
+		fd = open(cmd_node->hd_name, O_CREAT | O_RDWR
 				| O_EXCL, S_IRUSR | S_IWUSR);
 		here_doc(c, io, &fd);
 		non_interactive(c);

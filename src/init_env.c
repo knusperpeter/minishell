@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 23:45:06 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	create_list_element(t_common *c, void **element, size_t size)
 {
-	*element = ft_protect(c, malloc(sizeof(char) * size), 0, 0, 0);
+	*element = ft_protect(c, malloc(sizeof(char) * size), 0, 0);
 	return (0);
 }
 
@@ -39,14 +39,14 @@ int	ft_init_env(t_common *c, t_env *node, char *envp, t_env *prev)
 		if (*(equals - 1) == '+')
 			equals -= 1;
 	size = ft_get_var_size(envp, equals);
-	node->variable = ft_protect(c, malloc(sizeof(char) * (size + 1)), 0, 0, 0);
+	node->variable = ft_protect(c, malloc(sizeof(char) * (size + 1)), 0, 0);
 	ft_strlcpy(node->variable, envp, size + 1);
 	node->flag = 0;
 	if (equals)
 	{
 		if (*equals == '+')
 			equals++;
-		node->value = ft_protect(c, ft_strdup(equals + 1), node->variable, 0, 0);
+		node->value = ft_protect(c, ft_strdup(equals + 1), node->variable, 0);
 	}
 	else
 		node->value = NULL;

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 10:41:34 by chris             #+#    #+#             */
-/*   Updated: 2024/05/13 01:05:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,11 @@ void	add_to_var(t_common *c, t_env *env, char *arg)
 
 	if (env->value)
 	{
-		tmp = ft_protect(c, ft_strjoin(env->value, arg), env->value, 0, 0);
+		tmp = ft_protect(c, ft_strjoin(env->value, arg), env->value, 0);
 		free(env->value);
 		env->value = tmp;
 	}
 	else
-		env->value = ft_protect(c, ft_strdup(arg), 0, 0, 0);
+		env->value = ft_protect(c, ft_strdup(arg), 0, 0));
 	env->flag = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 00:55:11 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:34:33 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*get_llstr(t_common *c, char *arg, int i, int num_len)
 			minus = 1;
 		j++;
 	}
-	str = ft_protect(c, malloc(sizeof(char) * (num_len + minus + 1)), 0, 0, 0);
+	str = ft_protect(c, malloc(sizeof(char) * (num_len + minus + 1)), 0, 0);
 	if (str == NULL)
 		return (NULL);
 	j = 0;
@@ -66,7 +66,7 @@ int	overflows_ll(t_common *c, char *arg)
 	while (ft_isdigit(arg[i + num_len]))
 		num_len++;
 	s = get_llstr(c, arg, i, num_len);
-	num = ft_protect(c, ft_lltoa(ft_atoll(s)), s, 0, 0);
+	num = ft_protect(c, ft_lltoa(ft_atoll(s)), s, 0);
 	if (ft_strncmp(s, num, num_len))
 		return (free(s), free(num), 1);
 	return (free(s), free(num), 0);

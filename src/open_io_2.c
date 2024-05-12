@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_io_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 11:02:35 by chris             #+#    #+#             */
-/*   Updated: 2024/05/12 11:32:27 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/13 01:15:34 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	open_failed(t_io_red *io, char *file)
 void	unlink_heredoc(t_io_red *io, t_cmd_table *cmd)
 {
 	if (io->type == HEREDOC)
-		unlink(cmd->heredoc_name);
+		unlink(cmd->hd_name);
 }
 
 void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)

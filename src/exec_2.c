@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 20:57:47 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 23:16:30 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:30:04 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,18 +52,18 @@ int	ft_builtins(t_cmd_table *cmd, t_common *c)
 	return (1);
 }
 
-char	**env_to_arr(t_common *c,int size, t_env *env)
+char	**env_to_arr(t_common *c, int size, t_env *env)
 {
 	char	**ret;
 	char	*s;
 	int		i;
 
-	ret = ft_protect(c, malloc(sizeof(char *) * (size + 1)), 0, 0, 0);
+	ret = ft_protect(c, malloc(sizeof(char *) * (size + 1)), 0, 0);
 	i = 0;
 	while (i < size)
 	{
-		s = ft_protect(c, ft_strjoin(env->variable, "="), ret, 0, 0);
-		ret[i] = ft_protect(c, ft_strjoin(s, env->value), s, ret, 0);
+		s = ft_protect(c, ft_strjoin(env->variable, "="), ret, 0);
+		ret[i] = ft_protect(c, ft_strjoin(s, env->value), s, ret);
 		free(s);
 		i++;
 		env = env->next;

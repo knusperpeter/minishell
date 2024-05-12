@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 19:53:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 23:26:13 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_split_cmd(t_common *c, t_list *curr)
 	t_list	*new_list;
 	t_list	*original_next;
 
-	tmp = ft_protect(c, ft_split(curr->content, ' '), 0, 0, 0);
+	tmp = ft_protect(c, ft_split(curr->content, ' '), 0, 0);
 	i = 0;
 	list = curr;
 	original_next = curr->next;
@@ -30,7 +30,7 @@ void	ft_split_cmd(t_common *c, t_list *curr)
 	{
 		if (tmp[i + 1])
 		{
-			new_list = ft_protect(c, ft_lstnew(tmp[i + 1]), 0, 0, 0);
+			new_list = ft_protect(c, ft_lstnew(tmp[i + 1]), 0, 0);
 			new_list->next = list->next;
 			list->next = new_list;
 			list = list->next;

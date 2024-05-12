@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 19:51:57 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 23:17:48 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static t_env	*get_env_node(t_common *c, char *str, int i)
 	char	*var;
 
 	length = ft_varsize(str, i);
-	var = ft_protect(c, ft_substr(str, i, length), 0, 0, 0);
+	var = ft_protect(c, ft_substr(str, i, length), 0, 0);
 	env = c->env;
 	while (env)
 	{
@@ -44,21 +44,24 @@ static t_env	*get_env_node(t_common *c, char *str, int i)
 	return (free(var), NULL);
 }
 
-char	*get_expansion_value(t_common *c, char *str, int i, int *varsize)
+char	*get_expansion_value(t_common *c, char *str, int i, int *len)
 {
 	t_env	*env_node;
 
 	if (str[i + 1] == '?')
-		return (*varsize = 1, ft_protect(c, ft_itoa(c->exitstatus), 0, 0, 0));
+		return (*len = 1, ft_protect(c, ft_itoa(c->exitstatus), 0, 0));
 	else if (str[i + 1] == '$')
-		return (*varsize = 1, ft_protect(c, ft_strdup("1589302"), 0, 0, 0));
+		return (*len = 1, ft_protect(c, ft_strdup("1589302"), 0, 0));
 	else if (str[++i])
 	{
 		env_node = get_env_node(c, str, i);
 		if (!env_node)
-			return (*varsize = ft_varsize(str, i), ft_protect(c, ft_strdup(""), 0, 0, 0));
-		*varsize = ft_strlen(env_node->variable);
-		return (ft_protect(c, ft_strdup(env_node->value), 0, 0, 0));
+		{
+			*len = ft_varsize(str, i);
+			return (ft_protect(c, ft_strdup(""), 0, 0));
+		}
+		*len = ft_strlen(env_node->variable);
+		return (ft_protect(c, ft_strdup(env_node->value), 0, 0));
 	}
 	return (NULL);
 }
@@ -71,18 +74,18 @@ char	*get_expanded_str(t_common *c, char *str, int i, int varsize)
 	char	*old_res;
 
 	tmp = NULL;
-	res = ft_protect(c, ft_substr(str, 0, i), 0, 0, 0);
+	res = ft_protect(c, ft_substr(str, 0, i), 0, 0);
 	envvalue = get_expansion_value(c, str, i, &varsize);
 	if (envvalue)
 	{
-		tmp = ft_protect(c, ft_strjoin(res, envvalue), res, 0, 0);
+		tmp = ft_protect(c, ft_strjoin(res, envvalue), res, 0);
 		free(res);
 		res = NULL;
 	}
 	old_res = res;
 	if (tmp)
 	{
-		res = ft_protect(c, ft_strjoin(tmp, &str[i + varsize + 1]), tmp, 0, 0);
+		res = ft_protect(c, ft_strjoin(tmp, &str[i + varsize + 1]), tmp, 0);
 		free(tmp);
 		tmp = NULL;
 	}

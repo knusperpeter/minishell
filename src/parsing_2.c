@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:53:44 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 00:07:38 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int	tokenize(t_common *c)
 	i = 0;
 	while (arr[i])
 	{
-		token = ft_protect(c, malloc(sizeof(t_token)), 0, 0, 0);
+		token = ft_protect(c, malloc(sizeof(t_token)), 0, 0);
 		sub_arr = prep_input(arr[i++]);
-		cmd_tok = ft_protect(c, ft_lstnew(token), token, 0, 0);
+		cmd_tok = ft_protect(c, ft_lstnew(token), token, 0);
 		add_to_list(sub_arr, cmd_tok);
 		ft_lstadd_back(&c->tokens, cmd_tok);
 		free_2d(sub_arr);
@@ -45,12 +45,12 @@ int	cmd_to_node(t_common *c, t_cmd_table *cmd_node)
 	cmd_tmp = cmd_node;
 	cmd_tok = cmd_tmp->cmds;
 	i = ft_lstsize(cmd_tok);
-	cmd_tmp->str = ft_protect(c, malloc(sizeof(char **) * (i + 1)), 0, 0, 0);
+	cmd_tmp->str = ft_protect(c, malloc(sizeof(char **) * (i + 1)), 0, 0);
 	cmd_tok = cmd_tmp->cmds;
 	i = 0;
 	while (cmd_tok)
 	{
-		cmd_tmp->str[i] = ft_protect(c, ft_strdup(cmd_tok->content), 0, 0, 0);
+		cmd_tmp->str[i] = ft_protect(c, ft_strdup(cmd_tok->content), 0, 0);
 		i++;
 		cmd_tok = cmd_tok->next;
 	}
@@ -77,7 +77,7 @@ void	init_cmd_table(t_cmd_table *node)
 	node->id = -1;
 	node->cmds = NULL;
 	node->io_red = NULL;
-	node->heredoc_name = NULL;
+	node->hd_name = NULL;
 	node->str = NULL;
 	node->exec_path = NULL;
 	node->in = NULL;

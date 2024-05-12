@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 23:35:48 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	is_dir(char *file)
 
 void	access_denied(t_common *c, t_cmd_table *cmd)
 {
-	cmd->exec_path = ft_protect(c, ft_strdup(cmd->str[0]), 0, 0, 0);
+	cmd->exec_path = ft_protect(c, ft_strdup(cmd->str[0]), 0, 0);
 }
 
 int	add_path(t_common *c, t_cmd_table *cmd, char **paths)
@@ -67,7 +67,7 @@ int	is_path_or_pwd(t_common *c, t_cmd_table *cmd, t_env *env)
 
 	if (cmd->str[0] && cmd->str[0][0] == '/' && !is_dir(cmd->str[0]))
 	{
-		cmd->exec_path = ft_protect(c, ft_strdup(cmd->str[0]), 0, 0, 0);
+		cmd->exec_path = ft_protect(c, ft_strdup(cmd->str[0]), 0, 0);
 		return (1);
 	}
 	tmp = env;

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 01:10:40 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 01:20:20 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ typedef struct s_cmd_table
 	t_list				*cmds;
 	t_io_red			*in;
 	t_io_red			*out;
-	char				*heredoc_name;
+	char				*hd_name;
 	char				**str;
 	char				*exec_path;
 }	t_cmd_table;
@@ -168,7 +168,7 @@ void		ft_lst_d_delone(t_list_d *lst, void (*del)(void *));
 void		ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void		ft_printerrno(char *s);
 int			get_env_size(t_env *env);
-void		*ft_protect(t_common *c, void *p1, void *p2, void *p3, void *p4);
+void		*ft_protect(t_common *c, void *p1, void *p2, void *p3);
 //expansion & quotes
 void		ft_rm_quotes(t_common *c, t_list_d *cmds);
 char		*expand_str(t_common *c, char *str);

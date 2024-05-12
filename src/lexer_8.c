@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_8.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 21:55:58 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/12 21:58:17 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/13 01:19:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,3 @@ void	init_initial_checks(int *i, int *k, int*len, char *result)
 	*k = 0;
 	*len = ft_strlen(result);
 }
-
