@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 01:20:20 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 18:51:23 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ typedef struct s_cmd_table
 // Common struct
 typedef struct common_data
 {
-	pid_t				pid;
 	int					cmd_count;
 	int					open_single_quotes;
 	int					open_double_quotes;
@@ -155,11 +154,12 @@ void		free_all(t_common *c, int cleanup_loop);
 void		ft_clean_exit(t_common *c, char *msg, int cleanup_loop);
 //open_io
 int			open_io(t_common *c, t_list *io, t_cmd_table *cmd_node);
-void		open_failed(t_io_red *io, char *file);
+void		open_failed(t_common *c, t_io_red *io, char *file);
 void		unlink_heredoc(t_io_red *io, t_cmd_table *cmd);
 void		ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io);
 void		here_doc(t_common *c, t_io_red *io, int *fd);
 int			open_redirections(t_common *c, t_cmd_table *cmd_node);
+void		dir_error(t_common *c, char *file);
 //utils
 t_list_d	*ft_lstnew_d(void *content);
 t_list_d	*ft_lstlast_d(t_list_d *lst);
@@ -169,6 +169,7 @@ void		ft_lst_d_clear(t_list_d **lst, void (*del)(void *));
 void		ft_printerrno(char *s);
 int			get_env_size(t_env *env);
 void		*ft_protect(t_common *c, void *p1, void *p2, void *p3);
+void		cmd_not_found(char *cmd);
 //expansion & quotes
 void		ft_rm_quotes(t_common *c, t_list_d *cmds);
 char		*expand_str(t_common *c, char *str);
@@ -246,7 +247,6 @@ int			count_pipes(t_common *c, char *input);
 
 int			error_lexer(t_common *c, char *s, int i);
 int			tokenize(t_common *c);
-
 
 //parsing
 int			ft_parsing(t_common *c);

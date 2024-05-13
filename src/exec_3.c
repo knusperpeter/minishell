@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 20:57:43 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 21:17:33 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 18:17:25 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	handle_fds_parent(t_common *c, int *fd)
 void	ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
 {
 	if (cmd->read_fd == -1 || cmd->write_fd == -1)
-		dprintf(2, "error opening file");
+		ft_putstr_fd("minishell: error opening file\n", 2);
 	if (cmd->read_fd != STDIN)
 	{
 		if (dup2(cmd->read_fd, STDIN) == -1)

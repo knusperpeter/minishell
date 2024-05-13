@@ -51,14 +51,9 @@ cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
 		-> bash executes ls in bin...
 		-> ms cmd not found
 
-env -i ./minishell does not open even open
-
-dprintf entfernen!!!
+env -i --check with eval sheet
 
 IMPLEMENT:
-
-ls > $HOME
-	-> doppelte error message!!!!!!
 
 cd --
 	ms:	double error message

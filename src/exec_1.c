@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/12 22:17:24 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 18:15:18 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ void	execute_child(t_common *c, t_cmd_table *table, int curr, int *fd)
 		else
 		{
 			c->exitstatus = 127;
-			dprintf(2, "minishell: %s: command not found\n",
-				table->str[0]);
+			cmd_not_found(table->str[0]);
 		}
 	}
 	ft_clean_exit(c, NULL, 1);

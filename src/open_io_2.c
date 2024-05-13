@@ -6,16 +6,16 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 11:02:35 by chris             #+#    #+#             */
-/*   Updated: 2024/05/13 01:15:34 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 18:50:53 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	open_failed(t_io_red *io, char *file)
+void	open_failed(t_common *c, t_io_red *io, char *file)
 {
 	if (errno == EISDIR)
-		dprintf(2, "minishell: %s: Is a directory\n", file);
+		dir_error(c, io->outfile);
 	else if (io->type != HEREDOC)
 	{
 		ft_putstr_fd("minishell: ", 2);
@@ -65,4 +65,12 @@ void	here_doc(t_common *c, t_io_red *io, int *fd)
 	*(fd) = open(io->infile, O_RDONLY);
 	if (*fd == -1)
 		unlink(io->infile);
+}
+
+void	dir_error(t_common *c, char *file)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(file, 2);
+	ft_putstr_fd(": Is a directory\n", 2);
+	c->exitstatus = 126;
 }
