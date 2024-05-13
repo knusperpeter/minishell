@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 21:51:12 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/13 01:12:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 22:05:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int	check_this(t_common *c, char *result, int j)
 			|| (j == 2 && result [1] == '>' && result[2] == '\0')
 			|| result[1] == '\0')
 			status = ft_putstr_fd(MESSAGE7, 2);
-		error_and_cleanup(c, status);
+		if (status)
+			return (error_and_cleanup(c, status), 1);
 	}
 	return (0);
 }
@@ -113,7 +114,7 @@ int	condition_and_error(t_common *c, char *result, int k, int status)
 		else
 			write(2, "<", 1);
 	}
-	write(2, "'", 1);
+	write(2, "'\n", 2);
 	return (error_and_cleanup(c, status));
 }
 

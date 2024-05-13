@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 18:51:23 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 22:14:01 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,17 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
-# define MESSAGE1 "❌ minishell: syntax error near unexpected token `<<<'\n"
-# define MESSAGE2 "❌ minishell: syntax error near unexpected token `>>>'\n"
-# define MESSAGE3 "❌ minishell: syntax error near unexpected token `<<'\n"
-# define MESSAGE4 "❌ minishell: syntax error near unexpected token `>>'\n"
-# define MESSAGE5 "❌ minishell: syntax error near unexpected token `<'\n"
-# define MESSAGE6 "❌ minishell: syntax error near unexpected token `>'\n"
-# define MESSAGE7 "❌ minishell: syntax error near unexpected token `newline'\n"
+# define MESSAGE1 "minishell: syntax error near unexpected token `<<<'\n"
+# define MESSAGE2 "minishell: syntax error near unexpected token `>>>'\n"
+# define MESSAGE3 "minishell: syntax error near unexpected token `<<'\n"
+# define MESSAGE4 "minishell: syntax error near unexpected token `>>'\n"
+# define MESSAGE5 "minishell: syntax error near unexpected token `<'\n"
+# define MESSAGE6 "minishell: syntax error near unexpected token `>'\n"
+# define MESSAGE7 "minishell: syntax error near unexpected token `newline'\n"
 # define MESSAGE8 "minishell: .: filename argument required\n.: usage: . filename [arguments]\n"
-# define MESSAGE9 "❌ minishell: syntax error near unexpected token `"
-# define MESSAGE10 "❌ minishell: syntax error near unexpected token `|'\n"
-# define MESSAGE11 "❌ minishell: syntax error near unexpected token `||'\n"
+# define MESSAGE9 "minishell: syntax error near unexpected token `"
+# define MESSAGE10 "minishell: syntax error near unexpected token `|'\n"
+# define MESSAGE11 "minishell: syntax error near unexpected token `||'\n"
 
 extern int	g_signal;
 

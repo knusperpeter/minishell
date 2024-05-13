@@ -11,24 +11,6 @@ SIGNAL: ++++cmd+c in interactive mode (with/without text in prompt)  michi: fixe
 
 Syntax:
 
-
-!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
-<<"asd" cat
-	-> heredoc will not have "asd" as limitertoken, but cat. why?
-
-
-++++echo '  ' Hello World			michi: fixed, behaves like bash now (for the cases i have tested, correct exit code).
-	++++gibt error, obwohl keiner sein sollte
-++++!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-env | grep 'x='
-	-> invalid read
-!!!!!!!!!!!!!!!!!!!!!!WICHTIG!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-
 ls | cat Makefile | cat << "asd" > out
 	works but not if it is like this:
 ls|cat Makefile|cat<<"asd">out

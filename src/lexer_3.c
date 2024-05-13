@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 21:42:27 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/13 19:44:38 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 21:13:16 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ void	add_to_list(char **token, t_list *lst)
 tokenize_input*/
 int	check_tokens(char *input)
 {
-	int	i;
-	int	space;
+	int		i;
+	int		space;
+	char	quote;
 
 	i = 0;
 	space = 0;
@@ -61,8 +62,9 @@ int	check_tokens(char *input)
 	{
 		if (input[i] == '\'' || input[i] == '\"')
 		{
+			quote = input[i];
 			i++;
-			while (input[i] && input[i] != '\'' && input[i] != '\"')
+			while (input[i] && input[i] != quote)
 				i++;
 		}
 		if (input[i] && ft_strchr(WHITESPACE, input[i]))
@@ -104,21 +106,29 @@ if statement is handling quotes, the second one is handling different
 situations to put in a space to new_string*/
 int	process_special_character(int *i, int *j, char *input, char *new_string)
 {
-	if (ft_strchr("><", input[(*i) - 1]))
+	static int quote;
+	
+	quote++;
+	if (ft_strchr("><", input[(*i) - 1]) && quote % 2 != 0)
 		new_string[(*j)++] = ' ';
+	if ((input[(*i) + 1] == '<' || input[(*i) + 1] == '>') && quote % 2 != 1)
+	{
+		new_string[(*j)++] = input[(*i)++];
+		new_string[(*j)++] = ' ';
+	}
 	new_string[(*j)++] = input[(*i)++];
 	while (input[*i] && check_char(&input[*i]) != 2)
 		new_string[(*j)++] = input[(*i)++];
-	if (input[*i] && check_char(&input[*i]) == 2)
-	{
-		new_string[(*j)] = input[(*i)];
-		if (input[(*i) + 1] != '\0')
-		{
-			(*i)++;
-			(*j)++;
-		}
-		if (input[*i] && ft_strchr(WHITESPACE, input[*i]))
-			return (-10);
-	}
+	//if (input[*i] && check_char(&input[*i]) == 2)
+	//{
+	//	new_string[(*j)] = input[(*i)];
+	//	if (input[(*i) + 1] != '\0')
+	//	{
+	//		(*i)++;
+	//		(*j)++;
+	//	}
+	//	if (input[*i] && ft_strchr(WHITESPACE, input[*i]))
+	//		return (-10);
+	//}
 	return (10);
 }

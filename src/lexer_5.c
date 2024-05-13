@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 21:47:51 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/13 19:23:06 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 21:56:47 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	prep_input_three(int i, int *cc, char *input)
 		(*cc)++;
 	if (input[i] && !ft_strchr(WHITESPACE, input[i]))
 		(*cc)++;
-	//if (input[i] == '<' && (input[i + 1] == '\'' || input[i + 1] == '\"'))
-	//	(*cc)--;
+	if (ft_strchr("<>", input[i]) && (input[i + 1] == '\'' || input[i + 1] == '\"'))
+		(*cc)--;
 }
 
 int	prep_input_two(int *i, int *cc, char *input)
@@ -77,9 +77,9 @@ char	**prep_input(char *input)
 	while (input[i])
 	{
 		prep_input_one(i, &cc, input);
-		if (input[i] && (input[i] == '\'' || input[i] == '\"'))
-			if (prep_input_two(&i, &cc, input) < 0)
-				break ;
+		//if (input[i] && (input[i] == '\'' || input[i] == '\"'))
+		//	if (prep_input_two(&i, &cc, input) < 0)
+		//		break ;
 		prep_input_three(i, &cc, input);
 		i++;
 	}
