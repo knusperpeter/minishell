@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 21:47:51 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/13 01:16:26 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 19:23:06 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	prep_input_three(int i, int *cc, char *input)
 		(*cc)++;
 	if (input[i] && !ft_strchr(WHITESPACE, input[i]))
 		(*cc)++;
-	if (input[i] == '<' && (input[i + 1] == '\'' || input[i + 1] == '\"'))
-		(*cc)--;
+	//if (input[i] == '<' && (input[i + 1] == '\'' || input[i + 1] == '\"'))
+	//	(*cc)--;
 }
 
 int	prep_input_two(int *i, int *cc, char *input)

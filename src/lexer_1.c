@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 21:35:51 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/13 01:17:15 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 19:14:06 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	check_char(char *character)
 	special = "()<>";
 	if (*character == '\'' || *character == '\"')
 		return (2);
-	while (i < 5)
+	while (i < 4)
 	{
 		if (special[i] == *character)
 			return (1);

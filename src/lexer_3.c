@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 21:42:27 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/13 01:13:00 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/13 19:44:38 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ if statement is handling quotes, the second one is handling different
 situations to put in a space to new_string*/
 int	process_special_character(int *i, int *j, char *input, char *new_string)
 {
+	if (ft_strchr("><", input[(*i) - 1]))
+		new_string[(*j)++] = ' ';
 	new_string[(*j)++] = input[(*i)++];
 	while (input[*i] && check_char(&input[*i]) != 2)
 		new_string[(*j)++] = input[(*i)++];
