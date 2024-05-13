@@ -16,6 +16,9 @@ ls | cat Makefile | cat << "asd" > out
 ls|cat Makefile|cat<<"asd">out
 		invalid read size 1
 
+|ls | ls 
+			ms-> no error message
+
 
 ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
 	->syntax error, so it should not look for later commands any more, at least bash does it like that
