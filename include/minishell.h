@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 22:14:01 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/14 15:43:29 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,6 +270,8 @@ void		add_to_var(t_common *c, t_env *env, char *arg);
 int			ft_export(t_common *c, char **args, t_env *env);
 int			ft_echo(t_common *c, char **args);
 void		set_env_value(t_env *env, char *variable, char *value);
+int			get_path(char **args, char **oldpwd, char **path, t_common *c);
+void		join_path_else(t_common *c, char **path, char *oldpwd, char *args);
 int			ft_cd(char **args, t_common *c);
 int			get_set_path(t_env *env, char *variable, char **path);
 
