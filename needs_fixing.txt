@@ -30,7 +30,7 @@ echo '              $USER          '
 						->invalid reads
 
 "echo hi | ls | "
-				darf garnicht erst zur "command not found" gehen
+				keine error message und wenn es in quotes eingegeben wird invalid read
 
 
 
