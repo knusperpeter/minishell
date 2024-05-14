@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 23:07:09 by chris             #+#    #+#             */
-/*   Updated: 2024/05/11 23:55:58 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/14 14:14:54 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,36 @@ int	get_set_path(t_env *env, char *variable, char **path)
 		return (-1);
 	else
 		return (-2);
+}
+
+int	get_path(char **args, char **oldpwd, char **path, t_common *c)
+{
+	int		size;
+	char	*tmp;
+
+	size = ft_strlen(args[1]);
+	if (args[1] && args[2])
+		return (-3);
+	if (!args[1] || !ft_strncmp(args[1], "~", size))
+		return (get_set_path(c->env, "HOME", path));
+	else if (!ft_strncmp(args[1], "-", size))
+	{
+		tmp = get_env_value(c->env, "OLDPWD");
+		printf("%s\n", tmp);
+		return (get_set_path(c->env, "OLDPWD", path));
+	}
+	else if (args[1][0] == '/')
+		*path = ft_protect(c, ft_strdup(args[1]), 0, 0);
+	else if (!ft_strncmp(args[1], ".", size))
+		*path = ft_protect(c, ft_strdup(*oldpwd), 0, 0);
+	else if (!ft_strncmp(args[1], "..", size))
+	{
+		*path = ft_protect(c, ft_strdup(*oldpwd), 0, 0);
+		tmp = *path;
+		*path = ft_protect(c, ft_strjoin(*path, "/.."), tmp, 0);
+		free(tmp);
+	}
+	else
+		return (join_path_else(c, path, *oldpwd, args[1]), 0);
+	return (0);
 }

@@ -6,11 +6,18 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:53:44 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/14 15:35:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	init_token(t_token *token)
+{
+	token->data = NULL;
+	token->type = VOID;
+	token->next = NULL;
+}
 
 int	tokenize(t_common *c)
 {
@@ -27,6 +34,7 @@ int	tokenize(t_common *c)
 	while (arr[i])
 	{
 		token = ft_protect(c, malloc(sizeof(t_token)), 0, 0);
+		init_token(token);
 		sub_arr = prep_input(arr[i++]);
 		cmd_tok = ft_protect(c, ft_lstnew(token), token, 0);
 		add_to_list(sub_arr, cmd_tok);

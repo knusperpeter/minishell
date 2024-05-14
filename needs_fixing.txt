@@ -26,19 +26,30 @@ ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | 
 << set cat  	+ctrl c
 				command dannach funktioniert nicht.... D:
 
+echo '              $USER          '
+						->invalid reads
+
+"echo hi | ls | "
+				darf garnicht erst zur "command not found" gehen
+
+
 
 
 CHRIS:
 
 unset PATH
-cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
-../bin/../bin/ls
+cd /bin/../bin/
+../bin/ls
 		-> bash executes ls in bin...
 		-> ms cmd not found
 
 env -i --check with eval sheet
 
 IMPLEMENT:
+
+remove newline after cd error
+
+redirects for single builtins not working...
 
 cd --
 	ms:	double error message
