@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/14 15:43:29 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/15 16:00:25 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,11 +194,10 @@ char		*handle_single_quote(char *str, int *in_quotes, char *quote_type);
 //lexer_2
 char		*quotes_in_strtok(char *str, const char *delim);
 char		*ft_strtok(char *s1, const char *delim);
-int			create_token(t_token **token, char *data);
+int	create_token(t_token **token, char *value, int type);
 int			check_and_create_token(char **value, int i, t_token **token);
 int			add_token(t_token **lst, char **value, int i, t_token **tmp);
 //lexer_3.c
-void		init_add_to_list(int *index, t_token **tmp, t_token **last);
 void		add_to_list(char **token, t_list *lst);
 int			check_tokens(char *input);
 char		**tokenize_input(char *input);
@@ -242,10 +241,11 @@ int			check_result(t_common *c, char *result);
 //lexer.c
 int			is_in_quotes(char *str, int i);
 int			ignore_pipe(char *str, int i);
-void		count_pipes_cont(t_common *c, char *input, int *i, int *pipe);
+int			count_pipes_cont(t_common *c, char *input, int *i, int *pipe);
 int			count_pipes(t_common *c, char *input);
+void	init_add_to_list(t_token **last, t_token **tmp, int *index);
 
-int			error_lexer(t_common *c, char *s, int i);
+int			error_lexer(t_common *c, int i);
 int			tokenize(t_common *c);
 
 //parsing
