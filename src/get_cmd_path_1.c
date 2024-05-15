@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/14 16:49:02 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ int	add_path(t_common *c, t_cmd_table *cmd, char **paths)
 	{
 		if (!access(cmd->str[0], F_OK | X_OK | R_OK) && !is_dir(cmd->str[0]))
 			return (access_denied(c, cmd), 1);
-		else if (cmd->str && cmd->str[0] && (cmd->str[0][0] != '.'
-			&& cmd->str[0][1] != '/') && paths)
+		else if (cmd->str && cmd->str[0]
+			&& (ft_strncmp(cmd->str[0], "./", 2)) && paths)
 		{
 			while (paths[i])
 			{

@@ -47,16 +47,7 @@ env -i --check with eval sheet
 
 IMPLEMENT:
 
-remove newline after cd error
-
 redirects for single builtins not working...
-
-cd --
-	ms:	double error message
-	bash:	egal
-
-cd ..
-	wrong
 
 Set the $PATH to a multiple directory value
 (directory1:directory2) and ensure that directories 
