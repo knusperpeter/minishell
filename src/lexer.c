@@ -30,8 +30,8 @@ int	check_token(char *token)
 		return (4);
 	return (0);
 }
-
-/*this function checks for special characters, except for pipes*/
+/*
+this function checks for special characters, except for pipes*/
 int	check_char(char *character)
 {
 	char	*special;
@@ -117,6 +117,12 @@ char	*ft_strtok(char *s1, const char *delim)
 		str++;
 	}
 	return (start);
+}
+
+void	count_up(int *i, int *cc)
+{
+	(*i) ++;
+	(*cc) ++;
 }
 
 int	add_token(t_token **lst, char **value, int i, t_token **tmp)
@@ -337,11 +343,7 @@ char	**set_up_array(int cc, char *input)
 
 /*counting characters (cc) from input and taking care of quotes. This is
 used for mallocing memory in the 'set_up_array' function.*/
-void	count_up(int *i, int *cc)
-{
-	(*i)++;
-	(*cc)++;
-}
+
 
 /*the prep_input functions 0-4 are are counting the characters and spaces
 beeded to allocate memory for the norminized string.*/
@@ -396,26 +398,157 @@ void	prep_input_one(int i, int *cc, char *input)
 		(*cc)++;
 }
 
+int	skip_whitespace(char *input, int i, int dir)
+{
+	if (dir == 0)
+	{
+		while (input[i] && (input[i] == ' '
+				|| (input[i] >= 9 && input[i] <= 13)))
+			i++;
+	}
+	if (dir == 1)
+	{
+		while (input[i] && (input[i] == ' '
+				|| (input[i] >= 9 && input[i] <= 13)))
+			i--;
+	}
+	return (i);
+}
+
+/*this function checks the quote ststus of an input string. it starts 
+from the beginning of a string untill the actual position. if a 
+single or a double quote is open it returns 1, if not it returns 0*/
+int	q_status(char *input, int i)
+{
+	int	k;
+	int	dq;
+	int	sq;
+
+	k = 0;
+	dq = 0;
+	sq = 0;
+	while (input[k] && k <= i)
+	{
+		if (input[k] == '\'')
+			sq++;
+		if (input[k] == '\"')
+			dq++;
+		k++;
+	}
+	if (sq % 2 == 0 && dq % 2 == 0)
+		return (0);
+	else
+		return (1);
+}
+int	check_the_char(char *input, int i, int len)
+{
+	if (i + 1 <= len && ((input[i] == '>' && input[i + 1] == '>')
+			|| (input[i] == '<' && input[i + 1] == '<')))
+	{
+		if (i + 2 <= len && (input[i + 2] == ' '
+				|| (input[i + 2] >= 9 && input[i + 2] <= 13)))
+			return (1);
+		else
+			return (2);
+	}
+	if (i <= len && (input[i] == '>' || input[i] == '<'))
+	{
+		if (i + 1 <= len && (input[i + 1] == ' '
+				|| (input[i + 1] >= 9 && input[i + 1] <= 13)))
+			return (3);
+		else
+			return (4);
+	}
+	return (0);
+}
+
+void	counting_up(int *i, int *cc, int a, int b)
+{
+	(*i) += a;
+	(*cc) += b;
+}
+
 char	**prep_input(char *input)
 {
 	int	i;
 	int	cc;
+	int len;
 
 	i = 0;
 	cc = 0;
-	while (input[i] && ft_strchr(WHITESPACE, input[i]))
-		i++;
+	len = ft_strlen(input);
+	i = skip_whitespace(input, i, 0);
 	while (input[i])
 	{
-		prep_input_one(i, &cc, input);
+		if (q_status(input, i) == 0)
+		{
+			if (check_the_char(input, i, len) == 1)
+			{
+				if (i > 0 && input[i - 1] != ' ')
+					counting_up(&i, &cc, 3, 4);
+				else
+					counting_up(&i, &cc, 3, 3);
+			}
+			if (check_the_char(input, i, len) == 2)
+			{
+				if (i > 0 && input[i - 1] != ' ')
+					counting_up(&i, &cc, 2, 4);
+				else
+					counting_up(&i, &cc, 3, 4);
+			}
+			if (check_the_char(input, i, len) == 3)
+			{
+				if (i > 0 && input[i - 1] != ' ')
+					counting_up(&i, &cc, 2, 3);
+				else
+					counting_up(&i, &cc, 2, 2);
+			}
+			if (check_the_char(input, i, len) == 4)
+			{
+				if (i > 0 && input[i - 1] != ' ')
+					counting_up(&i, &cc, 1, 3);
+				else
+					counting_up(&i, &cc, 2, 3);
+			}
+			i = skip_whitespace(input, i, 0);
+			if (input[i] == '\0')
+			{
+				break;
+			}
+			if (i < len && (input[i] == ' '))
+			{
+				counting_up(&i, &cc, 1, 1);
+				i = skip_whitespace(input, i, 0);
+				continue ; 
+			}
+		}		
+		counting_up(&i, &cc, 1, 1);
+	}
+	printf("cc: %d\n", cc);
+	return (set_up_array(cc + 1, input));
+}
+
+
+
+
+
+		/*prep_input_one(i, &cc, input);
 		if (input[i] && (input[i] == '\'' || input[i] == '\"'))
 			if (prep_input_two(&i, &cc, input) < 0)
 				break ;
 		prep_input_three(i, &cc, input);
-		i++;
-	}
-	return (set_up_array(cc, input));
-}
+		i++;*/
+
+
+
+
+
+
+
+
+
+
+
 
 void	es_cul(t_common *c, int es)
 {
@@ -792,68 +925,26 @@ int	check_result(t_common *c, char *result)
 	return (0);
 }
 
-int	check_empty_line(t_common *c, char *input, int pipe)
-{
-	int	i;
-
-	i = 0;
-	if (pipe > 1)
-		return (0);
-	while (input[i])
-	{
-		if (input[i] == ' ' || (input[i] > 9 && input[i] < 13))
-			i++;
-		else
-			return (0);
-	}
-	c->exitstatus = 131;
-	return (1);
-}
-
-
-		// if (check_empty_line(c, input, pipe))
-		// 	return (c->exitstatus = 0, free(result[index]), free(result), NULL);
-		// if (check_result(c, result[index]))
-		// 	return (free(result[index]), free(result), NULL);
-
-
-
-
 char	**tokenize_one(t_common *c, char *input, int pipe)
 {
 	char	**result;
 	char	*token;
 	int		index;
-	(void) c;
-	result = malloc((pipe + 1) * sizeof(char *));
-	if (result == NULL)
-	{
-		printf("Error - malloc - tokenize_one\n");
-		return (NULL);
-	}
+
+	result = ft_protect(c, malloc((pipe + 1) * sizeof(char *)), 0, 0);
 	token = ft_strtok(input, "|");
 	index = 0;
 	while (token != NULL && index < pipe)
 	{
-		result[index] = ft_strdup(token);
+		result[index] = ft_protect(c, ft_strdup(token), result, 0);
+//		if (error_tree(c, result[index]))
+//			return (free(result[index]), free(result), NULL);
 		token = ft_strtok(NULL, "|");
 		index++;
 	}
 	result[index] = NULL;
 	return (result);
 }
-
-
-
-
-
-
-
-		// token = ft_protect(c, malloc(sizeof(t_token)), 0, 0);
-
-
-
-
 
 
 
@@ -884,38 +975,7 @@ char	**tokenize_one(t_common *c, char *input, int pipe)
 	}
 	result[index] = NULL;
 	return (result);
-}*/
-
-
-
-
-
-/*this function checks the quote ststus of an input string. it starts 
-from the beginning of a string untill the actual position. if a single or a double 
-quote is open it returns 1, if not it returns 0*/
-int	q_status(char *input, int i)
-{
-	int	k;
-	int	dq;
-	int	sq;
-
-	k = 0;
-	dq = 0;
-	sq = 0;
-	while (input[k] && k <= i)
-	{
-		if (input[k] == '\'')
-			sq++;
-		if (input[k] == '\"')
-			dq++;
-		k++;
-	}
-	if (sq % 2 == 0 && dq % 2 == 0)
-		return (0);
-	else
-		return (1);
 }
-
 
 int	check_pipe_redir(t_common *c, char *input)
 {
@@ -942,22 +1002,44 @@ int	check_pipe_redir(t_common *c, char *input)
 		i++;
 	}
 	return (0);
-}
+}*/
+/*this function checks if the input consists only of whitespaces and returns
+with exitstatus 127 if it is so
+int	check_empty_line(t_common *c, char *input)
+{
+	int	i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == ' ' || (input[i] > 9 && input[i] < 13))
+			i++;
+		else
+			return (0);
+	}
+	if (input[i] == '\0')
+	{	
+		c->exitstatus = 131;
+		return (1);
+	}
+	return (0);
+}*/
+
+
 
 /*if the last printable character of the input is a pipe ('|') it enters the 
 error_lexer function and displays an error message (incl freeing)*/
 int	check_pipe_error_last(t_common *c, char *input, int len)
 {
-	while (len > 0 && (input[len - 1] == ' '
-			|| (input[len - 1] >= 9 && input[len - 1] <= 13)))
-		len--;
-	if (input[len - 1] == '|')
+	len = skip_whitespace(input, len - 1, 1);
+	if (input[len] == '|')
 		return (error_lexer(c, 1), 1);
 	return (0);
 }
 
-/*this function checks if an pipe ('|') related syntax error occurs and enters the 
-error_lexer function and displays an error message (incl freeing) if this is the case*/
+/*this function checks if an pipe ('|') related syntax error occurs 
+and enters the error_lexer function and displays an error message 
+(incl freeing) if this is the case*/
 int	check_pipe_error(t_common *c, char *input, int len)
 {
 	int	i;
@@ -965,8 +1047,7 @@ int	check_pipe_error(t_common *c, char *input, int len)
 
 	i = 0;
 	pipe = 0;
-	while (input[i] && (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13)))
-		i++;
+	i = skip_whitespace(input, i, 0);
 	if (i + 1 < len && input[i] == '|'
 		&& input[i + 1] == '|' && !q_status(input, i))
 		return (error_lexer(c, 2), -1);
@@ -974,11 +1055,11 @@ int	check_pipe_error(t_common *c, char *input, int len)
 		return (error_lexer(c, 1), -1);
 	while (input[i])
 	{
-		if (input[i++] == '|' && !q_status(input, i))
+		if (input[i] == '|' && !q_status(input, i))
 		{
+			i++;
 			pipe = 1;
-			while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
-				i++;
+			i = skip_whitespace(input, i, 0);
 		}
 		if (input[i] == '|' && input[i - 1] == '|' && !q_status(input, i + 1))
 			return (error_lexer(c, 2));
@@ -986,7 +1067,7 @@ int	check_pipe_error(t_common *c, char *input, int len)
 			return (error_lexer(c, 1));
 		pipe = 0;
 		if (input[i] != '\0')
-			i++;	
+			i++;
 	}
 	return (0);
 }
@@ -1006,7 +1087,7 @@ int	count_pipes(t_common *c, char *input)
 	len = ft_strlen(input);
 	if (check_pipe_error(c, input, len) != 0
 		|| check_pipe_error_last(c, input, len) != 0
-		|| check_pipe_redir(c, input) != 0)
+		/*|| check_pipe_redir(c, input) != 0*/)
 		return (-1);
 	while (input[i])
 	{

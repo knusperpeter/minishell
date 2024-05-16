@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/15 16:00:25 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/16 14:51:20 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,7 @@ int			get_cmd_path(t_common *c, t_cmd_table *cmd);
 //lexer_1
 int			check_token(char *token);
 int			check_char(char *character);
+int	check_the_char(char *input, int i, int len);
 int			is_delim(char c, const char *delim);
 char		*handle_quote(char *str, int *in_quotes, char *quote_type);
 char		*handle_single_quote(char *str, int *in_quotes, char *quote_type);
@@ -207,7 +208,7 @@ int			handle_non_special_character(int *i, int *j, char *input, char *new_string
 int			no_space_array(int *i, int *j, char *input, char *new_string);
 char		*allocate_memory(int size);
 char		**set_up_array(int cc, char *input);
-void		count_up(int *i, int *cc);
+void	counting_up(int *i, int *cc, int a, int b);
 //lexer_5.c
 void		prep_input_three(int i, int *cc, char *input);
 int			prep_input_two(int *i, int *cc, char *input);
@@ -236,7 +237,7 @@ void		init_initial_checks(int *i, int *k, int*len, char *result);
 int			initial_checks(t_common *c, char *result);
 int			error_check_pipes(t_common *c, int *i, int *pipe, char *input);
 char		**tokenize_one(t_common *c, char *input, int pipe);
-int			check_empty_line(t_common *c, char *input, int pipe);
+int			check_empty_line(t_common *c, char *input);
 int			check_result(t_common *c, char *result);
 //lexer.c
 int			is_in_quotes(char *str, int i);
