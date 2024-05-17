@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/16 18:32:29 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/17 14:43:07 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@
 # define MESSAGE9 "minishell: syntax error near unexpected token `"
 # define MESSAGE10 "minishell: syntax error near unexpected token `|'\n"
 # define MESSAGE11 "minishell: syntax error near unexpected token `||'\n"
+# define MESSAGE12 "minishell: syntax error: dquote\n"
+# define MESSAGE13 ": command not found\n"
 
 extern int	g_signal;
 
@@ -207,17 +209,17 @@ int			process_special_character(int *i, int *j, char *input, char *new_string);
 int			handle_non_special_character(int *i, int *j, char *input, char *new_string);
 int			no_space_array(int *i, int *j, char *input, char *new_string);
 char		*allocate_memory(int size);
-char	**set_up_array(int cc, char *input, int len);
-void	counting_up(int *i, int *cc, int a, int b);
+char		**set_up_array(t_common *c, int cc, char *input, int len);
+void		counting_up(int *i, int *cc, int a, int b);
 //lexer_5.c
 void		prep_input_three(int i, int *cc, char *input);
 int			prep_input_two(int *i, int *cc, char *input);
 void		prep_input_one(int i, int *cc, char *input);
-char		**prep_input(char *input);
+char		**prep_input(t_common *c, char *input);
 int			error_and_cleanup(t_common *c, int status);
 //lexer_6.c
 int			check_this(t_common *c, char *result, int j);
-int			check_dot(t_common *c, char *result, int k, int j);
+int			check_dots(t_common *c, char *result);
 int			check_quotes(t_common *c, char *result, int k);
 int			condition_and_error(t_common *c, char *result, int k, int status);
 int			check_again(t_common *c, char *result, int k, char fir);
@@ -244,7 +246,7 @@ int			is_in_quotes(char *str, int i);
 int			ignore_pipe(char *str, int i);
 int			count_pipes_cont(t_common *c, char *input, int *i, int *pipe);
 int			count_pipes(t_common *c, char *input);
-void	init_add_to_list(t_token **last, t_token **tmp, int *index);
+void		init_add_to_list(t_token **last, t_token **tmp, int *index);
 
 int			error_lexer(t_common *c, int i);
 int			tokenize(t_common *c);
