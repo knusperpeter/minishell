@@ -31,7 +31,7 @@ int	check_token(char *token)
 	return (0);
 }
 /*
-this function checks for special characters, except for pipes*/
+this function checks for special characters, except for pipes
 int	check_char(char *character)
 {
 	char	*special;
@@ -48,7 +48,7 @@ int	check_char(char *character)
 		i++;
 	}
 	return (0);
-}
+}*/
 
 int	is_delim(char c, const char *delim)
 {
@@ -250,154 +250,8 @@ char	**tokenize_input(char *input)
 	return (result);
 }
 
-/*this is the inner while loop of the set_up_array function. The first 
-if statement is handling quotes, the second one is handling different 
-situations to put in a space to new_string*/
-int	no_space_array(int *i, int *j, char *input, char *new_string)
-{
-	static int	quote;
-
-	if (input[*i] && check_char(&input[*i]) == 2)
-	{
-		quote++;
-		if (quote % 2 == 1 && (input[(*i) - 1] == '<'
-				|| input[(*i) - 1] == '>'))
-		{
-			new_string[(*j)++] = ' ';
-			new_string[(*j)++] = input[(*i)++];
-		}
-		while (input[*i] && check_char(&input[*i]) != 2)
-			new_string[(*j)++] = input[(*i)++];
-		if (input[*i] && check_char(&input[*i]) == 2)
-		{
-			new_string[(*j)] = input[(*i)];
-			if (input[(*i) + 1] != '\0')
-			{
-				(*i)++;
-				(*j)++;
-			}
-			if (input[*i] && ft_strchr(WHITESPACE, input[*i]))
-				return (-10);
-		}
-	}
-	if (*i > 0)
-	{
-		if ((input[*i] && check_char(&input[*i]) == 0
-				&& check_char(&input[*(i) - 1]) == 1)
-			|| (check_char(&input[*i]) == 1
-				&& check_char(&input[*(i) - 1]) == 0
-				&& !ft_strchr(WHITESPACE, input[(*i) - 1]))
-			|| (check_char(&input[*i]) == 1
-				&& check_char(&input[*(i) - 1]) == 1
-				&& input[*i] != input[*(i) - 1]))
-		{
-			new_string[(*j)++] = ' ';
-		}
-	}
-	new_string[(*j)++] = input[(*i)++];
-	return (10);
-}
-
-/*just allocating memory for set_up_array fuction*/
-char	*allocate_memory(int size)
-{
-	char	*new_string;
-
-	new_string = (char *)malloc(sizeof(char) * (size + 1));
-	if (!new_string)
-	{
-		printf("Memory allocation failed!\n");
-		exit(1);
-	}
-	return (new_string);
-}
-
-/*this function is preparing the tokenized input line by line */
-char	**set_up_array(int cc, char *input)
-{
-	char	*new_string;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	new_string = allocate_memory(cc);
-	while (input[i] && ft_strchr(WHITESPACE, input[i]))
-		i++;
-	while (input[i])
-	{
-		while (input[i] && !ft_strchr(WHITESPACE, input[i]))
-		{
-			if (no_space_array(&i, &j, input, new_string) < 0)
-				break ;
-		}
-		while (input[i] && ft_strchr(WHITESPACE, input[i]))
-			i++;
-		if (i > 0)
-			if (input[i] != '\0' && ft_strchr(WHITESPACE, input[i - 1]))
-				new_string[j++] = ' ';
-	}
-	new_string[j] = '\0';
-	return (tokenize_input(new_string));
-}
-
-/*counting characters (cc) from input and taking care of quotes. This is
-used for mallocing memory in the 'set_up_array' function.*/
-
-
-/*the prep_input functions 0-4 are are counting the characters and spaces
-beeded to allocate memory for the norminized string.*/
-void	prep_input_three(int i, int *cc, char *input)
-{
-	if (i > 0 && *cc != 0 && input[i] && !ft_strchr(WHITESPACE, input[i])
-		&& ft_strchr(WHITESPACE, input[i - 1])
-		&& (input[i] != '\'' || input[i] != '\"'))
-		(*cc)++;
-	if (i > 0 && *cc != 0 && input[i] && ft_strchr(WHITESPACE, input[i])
-		&& (input[i + 1] == '\'' || input[i + 1] == '\"'))
-		(*cc)++;
-	if (input[i] && !ft_strchr(WHITESPACE, input[i]))
-		(*cc)++;
-	if (input[i] == '<' && (input[i + 1] == '\'' || input[i + 1] == '\"'))
-		(*cc)--;
-}
-
-int	prep_input_two(int *i, int *cc, char *input)
-{
-	if (*i > 0 && !ft_strchr(WHITESPACE, input[*(i) - 1]))
-		(*cc)--;
-	count_up(i, cc);
-	if (*i > 1 && !ft_strchr(WHITESPACE, input[*(i) - 2]))
-		(*cc)++;
-	while (input[*i] != '\0' && input[*i] != '\'' && input[*i] != '\"')
-	{
-		if (input[*(i)] == '\0')
-			break ;
-		count_up(i, cc);
-	}
-	if (input[*i] != '\0')
-	{
-		if (input[*(i) + 1] != '\0' || !ft_strchr(WHITESPACE, input[*(i) + 1]))
-			count_up(i, cc);
-		else if (input[*(i) + 1] != '\0')
-			return (-9);
-	}
-	return (9);
-}
-
-void	prep_input_one(int i, int *cc, char *input)
-{
-	if (i > 0 && *cc != 0 && check_char(&input[i]) == 1
-		&& !ft_strchr(WHITESPACE, input[i - 1]) && input[i] != input[i - 1]
-		&& (input[i - 1] != '\'' || input[i - 1] != '\"'))
-		(*cc)++;
-	if (input[i] && check_char(&input[i]) == 1
-		&& !ft_strchr(WHITESPACE, input[i + 1])
-		&& check_char(&input[i + 1]) != 1 && input[i + 1] != '\0'
-		&& (input[i] != '\'' || input[i] != '\"'))
-		(*cc)++;
-}
-
+/*this function skipps whitespasces. depending on dir it skips whitespace
+in forewards direction (dir = 0) or backwards (dir = 1).*/
 int	skip_whitespace(char *input, int i, int dir)
 {
 	if (dir == 0)
@@ -440,6 +294,9 @@ int	q_status(char *input, int i)
 	else
 		return (1);
 }
+
+/*this function checks the situation if a <, <<, > or >> occours. depending if
+a space afterwards is present it returns different values.*/
 int	check_the_char(char *input, int i, int len)
 {
 	if (i + 1 <= len && ((input[i] == '>' && input[i + 1] == '>')
@@ -462,11 +319,107 @@ int	check_the_char(char *input, int i, int len)
 	return (0);
 }
 
+/*this function is used by the set_up_array function and checks if a space before
+a < or > is needed.*/
+int	check_space_before(char *input, int k)
+{
+	if (input[k] == '>')
+	{
+		if (input[k - 1] != ' ' && input[k - 1] != '>')
+			return (1);
+	}
+	if (input[k] == '<')
+	{
+		if (input[k - 1] != ' ' && input[k - 1] != '<')
+			return (1);
+	}
+	return (0);
+}
+
+/*this function is used by the set_up_array function and checks if a space after
+a < or > is needed.*/
+int	check_space_after(char *input, int k)
+{
+	if (input[k] != ' ' && input[k] != '>')
+	{
+		if (input[k - 1] == '>')
+			return (1);
+	}
+	if (input[k] != ' ' && input[k] != '<')
+	{
+		if (input[k - 1] == '<')
+			return (1);
+	}
+	return (0);
+}
+
+/*this function is writing the characters of the token into the allocated memmory. it 
+skips multiple spaces and inserts spaces if needed. the new_string which is passed to
+the tokenize_input function.*/
+char	**set_up_array(int cc, char *input, int len)
+{
+	char	*new_string;
+	int		i;
+	int		j;
+	int		k;
+
+	i = 0;
+	j = 0;
+	new_string = (char *)malloc(sizeof(char) * (cc));
+	if (!new_string)
+	{
+		printf("Memory allocation failed!\n");
+		exit(1);
+	}
+	i = skip_whitespace(input, i, 0);
+	k = i;
+	while (input[k])
+	{
+		if (q_status(input, k) == 0)
+		{
+			len = len + 1 - 1;
+			k = skip_whitespace(input, k, 0);
+			if (k > 0 && k != i && input[k - 1] == ' ' && input[k] != '\0' && new_string[j - 1] != ' ')
+				new_string[j++] = ' ';
+			if (k > i && check_space_before(input, k) == 1 && new_string[j - 1] != ' ')
+				new_string[j++] = ' ';
+			if (k > i && check_space_after(input, k) == 1 && new_string[j - 1] != ' ')
+				new_string[j++] = ' ';
+		}		
+		new_string[j++] = input[k++];
+	}
+	new_string[j] = '\0';
+	printf("new_string: __%s__\n", new_string);
+	return (tokenize_input(new_string));
+}
+
+/*this function looks for <>, ><, >><< and <<>> in the string and updates
+the character counter*/
+int check_double(char *input, int i, int len)
+{
+	if (i + 1 <= len && input[i] == '<' && input[i + 1] == '>')
+		return (1);
+	if (i + 1 <= len && input[i] == '>' && input[i + 1] == '<')
+		return (1);
+	if (i + 3 <= len && input[i] == '<' && input[i + 1] == '<'
+		&& input[i + 2] == '>' && input[i + 3] == '>')
+		return (2);
+	if (i + 3 <= len && input[i] == '>' && input[i + 1] == '>'
+		&& input[i + 2] == '<' && input[i + 3] == '<')
+		return (2);
+	return (0);
+}
+
+/*this function is used by the prep_input function to count the characters (cc)
+and move the index (i).*/
 void	counting_up(int *i, int *cc, int a, int b)
 {
 	(*i) += a;
 	(*cc) += b;
 }
+
+/*tis function is used by the prep_input function and manipulates the character counter
+according to the situation. it also moves the index representatively.*/
 void update_counts(int *i, int *cc, char *input, int num)
 {
     if (*i > 0 && input[*i - 1] != ' ')
@@ -475,6 +428,8 @@ void update_counts(int *i, int *cc, char *input, int num)
         counting_up(i, cc, (num % 100) / 10, num % 10);
 }
 
+/*this function is analysing the token and counts the characters needed for
+memory allocation in the set_up_array function.*/
 char	**prep_input(char *input)
 {
 	int	i;
@@ -501,6 +456,10 @@ char	**prep_input(char *input)
 				}
 				continue ; 
 			}
+			if (check_double(input, i, len) == 1)
+				cc++;
+			if (check_double(input, i, len) == 2)
+				cc--;
 			if (check_the_char(input, i, len) == 1)
 				update_counts(&i, &cc, input, 3433);
 			if (check_the_char(input, i, len) == 2)
@@ -519,7 +478,8 @@ char	**prep_input(char *input)
 		}		
 		counting_up(&i, &cc, 1, 1);
 	}
-	return (set_up_array(cc + 1, input));
+	printf("cc: %d\n", cc);
+	return (set_up_array(cc + 1, input, len));
 }
 /*
 void	es_cul(t_common *c, int es)
@@ -726,7 +686,7 @@ int	check_one_more(t_common *c, char *result)
 			i++;
 			while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
 				i++;
-			/*if (result[i] == '\0' || (result[i] == ' '
+			if (result[i] == '\0' || (result[i] == ' '
 					|| (result[i] >= 9 && result[i] <= 13)))
 			{
 				status = ft_putstr_fd(MESSAGE7, 2);
@@ -897,6 +857,8 @@ int	check_result(t_common *c, char *result)
 	return (0);
 }*/
 
+/*this function is tokenizing the input for the first time. the delimiter are the '|'. 
+after tokenizing this function checks every token for syntax errors.*/
 char	**tokenize_one(t_common *c, char *input, int pipe)
 {
 	char	**result;

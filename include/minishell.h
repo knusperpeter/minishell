@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/16 14:51:20 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/16 18:32:29 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,7 @@ int			process_special_character(int *i, int *j, char *input, char *new_string);
 int			handle_non_special_character(int *i, int *j, char *input, char *new_string);
 int			no_space_array(int *i, int *j, char *input, char *new_string);
 char		*allocate_memory(int size);
-char		**set_up_array(int cc, char *input);
+char	**set_up_array(int cc, char *input, int len);
 void	counting_up(int *i, int *cc, int a, int b);
 //lexer_5.c
 void		prep_input_three(int i, int *cc, char *input);
