@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 17:18:10 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 17:36:25 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,18 +191,18 @@ int			get_cmd_path(t_common *c, t_cmd_table *cmd);
 //lexer_1
 int			check_token(char *token);
 int			check_char(char *character);
-int			check_the_char(char *input, int i, int len);
+int	check_the_char(char *input, int i, int len);
 int			is_delim(char c, const char *delim);
 char		*handle_quote(char *str, int *in_quotes, char *quote_type);
 char		*handle_single_quote(char *str, int *in_quotes, char *quote_type);
 //lexer_2
-char		*quotes_in_strtok(char *str, const char *delim);
+char		*quotes_in_strtok(char *str, const char *delim, int in_quotes,  char quote_type);
 char		*ft_strtok(char *s1, const char *delim);
 int			create_token(t_token **token, char *value, int type);
 int			check_and_create_token(char **value, int i, t_token **token);
-int			add_token(t_token **lst, char **value, int i, t_token **tmp);
+int			add_token(t_common *c, char **value, int i, t_token **tmp);
 //lexer_3.c
-void		add_to_list(char **token, t_list *lst);
+void		add_to_list(t_common *c, char **token, t_list *lst);
 int			check_tokens(char *input);
 char		**tokenize_input(char *input);
 int			process_special_character(int *i, int *j, char *input, char *new_string);
@@ -220,7 +220,7 @@ char		**prep_input(t_common *c, char *input);
 int			error_and_cleanup(t_common *c, int status);
 //lexer_6.c
 int			check_this(t_common *c, char *result, int j);
-int			check_dots(t_common *c, char *result);
+int			check_dots(t_common *c, char *result, int i, int k);
 int			check_quotes(t_common *c, char *result, int k);
 int			condition_and_error(t_common *c, char *result, int k, int status);
 int			check_again(t_common *c, char *result, int k, char fir);
