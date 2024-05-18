@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:53:44 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/17 12:49:57 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 17:10:57 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	tokenize(t_common *c)
 		init_token(token);
 		sub_arr = prep_input(c, arr[i++]);
 		cmd_tok = ft_protect(c, ft_lstnew(token), token, 0);
-		add_to_list(sub_arr, cmd_tok);
+		add_to_list(c, sub_arr, cmd_tok);
 		ft_lstadd_back(&c->tokens, cmd_tok);
 		free_2d(sub_arr);
 	}

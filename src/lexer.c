@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 16:59:08 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 17:21:29 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,30 +106,20 @@ void	count_up(int *i, int *cc)
 	(*cc)++;
 }
 
-int	add_token(t_token **lst, char **value, int i, t_token **tmp)
+int	add_token(t_common *c, char **value, int i, t_token **tmp)
 {
 	t_token	*token;
 	int		ret;
 
-	(void) lst;
 	ret = 0;
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (-1);
+	token = ft_protect(c, malloc(sizeof(t_token)), 0, 0);
 	if (!value[i])
-	{
-		free(token);
-		return (-1);
-	}
+		return (free(token), -1);
 	token->type = check_token(value[i]);
 	if (token->type >= 1 && token->type <= 4)
 	{
 		if (value[i + 1])
-		{
-			token->data = ft_strdup(value[i + 1]);
-			if (!token->data)
-				ft_putstr_fd("malloc token->data error\n", 1);
-		}
+			token->data = ft_protect(c, ft_strdup(value[i + 1]), 0, 0);
 		else
 		{
 			printf("minishell❌: syntax error\n");
@@ -139,7 +129,7 @@ int	add_token(t_token **lst, char **value, int i, t_token **tmp)
 		ret = 1;
 	}
 	else
-		token->data = ft_strdup(value[i]);
+		token->data = ft_protect(c, ft_strdup(value[i]), 0, 0);
 	*tmp = token;
 	return (ret);
 }
@@ -151,7 +141,7 @@ void	init_add_to_list(t_token **last, t_token **tmp, int *index)
 	*tmp = NULL;
 }
 
-void	add_to_list(char **token, t_list *lst)
+void	add_to_list(t_common *c, char **token, t_list *lst)
 {
 	t_token	*tmp;
 	t_token	*last;
@@ -161,7 +151,7 @@ void	add_to_list(char **token, t_list *lst)
 	init_add_to_list(&last, &tmp, &index);
 	while (token[index])
 	{
-		status = add_token(lst->content, token, index, &tmp);
+		status = add_token(c, token, index, &tmp);
 		if (status == 1)
 			index += 2;
 		else if (status <= 0)
@@ -478,235 +468,6 @@ char	**prep_input(t_common *c, char *input)
 	}
 	return (set_up_array(c, cc + 1, input));
 }
-/*
-
-int	check_again(t_common *c, char *result, int k, char fir)
-{
-	int	status;
-	int	len;
-
-	status = 0;
-	len = ft_strlen(result);
-	if ((len >= 2 && fir != '<' && fir != '>')
-		|| (len >= 2 && result[1] != ' '))
-		return (0);
-	if (len >= 2 && (result[k + 1] == ' '
-			|| (result[k + 1] >= 9 || result[k + 1] <= 13)))
-	{
-		k++;
-		while (result[k] == ' ' || (result[k] >= 9 && result[k] <= 13))
-			k++;
-	}
-	else
-		return (0);
-	if (result[k] == '<' || result[k] == '>')
-	{
-		status = ft_putstr_fd(MESSAGE9, 2);
-		if (result[k] == '>')
-			write(2, &result[k], 1);
-		else
-			write(2, "<", 1);
-		if (len >= 2 && (result[k + 1] == '<' || result[k + 1] == '>'))
-		{
-			if (result[k + 1] == '>')
-				write(2, &result[k], 1);
-			else
-				write(2, "<", 1);
-		}
-		write(2, "'\n", 2);
-	}
-	else
-		return (0);
-	if (status)
-		return (es_cul(c, 2), 1);
-	return (0);
-}
-
-int	check_more(t_common *c, char *result, int k, char fir)
-{
-	int	len;
-	int	status;
-
-	len = ft_strlen(result);
-	if (!(len >= 4 && result[k] == result[k + 1] && result[k] == fir
-			&& result[k + 2] == ' ' && (result[k + 3] == '<'
-				|| result[k + 3] == '>')))
-		return (0);
-	if (result[k + 3] == '<' || result[k + 3] == '>')
-	{
-		status = ft_putstr_fd(MESSAGE9, 2);
-		if (result[k] == '>')
-			write(2, &result[k + 3], 1);
-		else
-			write(2, "<", 1);
-		if (len >= 5 && (result [k + 4] == '<' || result[k + 4] == '>'))
-		{
-			if (result[k + 4] == '>')
-				write(2, &result[k], 1);
-			else
-				write(2, "<", 1);
-		}
-		write(2, "'\n", 2);
-	}
-	else
-		return (0);
-	if (status)
-		return (es_cul(c, 2), 1);
-	return (0);
-}
-
-int	check_that(t_common *c, char *result, int k)
-{
-	int	status;
-
-	status = 0;
-	if (result[k] == '<' && result[k + 1] == '>')
-	{
-		k += 2;
-		while (result[k] == ' ' || (result[k] >= 9
-				&& result[k] <= 13) || result[k] == '\0')
-		{
-			if (result[k] == '\0')
-			{
-				status = ft_putstr_fd(MESSAGE7, 2);
-				break ;
-			}
-			else
-				k++;
-		}
-	}
-	if (status)
-		return (es_cul(c, 2), 1);
-	return (0);
-}
-
-int	check_one_more(t_common *c, char *result)
-{
-	int	i;
-	int	status;
-
-	i = 0;
-	status = 0;
-	while (result[i] != '\0')
-	{
-		if (result[i] == '>')
-		{
-			i++;
-			while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
-				i++;
-			if (result[i] == '\0' || (result[i] == ' '
-					|| (result[i] >= 9 && result[i] <= 13)))
-			{
-				status = ft_putstr_fd(MESSAGE7, 2);
-				break ;
-			}
-			if (result[i] == '>')
-			{
-				i++;
-				while (result[i] == ' ' || (result[i] >= 9 && result[i] <= 13))
-					i++;
-				if (result[i] == '\0' || (result[i] == ' '
-						|| (result[i] >= 9 && result[i] <= 13)))
-				{
-					status = ft_putstr_fd(MESSAGE7, 2);
-					break ;
-				}
-			}
-		}
-		i++;
-	}
-	if (status)
-		return (es_cul(c, 2), 1);
-	return (0);
-}
-
-
-
-
-int	check_inout(t_common *c, char *result)
-{
-	int	i;
-	int	status;
-
-	i = 0;
-	status = 0;
-	while (result[i])
-	{
-		if (result[i] == '>')
-		{
-			i++;
-			while (result[i] == ' ')
-				i++;
-			if (result[i] == '<')
-				status = ft_putstr_fd(MESSAGE5, 2);
-		}
-		i++;
-	}
-	if (status)
-		return (es_cul(c, 2), 1);
-	return (0);
-}
-
-int	check_result(t_common *c, char *result)
-{
-	int		i;
-	int		j;
-	int		k;
-	char	fir;
-	int		len;
-
-	k = 0;
-	i = 0;
-	len = ft_strlen(result);
-	// if (check_sq(c, &result[k], k))
-	// 	return (1);
-	// if (open_quotes(c, &result[0]))
-	// 	return (1);
-	if (check_inout(c, &result[0]))
-		return (1);
-	if (check_one_more(c, &result[0]))
-		return (1);
-	while (len >= 1 && (result[i] == ' ' || (result[i] >= 9
-				&& result[i] <= 13)))
-		i++;
-	if (len >= 1 && (result[i] == '<' || result[i] == '>'))
-		fir = result[i];
-	else if (result[i] == '.')
-		fir = result[i];
-	else if (result[i] == '.' && (result[i + 1] == '\0'
-			|| (len >= 2 && result[i + 1] == '.')))
-		fir = result[i];
-	else if (result[i] == '\"')
-		fir = result[i];
-	else
-		return (0);
-	k = i;
-	j = 0;
-	while (result[i] && i < k + 6)
-	{
-		if (result[i] == fir)
-			j++;
-		else
-			break ;
-		i++;
-	}
-	if (check_that(c, &result[k], k))
-		return (1);
-	if (j > 0)
-	{
-		if (check_this(c, &result[k], j))
-			return (1);
-		// if (check_dot(c, &result[0], k, j))
-		// 	return (1);
-		// if (check_quotes(c, &result[k], k))
-		// 	return (1);
-		if (check_again(c, &result[k], k, fir))
-			return (1);
-		if (check_more(c, &result[0], k, fir))
-			return (1);
-	}
-	return (0);
-}*/
 
 /*this function sets the exitstatus to the value passed and calls the 
 ft_cleanup_loop. it is called when a function which is detecting for
@@ -788,14 +549,10 @@ int	check_last_redir(t_common *c, char *input)
 }
 
 /*This function checks for dots as only input*/
-int	check_dots(t_common *c, char *input)
+int	check_dots(t_common *c, char *input, int i, int k)
 {
-	int	i;
-	int	k;
 	int	dots;
 
-	k = 0;
-	i = 0;
 	dots = 0;
 	i = skip_whitespace(input, i, 0);
 	k = i;
@@ -929,11 +686,16 @@ in every token. if an error occours it will catch the return value and returns 1
 itself.*/
 int	error_tree(t_common *c, char *input)
 {
+	int	i;
+	int	k;
+
+	i = 0;
+	k = 0;
 	if (check_open_quotes(c, input))
 		return (1);
 	if (check_empty_quotes(c, input))
 		return (1);
-	if (check_dots(c, input))
+	if (check_dots(c, input, i, k))
 		return (1);
 	if (check_invalid_redir(c, input))
 		return (1);
