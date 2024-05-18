@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 15:35:51 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 16:59:08 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,9 @@ int	is_delim(char c, const char *delim)
 }
 
 /*This functions handles the quotes section for the ft_strtok function*/
-char	*quotes_in_strtok(char *str, const char *delim)
+char	*quotes_in_strtok(char *str, const char *delim, int in_quotes,
+			char quote_type)
 {
-	int		in_quotes;
-	char	quote_type;
-
-	in_quotes = 0;
-	quote_type = '\0';
 	while (*str)
 	{
 		if (*str == '\"' && quote_type != '\'')
@@ -81,7 +77,11 @@ char	*ft_strtok(char *s1, const char *delim)
 {
 	static char	*str;
 	char		*start;
+	int			in_quotes;
+	char		quote_type;
 
+	in_quotes = 0;
+	quote_type = '\0';
 	if (s1)
 		str = s1;
 	if (!str)
@@ -91,7 +91,7 @@ char	*ft_strtok(char *s1, const char *delim)
 	if (*str == '\0')
 		return (0);
 	start = str;
-	str = quotes_in_strtok(str, delim);
+	str = quotes_in_strtok(str, delim, in_quotes, quote_type);
 	if (*str != '\0')
 	{
 		*str = '\0';
@@ -358,7 +358,7 @@ char	**set_up_array(t_common *c, int cc, char *input)
 	while (input[k])
 	{
 		if (j >= cc - 1)
-            break;
+			break ;
 		if (q_status(input, k) == 0)
 		{
 			k = skip_whitespace(input, k, 0);
@@ -388,7 +388,6 @@ char	**set_up_array(t_common *c, int cc, char *input)
 		k++;
 	}
 	new_string[j] = '\0';
-//	printf("new_string: %s\n", new_string);
 	return (tokenize_input(new_string));
 }
 
@@ -477,7 +476,6 @@ char	**prep_input(t_common *c, char *input)
 		}
 		counting_up(&i, &cc, 1, 1);
 	}
-//	printf("cc: %d\n", cc);
 	return (set_up_array(c, cc + 1, input));
 }
 /*
@@ -979,6 +977,14 @@ int	check_pipe_error_last(t_common *c, char *input, int len)
 	return (0);
 }
 
+int	handle_i_and_pipe(char *input, int i, int *pipe)
+{
+	i++;
+	i = skip_whitespace(input, i, 0);
+	*pipe = 1;
+	return (i);
+}
+
 /*this function checks if an pipe ('|') related syntax error occurs 
 and enters the error_lexer function and displays an error message 
 (incl freeing) if this is the case*/
@@ -998,11 +1004,7 @@ int	check_pipe_error(t_common *c, char *input, int len)
 	while (input[i])
 	{
 		if (input[i] == '|' && !q_status(input, i))
-		{
-			i++;
-			pipe = 1;
-			i = skip_whitespace(input, i, 0);
-		}
+			i = handle_i_and_pipe(input, i, &pipe);
 		if (input[i] == '|' && input[i - 1] == '|' && !q_status(input, i + 1))
 			return (error_lexer(c, 2));
 		if (input[i] == '|' && !q_status(input, i) && pipe == 1)

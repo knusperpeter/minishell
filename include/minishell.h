@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 12:35:07 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 16:57:58 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ int			is_delim(char c, const char *delim);
 char		*handle_quote(char *str, int *in_quotes, char *quote_type);
 char		*handle_single_quote(char *str, int *in_quotes, char *quote_type);
 //lexer_2
-char		*quotes_in_strtok(char *str, const char *delim);
+char		*quotes_in_strtok(char *str, const char *delim, int in_quotes,  char quote_type);
 char		*ft_strtok(char *s1, const char *delim);
 int	create_token(t_token **token, char *value, int type);
 int			check_and_create_token(char **value, int i, t_token **token);
