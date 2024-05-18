@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/14 14:14:44 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 16:05:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	join_path_else(t_common *c, char **path, char *oldpwd, char *args)
 	*path = ft_protect(c, ft_strjoin(tmp, args), tmp, 0);
 	free(tmp);
 }
-
 
 void	print_error(int errorno, char *arg)
 {
@@ -58,7 +57,7 @@ int	ft_cd(char **args, t_common *c)
 		return (print_error(0, args[1]), EXIT_FAILURE);
 	errorno = get_path(args, &oldpwd, &path, c);
 	if (!path)
-		return(free(oldpwd), print_error(errorno, ""), EXIT_FAILURE);
+		return (free(oldpwd), print_error(errorno, ""), EXIT_FAILURE);
 	if (chdir(path) == -1 || errorno == -3)
 	{
 		free(path);

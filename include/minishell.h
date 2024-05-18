@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 12:35:07 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 16:20:25 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,14 +190,14 @@ int			get_cmd_path(t_common *c, t_cmd_table *cmd);
 //lexer_1
 int			check_token(char *token);
 int			check_char(char *character);
-int	check_the_char(char *input, int i, int len);
+int			check_the_char(char *input, int i, int len);
 int			is_delim(char c, const char *delim);
 char		*handle_quote(char *str, int *in_quotes, char *quote_type);
 char		*handle_single_quote(char *str, int *in_quotes, char *quote_type);
 //lexer_2
 char		*quotes_in_strtok(char *str, const char *delim);
 char		*ft_strtok(char *s1, const char *delim);
-int	create_token(t_token **token, char *value, int type);
+int			create_token(t_token **token, char *value, int type);
 int			check_and_create_token(char **value, int i, t_token **token);
 int			add_token(t_token **lst, char **value, int i, t_token **tmp);
 //lexer_3.c
