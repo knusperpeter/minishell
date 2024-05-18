@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 12:36:41 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 14:21:56 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -799,10 +799,13 @@ int	check_dots(t_common *c, char *input)
 	k = i;
 	if (input[k] == '.')
 	{
+		
 		while (input[k++] == '.')
 			dots++;
-		if (dots == 1)
+		if (dots == 1 && input[i + 1] == ' ')
 			ft_putstr_fd(MESSAGE8, 2);
+		if (dots == 2 && input[i + 2] != ' ')
+			return (0);
 		if (dots > 1)
 		{
 			while (input[i] != ' ' && input[i] != '\0')
@@ -873,6 +876,51 @@ int	check_open_quotes(t_common *c, char *result)
 	return (0);
 }
 
+int check_next(char *input, int i)
+{
+	int len;
+
+	len = ft_strlen(input);
+	if (i + 1 <= len)
+	{	
+		if (i + 2 <= len && input[i] == '<' && input[i + 1] == '<')
+			return (i + 2);
+		else if (i + 2 <= len && input[i] == '>' && input[i + 1] == '>')
+			return (i + 2);
+		else
+			return (i + 1);
+	}
+	return (i + 1);
+}
+
+int	check_invalid_redir(t_common *c, char *input)
+{
+	size_t	i;
+	int	status;
+
+	status = 0;
+	i = 0;
+	i = skip_whitespace(input, i, 0);
+	if (i + 1 <= ft_strlen(input) && (input[i] == '<' || input[i] == '>'))
+	{
+		i = check_next(input, i);
+		if (input[i] != ' ')
+			return (0);
+		i = skip_whitespace(input, i, 0);
+		if (input[i] == '>' && input[i + 1] == '>')
+			status = ft_putstr_fd(MESSAGE4, 2);
+		else if (input[i] == '<' && input[i + 1] == '<')
+			status = ft_putstr_fd(MESSAGE3, 2);
+		else if (input[i] == '<')
+			status = ft_putstr_fd(MESSAGE5, 2);
+		else if (input[i] == '>')
+			status = ft_putstr_fd(MESSAGE6, 2);
+	}
+	if (status)
+		return (es_cul(c, 2), 1);
+	return (0);	
+}
+
 /*This function calls many function which will check for different syntax errors
 in every token. if an error occours it will catch the return value and returns 1
 itself.*/
@@ -884,6 +932,10 @@ int	error_tree(t_common *c, char *input)
 		return (1);
 	if (check_dots(c, input))
 		return (1);
+	if (check_invalid_redir(c, input))
+		return (1);
+//	if (check_invalid_redir_next(c, input))
+//		return (1);
 	if (check_block_redir(c, input))
 		return (1);
 	if (check_last_redir(c, input))
@@ -915,7 +967,7 @@ char	**tokenize_one(t_common *c, char *input, int pipe)
 }
 
 /*Tis function checks for the syntax errors '<  |', '>  |', '<<  |' or '>> |'.
-it returns an error message (exit 2) in case this error was fornd.*/
+it returns an error message (exit 2) in case this error was fornd.
 int	check_pipe_redir(t_common *c, char *input)
 {
 	int	i;
@@ -944,7 +996,7 @@ int	check_pipe_redir(t_common *c, char *input)
 		i--;
 	}
 	return (0);
-}
+}*/
 
 /*if the last printable character of the input is a pipe ('|') it enters the 
 error_lexer function and displays an error message (incl freeing)*/
@@ -1006,7 +1058,7 @@ int	count_pipes(t_common *c, char *input)
 	len = ft_strlen(input);
 	if (check_open_quotes(c, input) != 0
 		|| check_pipe_error(c, input, len) != 0
-		|| check_pipe_redir(c, input) != 0
+//		|| check_pipe_redir(c, input) != 0
 		|| check_pipe_error_last(c, input, len) != 0)
 		return (-1);
 	while (input[i])
