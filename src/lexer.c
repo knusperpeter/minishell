@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 14:51:04 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 15:00:57 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -352,7 +352,7 @@ char	**set_up_array(t_common *c, int cc, char *input)
 
 	i = 0;
 	j = 0;
-	new_string = ft_protect(c, (char *)malloc(sizeof(char) * (cc)), 0, 0); 
+	new_string = ft_protect(c, (char *)malloc(sizeof(char) * (cc)), 0, 0);
 	i = skip_whitespace(input, i, 0);
 	k = i;
 	while (input[k] && j >= cc - 1)
@@ -360,21 +360,22 @@ char	**set_up_array(t_common *c, int cc, char *input)
 		if (q_status(input, k) == 0)
 		{
 			k = skip_whitespace(input, k, 0);
-			if (k > 0 && k != i && input[k - 1] == ' ' && input[k] != '\0' && new_string[j - 1] != ' ')
+			if (k > 0 && k != i && input[k - 1] == ' ' && input[k] != '\0'
+				&& new_string[j - 1] != ' ')
 				new_string[j++] = ' ';
 			if (input[k] == '<' || input[k] == '>')
 			{
-				if (k > i && check_space_before(input, k) == 1 && new_string[j - 1] != ' ')
+				if (k > i && check_space_before(input, k) == 1
+					&& new_string[j - 1] != ' ')
 					new_string[j++] = ' ';
-
 				new_string[j++] = input[k];
-
 				if (input[k + 1] == input[k])
 				{
 					new_string[j++] = input[k];
 					k++;
 				}
-				if (check_space_after(input, k) == 1 && input[k + 1] != '\0' && input[k + 1] != ' ')
+				if (check_space_after(input, k) == 1
+					&& input[k + 1] != '\0' && input[k + 1] != ' ')
 					new_string[j++] = ' ';
 			}
 			else
@@ -473,7 +474,6 @@ char	**prep_input(t_common *c, char *input)
 		}
 		counting_up(&i, &cc, 1, 1);
 	}
-	printf("cc: %d\n", cc);
 	return (set_up_array(c, cc + 1, input));
 }
 /*
@@ -799,7 +799,6 @@ int	check_dots(t_common *c, char *input)
 	k = i;
 	if (input[k] == '.')
 	{
-		
 		while (input[k++] == '.')
 			dots++;
 		if (dots == 1 && input[i + 1] == ' ')
@@ -876,13 +875,13 @@ int	check_open_quotes(t_common *c, char *result)
 	return (0);
 }
 
-int check_next(char *input, int i)
+int	check_next(char *input, int i)
 {
-	int len;
+	int	len;
 
 	len = ft_strlen(input);
 	if (i + 1 <= len)
-	{	
+	{
 		if (i + 2 <= len && input[i] == '<' && input[i + 1] == '<')
 			return (i + 2);
 		else if (i + 2 <= len && input[i] == '>' && input[i + 1] == '>')
@@ -896,7 +895,7 @@ int check_next(char *input, int i)
 int	check_invalid_redir(t_common *c, char *input)
 {
 	size_t	i;
-	int	status;
+	int		status;
 
 	status = 0;
 	i = 0;
@@ -918,7 +917,7 @@ int	check_invalid_redir(t_common *c, char *input)
 	}
 	if (status)
 		return (es_cul(c, 2), 1);
-	return (0);	
+	return (0);
 }
 
 /*This function calls many function which will check for different syntax errors
@@ -934,8 +933,6 @@ int	error_tree(t_common *c, char *input)
 		return (1);
 	if (check_invalid_redir(c, input))
 		return (1);
-//	if (check_invalid_redir_next(c, input))
-//		return (1);
 	if (check_block_redir(c, input))
 		return (1);
 	if (check_last_redir(c, input))
@@ -965,38 +962,6 @@ char	**tokenize_one(t_common *c, char *input, int pipe)
 	result[index] = NULL;
 	return (result);
 }
-
-/*Tis function checks for the syntax errors '<  |', '>  |', '<<  |' or '>> |'.
-it returns an error message (exit 2) in case this error was fornd.
-int	check_pipe_redir(t_common *c, char *input)
-{
-	int	i;
-
-	i = ft_strlen(input);
-	while (i - 1 >= 0)
-	{
-		while (input[i] != '|' && !q_status(input, i))
-		{
-			if (i == 1 || (input[i] != ' ' && input[i] != '|'))
-				return (0);
-			i--;
-		}
-		i--;
-		i = skip_whitespace(input, i, 1);
-		if (i > 1 && ((input[i] == '<' && input[i] == '<') || (input[i] == '>'
-					&& input[i] == '>')) && !q_status(input, i))
-			i -= 2;
-		else if ((input[i] == '<' || input[i] == '>') && !q_status(input, i))
-			i--;
-		else
-			continue ;
-		i = skip_whitespace(input, i, 1);
-		if ((input[i] != '<' || input[i] != '>') && !q_status(input, i))
-			return (error_lexer(c, 1), 1);
-		i--;
-	}
-	return (0);
-}*/
 
 /*if the last printable character of the input is a pipe ('|') it enters the 
 error_lexer function and displays an error message (incl freeing)*/
@@ -1058,7 +1023,6 @@ int	count_pipes(t_common *c, char *input)
 	len = ft_strlen(input);
 	if (check_open_quotes(c, input) != 0
 		|| check_pipe_error(c, input, len) != 0
-//		|| check_pipe_redir(c, input) != 0
 		|| check_pipe_error_last(c, input, len) != 0)
 		return (-1);
 	while (input[i])
