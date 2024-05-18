@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 16:05:43 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 00:21:40 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	ft_cd(char **args, t_common *c)
 		return (free(oldpwd), print_error(errorno, args[1]), 1);
 	set_env_value(c->env, "OLDPWD", oldpwd);
 	set_env_value(c->env, "PWD", path);
+	set_env_value(c->hidden_env, "PWD", path);
 	free(oldpwd);
 	return (free(path), 0);
 }

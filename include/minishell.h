@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 22:52:29 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 00:18:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ typedef struct common_data
 	int					subshell_level;
 	int					heredoc_counter;
 	t_env				*env;
+	t_env				*hidden_env;
 	char				**envp;
 	t_list_d			*cmd_struct;
 	t_list				*tokens;

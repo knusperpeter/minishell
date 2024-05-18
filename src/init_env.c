@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 23:29:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,14 @@ int	dup_env(t_common *c, char **envp)
 	int		i;
 	t_env	*prev;
 	t_env	*node;
+	t_env	*h_prev;
+	t_env	*h_node;
 
 	if (!envp)
 		return (0);
 	i = 0;
 	prev = NULL;
+	h_prev = NULL;
 	while (envp[i])
 	{
 		if (create_list_element(c, (void **) &node, sizeof(t_env)))
@@ -74,6 +77,14 @@ int	dup_env(t_common *c, char **envp)
 		else
 			prev->next = node;
 		prev = node;
+		if (create_list_element(c, (void **) &h_node, sizeof(t_env)))
+			return (free_env_nodes(c->env), 0);
+		ft_init_env(c, h_node, envp[i], h_prev);
+		if (!c->hidden_env)
+			c->hidden_env = h_node;
+		else
+			h_prev->next = h_node;
+		h_prev = h_node;
 		i++;
 	}
 	return (1);

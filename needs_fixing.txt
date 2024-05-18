@@ -3,3 +3,9 @@ MICHI:
 		cmd+d in heredoc
 					->ms: exit code 0
 					-> bash: 127
+
+unset PWD
+cd
+echo $PWD
+bei uns nix
+bei bash PWD

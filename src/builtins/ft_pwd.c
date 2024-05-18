@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:31 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/11 23:56:57 by chris            ###   ########.fr       */
+/*   Updated: 2024/05/18 23:30:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_pwd(t_common *c, char **args)
 	if (args[1])
 		if (args[1][0] == '-')
 			ft_printerror(c, args);
-	tmp = c->env;
+	tmp = c->hidden_env;
 	while (tmp)
 	{
 		if (!tmp)
