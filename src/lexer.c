@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 15:25:55 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 15:35:51 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -807,14 +807,16 @@ int	check_dots(t_common *c, char *input)
 			dots++;
 		if (dots == 1 && (input[i + 1] == ' ' || input[i + 1] == '\0'))
 			ft_putstr_fd(MESSAGE8, 2);
-		if (dots == 2 && (input[i + 2] != ' ' || input[i + 2] == '\0'))
+		else if (dots == 2 && (input[i + 2] != ' ' || input[i + 2] == '\0'))
 			return (0);
-		if (dots > 2)
+		else if (dots > 2)
 		{
 			while (input[i] != ' ' && input[i] != '\0')
 				write (2, &input[i++], 1);
 			ft_putstr_fd(MESSAGE13, 2);
 		}
+		else
+			return (0);
 		return (es_cul(c, 127), 1);
 	}
 	return (0);
