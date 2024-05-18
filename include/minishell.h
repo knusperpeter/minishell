@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 21:00:10 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 22:52:29 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void		open_failed(t_common *c, t_io_red *io, char *file, \
 			t_cmd_table *cmd);
 void		unlink_heredoc(t_io_red *io, t_cmd_table *cmd);
 void		ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io);
-void		here_doc(t_common *c, t_io_red *io, int *fd);
+int			here_doc(t_common *c, t_io_red *io, int *fd);
 int			open_redirections(t_common *c, t_cmd_table *cmd_node);
 void		dir_error(t_common *c, char *file);
 //utils
@@ -197,6 +197,7 @@ void		init_prep_input(int *i, int *cc, int *len, char *input);
 int			check_the_end(char *input, int i, int *cc);
 char		**prep_input(t_common *c, char *input);
 //lexer_pipe
+int			skip_whitespace(char *input, int i, int dir);
 int			check_pipe_error_last(t_common *c, char *input, int len);
 int			handle_i_and_pipe(char *input, int i, int *pipe);
 int			check_pipe_error(t_common *c, char *input, int len);

@@ -6,11 +6,22 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:07:01 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:07:24 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 22:49:56 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int	check_empty_line(t_common *c, char *input)
+{
+	int	i;
+
+	i = 0;
+	i = skip_whitespace(input, i, 0);
+	if (input[i] == '\0')
+		return (ft_cleanup_loop(c), 1);
+	return (0);
+}
 
 /*if the last printable character of the input is a pipe ('|') it enters the 
 error_lexer function and displays an error message (incl freeing)*/
@@ -76,7 +87,8 @@ int	count_pipes(t_common *c, char *input)
 	len = ft_strlen(input);
 	if (check_open_quotes(c, input) != 0
 		|| check_pipe_error(c, input, len) != 0
-		|| check_pipe_error_last(c, input, len) != 0)
+		|| check_pipe_error_last(c, input, len) != 0
+		|| check_empty_line(c, input) != 0)
 		return (-1);
 	while (input[i])
 	{

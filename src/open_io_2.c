@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_io_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 11:02:35 by chris             #+#    #+#             */
-/*   Updated: 2024/05/18 17:18:27 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 21:44:46 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io)
 		close(cmd_node->write_fd);
 }
 
-void	here_doc(t_common *c, t_io_red *io, int *fd)
+int	here_doc(t_common *c, t_io_red *io, int *fd)
 {
 	char		*buf;
 
@@ -50,7 +50,7 @@ void	here_doc(t_common *c, t_io_red *io, int *fd)
 		if (get_next_line_heredoc(0, &buf, 0) < 0)
 			ft_cleanup_loop(c);
 		if (buf == NULL || *buf == '\0')
-			break ;
+			return (write(1, "\n", 1));
 		if (ft_strlen(io->heredoc_limiter) == ft_strlen(buf) - 1 && \
 				!ft_strncmp(io->heredoc_limiter, buf, (ft_strlen(buf) - 1)))
 			break ;
@@ -66,6 +66,7 @@ void	here_doc(t_common *c, t_io_red *io, int *fd)
 	*(fd) = open(io->infile, O_RDONLY);
 	if (*fd == -1)
 		unlink(io->infile);
+	return (0);
 }
 
 void	dir_error(t_common *c, char *file)

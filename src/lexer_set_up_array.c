@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:24:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:49:09 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 21:21:45 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ which is passed to the tokenize_input function.*/
 int	handle_whitespace(char *input, int k, char *new_string, int *j)
 {
 	k = skip_whitespace(input, k, 0);
-	if (k > 0 && input[k - 1] == ' ' && input[k] != '\0'
+	if (k > 0 && *j > 0 && input[k - 1] == ' ' && input[k] != '\0'
 		&& new_string[*j - 1] != ' ')
 	{
 		if (*j != 0)
