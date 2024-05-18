@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/17 12:57:08 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/17 16:12:43 by miheider         ###   ########.fr       */
+/*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
+/*   Updated: 2024/05/18 12:36:41 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,14 +321,20 @@ int	check_space_before(char *input, int k)
 after a < or > is needed.*/
 int	check_space_after(char *input, int k)
 {
-	if (input[k] != ' ' && input[k] != '>')
+	if (input[k] == '>')
 	{
-		if (input[k - 1] == '>')
+		if (input[k + 1] != ' ' && input[k + 1] != '>')
+			return (1);
+		else if (input[k + 1] == '>' && (input[k + 2] != ' '
+				&& input[k + 2] != '\0'))
 			return (1);
 	}
-	if (input[k] != ' ' && input[k] != '<')
+	if (input[k] == '<')
 	{
-		if (input[k - 1] == '<')
+		if (input[k + 1] != ' ' && input[k + 1] != '<')
+			return (1);
+		else if (input[k + 1] == '<' && (input[k + 2] != ' '
+				&& input[k + 2] != '\0'))
 			return (1);
 	}
 	return (0);
@@ -337,7 +343,7 @@ int	check_space_after(char *input, int k)
 /*this function is writing the characters of the token into the allocated
 memmory. it skips multiple spaces and inserts spaces if needed. the new_string
 which is passed to the tokenize_input function.*/
-char	**set_up_array(t_common *c, int cc, char *input, int len)
+char	**set_up_array(t_common *c, int cc, char *input)
 {
 	char	*new_string;
 	int		i;
@@ -353,19 +359,31 @@ char	**set_up_array(t_common *c, int cc, char *input, int len)
 	{
 		if (q_status(input, k) == 0)
 		{
-			len = len + 1 - 1;
 			k = skip_whitespace(input, k, 0);
 			if (k > 0 && k != i && input[k - 1] == ' '
 				&& input[k] != '\0' && new_string[j - 1] != ' ')
 				new_string[j++] = ' ';
-			if (k > i && check_space_before(input, k) == 1
-				&& new_string[j - 1] != ' ')
-				new_string[j++] = ' ';
-			if (k > i && check_space_after(input, k) == 1
-				&& new_string[j - 1] != ' ')
-				new_string[j++] = ' ';
+			if (input[k] == '<' || input[k] == '>')
+			{
+				if (k > i && check_space_before(input, k) == 1
+					&& new_string[j - 1] != ' ')
+					new_string[j++] = ' ';
+				new_string[j++] = input[k];
+				if (input[k + 1] == input[k])
+				{
+					new_string[j++] = input[k];
+					k++;
+				}
+				if (check_space_after(input, k) == 1
+					&& input[k + 1] != '\0' && input[k + 1] != ' ')
+					new_string[j++] = ' ';
+			}
+			else
+				new_string[j++] = input[k];
 		}
-		new_string[j++] = input[k++];
+		else
+			new_string[j++] = input[k];
+		k++;
 	}
 	new_string[j] = '\0';
 	return (tokenize_input(new_string));
@@ -456,43 +474,9 @@ char	**prep_input(t_common *c, char *input)
 		}
 		counting_up(&i, &cc, 1, 1);
 	}
-	return (set_up_array(c, cc + 1, input, len));
+	return (set_up_array(c, cc + 1, input));
 }
 /*
-
-
-prints out the correct error message when only > or < as input
-int	check_this(t_common *c, char *result, int j)
-{
-	int	status;
-
-	status = 0;
-	if (*result == '<' || *result == '>')
-	{
-		if (j == 6 && *result == '<')
-			status = ft_putstr_fd(MESSAGE1, 2);
-		else if (j == 6 && *result == '>')
-			status = ft_putstr_fd(MESSAGE2, 2);
-		else if (j == 5 && *result == '<')
-			status = ft_putstr_fd(MESSAGE3, 2);
-		else if (j == 5 && *result == '>')
-			status = ft_putstr_fd(MESSAGE4, 2);
-		else if (j == 4 && *result == '<')
-			status = ft_putstr_fd(MESSAGE5, 2);
-		else if (j == 4 && *result == '>')
-			status = ft_putstr_fd(MESSAGE6, 2);
-		else if (j == 3 || (j == 2 && result [1] == '<' && result[2] == '\0')
-			|| (j == 2 && result [1] == '>' && result[2] == '\0')
-			|| result[1] == '\0')
-			status = ft_putstr_fd(MESSAGE7, 2);
-		if (status)
-			return (es_cul(c, 2), 1);
-	}
-	return (0);
-}
-
-
-
 
 int	check_again(t_common *c, char *result, int k, char fir)
 {
@@ -636,32 +620,6 @@ int	check_one_more(t_common *c, char *result)
 
 
 
-// int	check_sq(t_common *c, char *result, int k)
-// {
-// 	int	sq;
-
-// 	sq = 0;
-// 	while (result[k])
-// 	{
-// 		if (result[k] == '\'')
-// 		{
-// 			while (result[k] == '\'')
-// 			{
-// 				sq++;
-// 				k++;
-// 			}
-// 			if (result[k] == ' ' && sq % 2 == 0)
-// 			{
-// 				ft_putstr_fd("❌ minishell: Command '' not found.\n", 2);
-// 				return (es_cul(c, 127), 1);
-// 			}
-// 		}
-// 		else
-// 			return (0);
-// 		k++;
-// 	}
-// 	return (0);
-// }
 
 int	check_inout(t_common *c, char *result)
 {
@@ -785,6 +743,8 @@ int	analysis_block_redir(t_common *c, char *input, int i, int count)
 	return (0);
 }
 
+/*This function checks for multiple an wrong usage of < and >. it calls the
+analysis_block_redir to print out the correct error message.*/
 int	check_block_redir(t_common *c, char *input)
 {
 	int		i;
@@ -918,18 +878,14 @@ in every token. if an error occours it will catch the return value and returns 1
 itself.*/
 int	error_tree(t_common *c, char *input)
 {
-	if (check_empty_quotes(c, input))
-		return (1);
 	if (check_open_quotes(c, input))
+		return (1);
+	if (check_empty_quotes(c, input))
 		return (1);
 	if (check_dots(c, input))
 		return (1);
 	if (check_block_redir(c, input))
 		return (1);
-	
-	
-	
-	
 	if (check_last_redir(c, input))
 		return (1);
 	return (0);
@@ -969,7 +925,7 @@ int	check_pipe_redir(t_common *c, char *input)
 	{
 		while (input[i] != '|' && !q_status(input, i))
 		{
-			if (i == 1)
+			if (i == 1 || (input[i] != ' ' && input[i] != '|'))
 				return (0);
 			i--;
 		}
@@ -1048,7 +1004,8 @@ int	count_pipes(t_common *c, char *input)
 	pipe = 0;
 	in_quote = 0;
 	len = ft_strlen(input);
-	if (check_pipe_error(c, input, len) != 0
+	if (check_open_quotes(c, input) != 0
+		|| check_pipe_error(c, input, len) != 0
 		|| check_pipe_redir(c, input) != 0
 		|| check_pipe_error_last(c, input, len) != 0)
 		return (-1);
