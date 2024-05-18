@@ -6,13 +6,13 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 11:02:35 by chris             #+#    #+#             */
-/*   Updated: 2024/05/13 18:50:53 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 17:18:27 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	open_failed(t_common *c, t_io_red *io, char *file)
+void	open_failed(t_common *c, t_io_red *io, char *file, t_cmd_table *cmd)
 {
 	if (errno == EISDIR)
 		dir_error(c, io->outfile);
@@ -20,6 +20,7 @@ void	open_failed(t_common *c, t_io_red *io, char *file)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		perror(file);
+		cmd->permission = 0;
 	}
 }
 

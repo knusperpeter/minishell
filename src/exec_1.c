@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/13 18:15:18 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 17:24:54 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ void	prepare_execution(t_common *c, t_cmd_table *table, int curr, int *fd)
 void	execute_child(t_common *c, t_cmd_table *table, int curr, int *fd)
 {
 	prepare_execution(c, table, curr, fd);
-	if (is_builtin(table->str[0]))
+	if (is_builtin(table->str[0]) && table->permission)
 	{
 		ft_builtins(table, c);
 		ft_clean_exit(c, NULL, 1);
 	}
-	else
+	else if (table->permission)
 	{
 		c->envp = get_envp(c, c->env);
 		if (get_cmd_path(c, table))
@@ -60,6 +60,8 @@ void	execute_child(t_common *c, t_cmd_table *table, int curr, int *fd)
 			cmd_not_found(table->str[0]);
 		}
 	}
+	else
+		c->exitstatus = 1;
 	ft_clean_exit(c, NULL, 1);
 }
 

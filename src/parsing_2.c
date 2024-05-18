@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:53:44 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 17:10:57 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 17:36:38 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	ft_cmd_args_to_2d(t_common *c, t_list_d *cmd_table)
 
 void	init_cmd_table(t_cmd_table *node)
 {
+	node->permission = 1;
 	node->read_fd = 0;
 	node->write_fd = 1;
 	node->id = -1;
