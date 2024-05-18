@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 14:21:56 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 14:51:04 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -352,30 +352,29 @@ char	**set_up_array(t_common *c, int cc, char *input)
 
 	i = 0;
 	j = 0;
-	new_string = ft_protect(c, (char *)malloc(sizeof(char) * (cc)), 0, 0);
+	new_string = ft_protect(c, (char *)malloc(sizeof(char) * (cc)), 0, 0); 
 	i = skip_whitespace(input, i, 0);
 	k = i;
-	while (input[k])
+	while (input[k] && j >= cc - 1)
 	{
 		if (q_status(input, k) == 0)
 		{
 			k = skip_whitespace(input, k, 0);
-			if (k > 0 && k != i && input[k - 1] == ' '
-				&& input[k] != '\0' && new_string[j - 1] != ' ')
+			if (k > 0 && k != i && input[k - 1] == ' ' && input[k] != '\0' && new_string[j - 1] != ' ')
 				new_string[j++] = ' ';
 			if (input[k] == '<' || input[k] == '>')
 			{
-				if (k > i && check_space_before(input, k) == 1
-					&& new_string[j - 1] != ' ')
+				if (k > i && check_space_before(input, k) == 1 && new_string[j - 1] != ' ')
 					new_string[j++] = ' ';
+
 				new_string[j++] = input[k];
+
 				if (input[k + 1] == input[k])
 				{
 					new_string[j++] = input[k];
 					k++;
 				}
-				if (check_space_after(input, k) == 1
-					&& input[k + 1] != '\0' && input[k + 1] != ' ')
+				if (check_space_after(input, k) == 1 && input[k + 1] != '\0' && input[k + 1] != ' ')
 					new_string[j++] = ' ';
 			}
 			else
@@ -474,6 +473,7 @@ char	**prep_input(t_common *c, char *input)
 		}
 		counting_up(&i, &cc, 1, 1);
 	}
+	printf("cc: %d\n", cc);
 	return (set_up_array(c, cc + 1, input));
 }
 /*
