@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 15:00:57 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 15:04:36 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,7 @@ char	**set_up_array(t_common *c, int cc, char *input)
 	new_string = ft_protect(c, (char *)malloc(sizeof(char) * (cc)), 0, 0);
 	i = skip_whitespace(input, i, 0);
 	k = i;
-	while (input[k] && j >= cc - 1)
+	while (input[k])
 	{
 		if (q_status(input, k) == 0)
 		{
