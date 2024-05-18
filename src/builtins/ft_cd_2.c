@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 23:07:09 by chris             #+#    #+#             */
-/*   Updated: 2024/05/14 14:14:54 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 16:19:33 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,16 @@ int	get_set_path(t_env *env, char *variable, char **path)
 		return (-2);
 }
 
+void	join_relative_path(t_common *c, char **path, char **oldpwd)
+{
+	char	*tmp;
+
+	*path = ft_protect(c, ft_strdup(*oldpwd), 0, 0);
+	tmp = *path;
+	*path = ft_protect(c, ft_strjoin(*path, "/.."), tmp, 0);
+	free(tmp);
+}
+
 int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 {
 	int		size;
@@ -77,12 +87,7 @@ int	get_path(char **args, char **oldpwd, char **path, t_common *c)
 	else if (!ft_strncmp(args[1], ".", size))
 		*path = ft_protect(c, ft_strdup(*oldpwd), 0, 0);
 	else if (!ft_strncmp(args[1], "..", size))
-	{
-		*path = ft_protect(c, ft_strdup(*oldpwd), 0, 0);
-		tmp = *path;
-		*path = ft_protect(c, ft_strjoin(*path, "/.."), tmp, 0);
-		free(tmp);
-	}
+		join_relative_path(c, path, oldpwd);
 	else
 		return (join_path_else(c, path, *oldpwd, args[1]), 0);
 	return (0);

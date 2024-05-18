@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:08:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 16:19:44 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	t_lst_to_struct(t_common *c)
 	while (cmd_token)
 	{
 		tmp_cmd = create_cmds_node(c);
-		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);//moved one line up
+		ft_lst_d_add_back(&c->cmd_struct, tmp_cmd);
 		token_to_struct(c, cmd_token->content, tmp_cmd->content);
 		cmd_token = cmd_token->next;
 	}
