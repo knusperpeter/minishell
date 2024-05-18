@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:34:26 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 20:48:04 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,3 @@ char	*ft_strtok(char *s1, const char *delim)
 	}
 	return (start);
 }
-
-
-
-
-

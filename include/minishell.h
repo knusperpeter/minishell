@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 20:44:40 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 21:00:10 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@
 # define MESSAGE5 "minishell: syntax error near unexpected token `<'\n"
 # define MESSAGE6 "minishell: syntax error near unexpected token `>'\n"
 # define MESSAGE7 "minishell: syntax error near unexpected token `newline'\n"
-# define MESSAGE8 "minishell: .: filename argument required\n.: usage: . filename [arguments]\n"
+# define MESSAGE8 "minishell: .: filename argument required\n\
+.: usage: . filename [arguments]\n"
 # define MESSAGE9 "minishell: syntax error near unexpected token `"
 # define MESSAGE10 "minishell: syntax error near unexpected token `|'\n"
 # define MESSAGE11 "minishell: syntax error near unexpected token `||'\n"
@@ -157,7 +158,8 @@ void		free_all(t_common *c, int cleanup_loop);
 void		ft_clean_exit(t_common *c, char *msg, int cleanup_loop);
 //open_io
 int			open_io(t_common *c, t_list *io, t_cmd_table *cmd_node);
-void		open_failed(t_common *c, t_io_red *io, char *file, t_cmd_table *cmd);
+void		open_failed(t_common *c, t_io_red *io, char *file, \
+			t_cmd_table *cmd);
 void		unlink_heredoc(t_io_red *io, t_cmd_table *cmd);
 void		ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io);
 void		here_doc(t_common *c, t_io_red *io, int *fd);
@@ -215,7 +217,8 @@ int			error_tree(t_common *c, char *input);
 char		**set_up_array(t_common *c, int cc, char *input);
 void		process_input(char *input, char *new_string, int cc);
 void		process_character(char *input, int *k, char *new_string, int *j);
-void		handle_special_characters(char *input, int *k, char *new_string, int *j);
+void		handle_special_characters(char *input, int *k, char *new_string, \
+			int *j);
 int			handle_whitespace(char *input, int k, char *new_string, int *j);
 //lexer_utils.c
 int			skip_whitespace(char *input, int i, int dir);
@@ -237,7 +240,8 @@ void		add_to_list(t_common *c, char **token, t_list *lst);
 //lexer.c
 int			check_token(char *token);
 int			is_delim(char c, const char *delim);
-char		*quotes_in_strtok(char *str, const char *delim, int in_quotes, char quote_type);
+char		*quotes_in_strtok(char *str, const char *delim, int in_quotes, \
+			char quote_type);
 char		*ft_strtok(char *s1, const char *delim);
 //lexer_error.c
 int			error_lexer(t_common *c, int i);
@@ -247,11 +251,15 @@ void		ft_cmd_args_to_2d(t_common *c, t_list_d *cmd_table);
 int			red_to_node(t_common *c, t_token *token, t_cmd_table *node);
 void		init_cmd_table(t_cmd_table *node);
 int			tokenize(t_common *c);
-//signals
+//signals.c
+void		cmd_c_ia(int sig);
+void		cmd_c_nonia(int sig);
+void		cmd_bs(int sig);
+void		cmd_c_here(int sig);
+//signals_2.c
 void		interactive(t_common *c);
 void		interactive_here(t_common *c);
 void		non_interactive(t_common *c);
-void		cmd_bs(int sig);
 
 // builtins
 int			ft_pwd(t_common *c, char **args);

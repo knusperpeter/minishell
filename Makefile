@@ -6,7 +6,7 @@
 #    By: miheider <miheider@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/05/18 20:36:05 by miheider         ###   ########.fr        #
+#    Updated: 2024/05/18 20:59:05 by miheider         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,6 +56,7 @@ SOURCES	=	src/builtins/ft_echo.c \
 			src/free_2.c \
 			src/lexer_error.c \
 			src/signals.c \
+			src/signal_2.c \
 			src/expansion_1.c \
 			src/expansion_2.c \
 			src/expansion_3.c \

@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/15 15:57:55 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 20:48:33 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	error_lexer(t_common *c, int i)
 	status = 0;
 	if (i == 1)
 		status = ft_putstr_fd(MESSAGE10, 2);
-	else 
+	else
 		status = ft_putstr_fd(MESSAGE11, 2);
 	if (status)
 	{
@@ -29,4 +29,3 @@ int	error_lexer(t_common *c, int i)
 	}
 	return (0);
 }
-
