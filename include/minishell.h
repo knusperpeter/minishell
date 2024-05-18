@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 16:20:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 17:18:10 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ typedef struct s_io_red
 typedef struct s_cmd_table
 {
 	pid_t				id;
+	int					permission;
 	int					read_fd;
 	int					write_fd;
 	t_list				*io_red;
@@ -156,7 +157,7 @@ void		free_all(t_common *c, int cleanup_loop);
 void		ft_clean_exit(t_common *c, char *msg, int cleanup_loop);
 //open_io
 int			open_io(t_common *c, t_list *io, t_cmd_table *cmd_node);
-void		open_failed(t_common *c, t_io_red *io, char *file);
+void		open_failed(t_common *c, t_io_red *io, char *file, t_cmd_table *cmd);
 void		unlink_heredoc(t_io_red *io, t_cmd_table *cmd);
 void		ft_close_old_fd(t_cmd_table *cmd_node, t_io_red *io);
 void		here_doc(t_common *c, t_io_red *io, int *fd);

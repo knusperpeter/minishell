@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 13:19:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 18:46:39 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 17:17:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	open_infile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 	else
 		fd = open(io->infile, O_RDONLY);
 	if (fd == -1)
-		return (open_failed(c, io, io->infile), 0);
+		return (open_failed(c, io, io->infile, cmd_node), 0);
 	if (fd != 0)
 		close(fd);
 	return (1);
@@ -46,7 +46,7 @@ int	open_outfile(t_common *c, t_io_red *io, t_cmd_table *cmd_node)
 		fd = open(io->outfile, O_WRONLY | O_APPEND
 				| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1 && cmd_node->id != 0)
-		return (open_failed(c, io, io->outfile), fd);
+		return (open_failed(c, io, io->outfile, cmd_node), fd);
 	if (fd != 1 && cmd_node->id != 0)
 		close(fd);
 	return (fd);
