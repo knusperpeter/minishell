@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:36:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 15:00:57 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/18 15:24:35 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,8 +355,10 @@ char	**set_up_array(t_common *c, int cc, char *input)
 	new_string = ft_protect(c, (char *)malloc(sizeof(char) * (cc)), 0, 0);
 	i = skip_whitespace(input, i, 0);
 	k = i;
-	while (input[k] && j >= cc - 1)
+	while (input[k])
 	{
+		if (j >= cc - 1)
+            break;
 		if (q_status(input, k) == 0)
 		{
 			k = skip_whitespace(input, k, 0);
@@ -386,6 +388,7 @@ char	**set_up_array(t_common *c, int cc, char *input)
 		k++;
 	}
 	new_string[j] = '\0';
+//	printf("new_string: %s\n", new_string);
 	return (tokenize_input(new_string));
 }
 
@@ -474,6 +477,7 @@ char	**prep_input(t_common *c, char *input)
 		}
 		counting_up(&i, &cc, 1, 1);
 	}
+//	printf("cc: %d\n", cc);
 	return (set_up_array(c, cc + 1, input));
 }
 /*
@@ -801,11 +805,11 @@ int	check_dots(t_common *c, char *input)
 	{
 		while (input[k++] == '.')
 			dots++;
-		if (dots == 1 && input[i + 1] == ' ')
+		if (dots == 1 && (input[i + 1] == ' ' || input[i + 1] == '\0'))
 			ft_putstr_fd(MESSAGE8, 2);
-		if (dots == 2 && input[i + 2] != ' ')
+		if (dots == 2 && (input[i + 2] != ' ' || input[i + 2] == '\0'))
 			return (0);
-		if (dots > 1)
+		if (dots > 2)
 		{
 			while (input[i] != ' ' && input[i] != '\0')
 				write (2, &input[i++], 1);
