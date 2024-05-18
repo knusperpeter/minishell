@@ -6,7 +6,7 @@
 #    By: miheider <miheider@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/10 20:04:47 by miheider          #+#    #+#              #
-#    Updated: 2024/05/14 16:28:57 by miheider         ###   ########.fr        #
+#    Updated: 2024/05/18 20:36:05 by miheider         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ HDRS	= include/minishell.h
 LIBFT	= libft
 LIBFT_LIB	= libft.a
 
-SOURCES	=	src/builtins/ft_echo.c	\
+SOURCES	=	src/builtins/ft_echo.c \
 			src/builtins/ft_env.c \
 			src/builtins/ft_exit.c \
 			src/builtins/ft_export_1.c \
@@ -32,6 +32,14 @@ SOURCES	=	src/builtins/ft_echo.c	\
 			src/minishell.c \
 			src/init_env.c \
 			src/lexer.c \
+			src/lexer_prep_input.c \
+			src/lexer_pipe.c \
+			src/lexer_error_tree_one.c \
+			src/lexer_error_tree_two.c \
+			src/lexer_set_up_array.c \
+			src/lexer_utils.c \
+			src/lexer_tokenizing.c \
+			src/lexer_token.c \
 			src/parsing_1.c \
 			src/parsing_2.c \
 			src/parsing_3.c \
