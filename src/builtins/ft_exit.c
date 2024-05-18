@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 01:34:33 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/18 16:01:13 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,29 +102,27 @@ int	valid_num(char *arg)
 //to hand back the exit status from subshell, use waitpid in parent process?
 void	ft_exit(t_common *c, char **cmd)
 {
-	ft_putstr_fd("exit\n", 2);
-	if (cmd)
+	if (c->cmd_count == 1)
+		ft_putstr_fd("exit\n", 2);
+	if (cmd[1])
 	{
-		if (cmd[1])
+		if (!cmd[1])
+			c->exitstatus = 0;
+		if (!valid_num(cmd[1]) || overflows_ll(c, cmd[1]))
 		{
-			if (!cmd[1])
-				c->exitstatus = 0;
-			if (!valid_num(cmd[1]) || overflows_ll(c, cmd[1]))
-			{
-				ft_putstr_fd("minishell: exit: ", 2);
-				ft_putstr_fd(cmd[1], 2);
-				ft_putstr_fd(": numeric argument required\n", 2);
-				c->exitstatus = 2;
-			}
-			if (cmd[2])
-			{
-				c->exitstatus = 1;
-				ft_putstr_fd("minishell: exit: too many args\n", 2);
-				return ;
-			}
-			else if (cmd[1])
-				c->exitstatus = ft_atoll(cmd[1]) % 256;
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(cmd[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+			c->exitstatus = 2;
 		}
+		if (cmd[2])
+		{
+			c->exitstatus = 1;
+			ft_putstr_fd("minishell: exit: too many args\n", 2);
+			return ;
+		}
+		else if (cmd[1])
+			c->exitstatus = ft_atoll(cmd[1]) % 256;
 	}
 	ft_clean_exit(c, NULL, 1);
 }
