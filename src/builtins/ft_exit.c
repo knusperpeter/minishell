@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:50 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 13:32:47 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 22:06:20 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	ft_exit(t_common *c, char **cmd)
 			ft_putstr_fd(": numeric argument required\n", 2);
 			c->exitstatus = 2;
 		}
-		if (cmd[2])
+		else if (cmd[2])
 		{
 			c->exitstatus = 1;
 			ft_putstr_fd("minishell: exit: too many args\n", 2);
