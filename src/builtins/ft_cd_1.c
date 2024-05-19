@@ -6,12 +6,9 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 12:54:29 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 13:32:25 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-//cd /bin goes to /usr/bin
-// needs fixing
 
 #include "../../include/minishell.h"
 
@@ -73,5 +70,3 @@ int	ft_cd(char **args, t_common *c)
 	free(oldpwd);
 	return (free(path), 0);
 }
-//	Wenn unset PWD und dann cd, ist auch OLDPWD unsetted.
-//	Wie wird PWD neu gesetzt? Wie wird OLDPWD neu gesetzt?

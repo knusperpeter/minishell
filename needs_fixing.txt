@@ -1,9 +1,0 @@
-MICHI:
-
-echo 1 '||' echo 2
-
-unset PWD
-cd
-echo $PWD
-bei uns nix
-bei bash PWD

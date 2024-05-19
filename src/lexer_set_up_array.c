@@ -3,18 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_set_up_array.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:24:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 21:21:45 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:35:36 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/*this function is writing the characters of the token into the allocated
-memmory. it skips multiple spaces and inserts spaces if needed. the new_string
-which is passed to the tokenize_input function.*/
 int	handle_whitespace(char *input, int k, char *new_string, int *j)
 {
 	k = skip_whitespace(input, k, 0);

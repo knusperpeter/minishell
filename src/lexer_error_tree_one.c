@@ -3,18 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_error_tree_one.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:08:50 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:49:18 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:34:55 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/*this function sets the exitstatus to the value passed and calls the 
-ft_cleanup_loop. it is called when a function which is detecting for
-syntax errors findes one.*/
 void	es_cul(t_common *c, int es)
 {
 	c->exitstatus = es;
@@ -49,8 +46,6 @@ int	analysis_block_redir(t_common *c, char *input, int i, int count)
 	return (0);
 }
 
-/*This function checks for multiple an wrong usage of < and >. it calls the
-analysis_block_redir to print out the correct error message.*/
 int	check_block_redir(t_common *c, char *input)
 {
 	int		i;
@@ -75,8 +70,6 @@ int	check_block_redir(t_common *c, char *input)
 	return (0);
 }
 
-/*This function checks for <, <<, >>, > as a last printable character and
-exits in case it finds one.*/
 int	check_last_redir(t_common *c, char *input)
 {
 	int	i;
@@ -91,7 +84,6 @@ int	check_last_redir(t_common *c, char *input)
 	return (0);
 }
 
-/*This function checks for dots as only input*/
 int	check_dots(t_common *c, char *input, int i, int k)
 {
 	int	dots;

@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_tokenizing.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:31:47 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:49:00 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:36:02 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/*counts the spaces of a token, used to allocate memory in function 
-tokenize_input*/
 int	check_tokens(char *input)
 {
 	int	i;
@@ -36,7 +34,6 @@ int	check_tokens(char *input)
 	return (space);
 }
 
-/*tokenizes the tokens, stores it in the result array and returns it*/
 char	**tokenize_input(char *input)
 {
 	char	**result;
@@ -63,8 +60,6 @@ char	**tokenize_input(char *input)
 	return (result);
 }
 
-/*this function looks for <>, ><, >><< and <<>> in the string and updates
-the character counter*/
 int	check_double(char *input, int i, int len)
 {
 	if (i + 1 <= len && input[i] == '<' && input[i + 1] == '>')
@@ -80,16 +75,12 @@ int	check_double(char *input, int i, int len)
 	return (0);
 }
 
-/*this function is used by the prep_input function to count the characters (cc)
-and move the index (i).*/
 void	counting_up(int *i, int *cc, int a, int b)
 {
 	(*i) += a;
 	(*cc) += b;
 }
 
-/*this function is tokenizing the input for the first time. the delimiter are
-the '|'. after tokenizing this function checks every token for syntax errors.*/
 char	**tokenize_one(t_common *c, char *input, int pipe)
 {
 	char	**result;

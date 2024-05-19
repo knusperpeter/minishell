@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 00:18:28 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 13:31:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ extern int	g_signal;
 typedef enum e_type
 {
 	VOID,
-//	STRING,
 	REDIR_IN,
 	REDIR_OUT,
 	APPEND,
@@ -70,8 +69,6 @@ typedef struct s_list_d
 	struct s_list_d	*next;
 }	t_list_d;
 
-// Environment key-value pairs are saved here. The flag indicates if
-// the key is defined or not.
 typedef struct s_env
 {
 	char			*variable;
@@ -81,7 +78,7 @@ typedef struct s_env
 	struct s_env	*prev;
 }	t_env;
 
-typedef struct s_token // "< in" -> type = REDIR_IN     data = "in"
+typedef struct s_token
 {
 	t_type			type;
 	char			*data;
@@ -97,7 +94,6 @@ typedef struct s_io_red
 	int				expand_heredoc;
 }	t_io_red;
 
-// Inputs and what attributes come with them is locatedhere.
 typedef struct s_cmd_table
 {
 	pid_t				id;
@@ -113,7 +109,6 @@ typedef struct s_cmd_table
 	char				*exec_path;
 }	t_cmd_table;
 
-// Common struct
 typedef struct common_data
 {
 	int					cmd_count;
@@ -127,7 +122,6 @@ typedef struct common_data
 	t_list_d			*cmd_struct;
 	t_list				*tokens;
 	unsigned int		exitstatus;
-	// char				*exitstatus_str;
 	char				*raw_prompt;
 	int					old_pipe;
 }	t_common;
@@ -278,7 +272,5 @@ int			get_path(char **args, char **oldpwd, char **path, t_common *c);
 void		join_path_else(t_common *c, char **path, char *oldpwd, char *args);
 int			ft_cd(char **args, t_common *c);
 int			get_set_path(t_env *env, char *variable, char **path);
-
-//int	ft_execute_builtins(t_cmd_table *cmd, t_common *c);
 
 #endif

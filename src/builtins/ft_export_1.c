@@ -6,11 +6,10 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:41 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 01:02:24 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 13:33:03 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// declare -x VAR="value" only?
 #include "../../include/minishell.h"
 
 void	replace_env_value(t_common *c, t_env *env, char *args, size_t len)
@@ -81,7 +80,6 @@ static void	print_error(t_common *c, char *arg, int i)
 	}
 }
 
-//export hallo+=lol oder auch export += $hallo$hallo$hallo
 int	ft_export(t_common *c, char **args, t_env *env)
 {
 	int	i;
@@ -104,5 +102,3 @@ int	ft_export(t_common *c, char **args, t_env *env)
 	}
 	return (EXIT_SUCCESS);
 }
-
-//Error to still handle: export "" -> 	export: not valid in this context: 

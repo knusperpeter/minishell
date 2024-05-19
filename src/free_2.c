@@ -6,17 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:55:02 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/12 20:10:51 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 13:34:25 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/**
- * Function: free_2d
- * Description: Frees a 2D array of strings.
- * Parameter: str - The 2D array to free.
- */
 void	free_2d(char **str)
 {
 	int	i;
@@ -31,11 +26,6 @@ void	free_2d(char **str)
 	free(str);
 }
 
-/**
- * Function: free_env_nodes
- * Description: Frees a linked list of environment variables.
- * Parameter: start - The start of the linked list to free.
- */
 void	free_env_nodes(t_env *start)
 {
 	t_env	*tmp;
@@ -52,11 +42,6 @@ void	free_env_nodes(t_env *start)
 	}
 }
 
-/**
- * Function: free_tokens
- * Description: Frees a linked list of tokens.
- * Parameter: content - The linked list to free.
- */
 void	free_tokens(void *content)
 {
 	t_token	*token;
@@ -75,11 +60,6 @@ void	free_tokens(void *content)
 	}
 }
 
-/**
- * Function: free_io_red
- * Description: Frees an IO redirection structure.
- * Parameter: content - The IO redirection structure to free.
- */
 void	free_io_red(void *content)
 {
 	t_io_red	*io;

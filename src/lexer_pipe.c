@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_pipe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:07:01 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/19 13:09:26 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:35:19 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ int	check_empty_line(t_common *c, char *input)
 	return (0);
 }
 
-/*if the last printable character of the input is a pipe ('|') it enters the 
-error_lexer function and displays an error message (incl freeing)*/
 int	check_pipe_error_last(t_common *c, char *input, int len)
 {
 	len = skip_whitespace(input, len - 1, 1);
@@ -41,9 +39,6 @@ int	handle_i_and_pipe(char *input, int i, int *pipe)
 	return (i);
 }
 
-/*this function checks if an pipe ('|') related syntax error occurs 
-and enters the error_lexer function and displays an error message 
-(incl freeing) if this is the case*/
 int	check_pipe_error(t_common *c, char *input, int len)
 {
 	int	i;
@@ -72,8 +67,6 @@ int	check_pipe_error(t_common *c, char *input, int len)
 	return (0);
 }
 
-/*this function counts all the pipes ('|') which are not in quotes. it 
-checks for pipe ('|') related errors and returns -1 in case of an error*/
 int	count_pipes(t_common *c, char *input)
 {
 	int	i;

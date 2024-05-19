@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_error_tree_two.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:15:38 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:47:40 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:35:08 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/*This function returns an error message if it finds an empty single or 
-double quote or quotes which contains only whitespaces.*/
 int	check_empty_quotes(t_common *c, char *input)
 {
 	int		i;
@@ -41,8 +39,6 @@ int	check_empty_quotes(t_common *c, char *input)
 	return (0);
 }
 
-/*This is a function which checks for open double or single quotes. If there are
-open quotes it will clear and return the prompt (exitstatus 2).*/
 int	check_open_quotes(t_common *c, char *result)
 {
 	int	i;
@@ -116,9 +112,6 @@ int	check_invalid_redir(t_common *c, char *input)
 	return (0);
 }
 
-/*This function calls many function which will check for different syntax errors
-in every token. if an error occours it will catch the return value and returns 1
-itself.*/
 int	error_tree(t_common *c, char *input)
 {
 	int	i;

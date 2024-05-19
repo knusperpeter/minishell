@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_prep_input.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:00:11 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:47:24 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:35:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/*this function is used by the prep_input function and manipulates the character
-counter according to the situation. it also moves the index representatively.*/
 void	update_counts(int *i, int *cc, char *input, int num)
 {
 	if (*i > 0 && input[*i - 1] != ' ')
@@ -56,8 +54,6 @@ int	check_the_end(char *input, int i, int *cc)
 	return (0);
 }
 
-/*this function is analysing the token and counts the characters needed for
-memory allocation in the set_up_array function.*/
 char	**prep_input(t_common *c, char *input)
 {
 	int	i;

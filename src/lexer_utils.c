@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:28:34 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:47:47 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:36:18 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/*this function skipps whitespasces. depending on dir it skips whitespace
-in forewards direction (dir = 0) or backwards (dir = 1).*/
 int	skip_whitespace(char *input, int i, int dir)
 {
 	if (dir == 0)
@@ -31,9 +29,6 @@ int	skip_whitespace(char *input, int i, int dir)
 	return (i);
 }
 
-/*this function checks the quote ststus of an input string. it starts 
-from the beginning of a string untill the actual position. if a 
-single or a double quote is open it returns 1, if not it returns 0*/
 int	q_status(char *input, int i)
 {
 	int	k;
@@ -57,8 +52,6 @@ int	q_status(char *input, int i)
 		return (1);
 }
 
-/*this function checks the situation if a <, <<, > or >> occours. depending if
-a space afterwards is present it returns different values.*/
 int	check_the_char(char *input, int i, int len)
 {
 	if (i + 1 <= len && ((input[i] == '>' && input[i + 1] == '>')
@@ -81,8 +74,6 @@ int	check_the_char(char *input, int i, int len)
 	return (0);
 }
 
-/*this function is used by the set_up_array function and checks if a space
-before a < or > is needed.*/
 int	check_space_before(char *input, int k)
 {
 	if (input[k] == '>')
@@ -98,8 +89,6 @@ int	check_space_before(char *input, int k)
 	return (0);
 }
 
-/*this function is used by the set_up_array function and checks if a space
-after a < or > is needed.*/
 int	check_space_after(char *input, int k)
 {
 	if (input[k] == '>')

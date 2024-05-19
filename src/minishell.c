@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/18 21:46:12 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:36:41 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,6 @@ void	init_loop_data(t_common *c)
 	c->heredoc_counter = 0;
 }
 
-/**
- * Function: ft_loop
- * Description: The main loop of the shell. It reads input, parses it, executes
- * it, and cleans up.
- * Parameter: c - The common structure containing the shell data.
- * Returns: 0 when the loop ends.
- */
 int	ft_loop(t_common *c)
 {
 	c->exitstatus = 0;
@@ -73,13 +66,6 @@ int	ft_loop(t_common *c)
 	return (0);
 }
 
-/**
- * Function: init_minishell
- * Description: Initializes the shell.
- * Parameters:
- * - c: The common structure containing the shell data.
- * - envp: The environment variables.
- */
 void	init_minishell(t_common *c, char **envp)
 {
 	ft_memset(c, 0, sizeof(t_common));
@@ -92,16 +78,6 @@ void	init_minishell(t_common *c, char **envp)
 		return (perror("Error initializing environment\n"));
 }
 
-/**
- * Function: main
- * Description: The entry point of the program. It initializes the shell, runs 
- * the main loop, and cleans up when done.
- * Parameters:
- * - ac: The number of command-line arguments.
- * - av: The command-line arguments.
- * - envp: The environment variables.
- * Returns: 0 when the program ends.
- */
 int	main(int ac, char **av, char **envp)
 {
 	t_common	c;

@@ -6,18 +6,12 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 14:18:28 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/14 16:49:02 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 13:34:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/**
- * Function: is_dir
- * Description: Checks if a file is a directory.
- * Parameter: file - The file to check.
- * Returns: 1 if the file is a directory, 0 otherwise.
- */
 int	is_dir(char *file)
 {
 	struct stat	s;
