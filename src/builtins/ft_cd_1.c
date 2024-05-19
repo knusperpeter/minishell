@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 00:21:40 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 12:54:29 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,8 @@ int	ft_cd(char **args, t_common *c)
 		return (free(oldpwd), print_error(errorno, ""), EXIT_FAILURE);
 	if (chdir(path) == -1 || errorno == -3)
 	{
-		free(path);
 		print_error(errorno, args[1]);
-		return (free(oldpwd), EXIT_FAILURE);
+		return (free(path), free(oldpwd), EXIT_FAILURE);
 	}
 	free(path);
 	path = getcwd(NULL, 0);

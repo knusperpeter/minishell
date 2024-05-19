@@ -1,9 +1,5 @@
 MICHI:
 
-		cmd+d in heredoc
-					->ms: exit code 0
-					-> bash: 127
-
 echo 1 '||' echo 2
 
 unset PWD
