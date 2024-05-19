@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:07:01 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/19 13:05:15 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/19 13:09:26 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ int	check_pipe_error(t_common *c, char *input, int len)
 		if (input[i] == '|' && !q_status(input, i))
 			i = handle_i_and_pipe(input, i, &pipe);
 		if (input[i] == '|' && input[i - 1] == '|' && !q_status(input, i))
-			return (error_lexer(c, 2));
+			return (error_lexer(c, 2), -1);
 		if (input[i] == '|' && !q_status(input, i) && pipe == 1)
-			return (error_lexer(c, 1));
+			return (error_lexer(c, 1), -1);
 		pipe = 0;
 		if (input[i] != '\0')
 			i++;
