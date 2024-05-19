@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 13:36:41 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 13:46:05 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,9 @@ int	g_signal = 0;
 
 void	prompt(t_common *c)
 {
-	char	*line;
-
-	if (isatty(fileno(stdin)))
-	{
-		c->raw_prompt = readline("minishell> ");
-		if (c->raw_prompt && c->raw_prompt[0] != '\0')
-			add_history(c->raw_prompt);
-	}
-	else
-	{
-		line = get_next_line(fileno(stdin));
-		c->raw_prompt = ft_strtrim(line, "\n");
-		free(line);
-	}
+	c->raw_prompt = readline("minishell> ");
+	if (c->raw_prompt && c->raw_prompt[0] != '\0')
+		add_history(c->raw_prompt);
 }
 
 void	init_loop_data(t_common *c)
