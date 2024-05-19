@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 20:57:43 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 16:44:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 21:21:00 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,8 @@ void	ft_redirect_io(t_common *c, t_cmd_table *cmd, int curr, int *fd)
 
 int	is_builtin(char *cmd)
 {
-	int	size;
-
 	if (!cmd)
 		return (0);
-	size = ft_strlen(cmd);
 	if (ft_strncmp("echo", cmd, 5) == 0 || \
 		ft_strncmp("env", cmd, 4) == 0 || \
 		ft_strncmp("unset", cmd, 6) == 0 || \
