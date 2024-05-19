@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 13:46:05 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 16:32:50 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ int	ft_loop(t_common *c)
 		prompt(c);
 		non_interactive(c);
 		if (!c->raw_prompt)
+		{
+			write(1, "exit\n", 5);
 			break ;
+		}
 		if (c->raw_prompt[0])
 		{
 			if (ft_parsing(c) != EXIT_FAILURE)
@@ -51,6 +54,8 @@ int	ft_loop(t_common *c)
 				c->exitstatus = 130;
 			ft_cleanup_loop(c);
 		}
+		else
+			free(c->raw_prompt);
 	}
 	return (0);
 }

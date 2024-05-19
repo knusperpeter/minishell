@@ -1,9 +1,0 @@
-./a.out
-*.o
-.nfs*
-*libft.a
-minishell
-out
-in
-.heredoc_tmp*
-minishell_tester

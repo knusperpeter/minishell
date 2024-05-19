@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 20:57:43 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/13 18:17:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 16:44:31 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ int	is_builtin(char *cmd)
 	if (!cmd)
 		return (0);
 	size = ft_strlen(cmd);
-	if (ft_strncmp("echo", cmd, size) == 0 || \
-		ft_strncmp("env", cmd, size) == 0 || \
-		ft_strncmp("unset", cmd, size) == 0 || \
-		ft_strncmp("export", cmd, size) == 0 || \
-		ft_strncmp("cd", cmd, size) == 0 || \
-		ft_strncmp("pwd", cmd, size) == 0 || \
-		ft_strncmp("exit", cmd, size) == 0)
+	if (ft_strncmp("echo", cmd, 5) == 0 || \
+		ft_strncmp("env", cmd, 4) == 0 || \
+		ft_strncmp("unset", cmd, 6) == 0 || \
+		ft_strncmp("export", cmd, 7) == 0 || \
+		ft_strncmp("cd", cmd, 3) == 0 || \
+		ft_strncmp("pwd", cmd, 4) == 0 || \
+		ft_strncmp("exit", cmd, 5) == 0)
 		return (1);
 	return (0);
 }

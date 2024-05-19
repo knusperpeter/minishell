@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/18 17:24:54 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/19 16:42:15 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ int	ft_check_builtin(t_cmd_table *cmd)
 {
 	if (cmd->str[0])
 	{
-		if ((!ft_strncmp("export", cmd->str[0], ft_strlen(cmd->str[0]))
+		if ((!ft_strncmp("export", cmd->str[0], 7)
 				&& cmd->str[1])
-			|| !ft_strncmp("exit", cmd->str[0], ft_strlen(cmd->str[0]))
-			|| !ft_strncmp("unset", cmd->str[0], ft_strlen(cmd->str[0]))
-			|| !ft_strncmp("cd", cmd->str[0], ft_strlen(cmd->str[0])))
+			|| !ft_strncmp("exit", cmd->str[0], 5)
+			|| !ft_strncmp("unset", cmd->str[0], 6)
+			|| !ft_strncmp("cd", cmd->str[0], 3))
 			return (1);
 	}
 	return (0);
