@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:24:45 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/19 13:35:36 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/20 15:41:05 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,5 @@ char	**set_up_array(t_common *c, int cc, char *input)
 
 	new_string = ft_protect(c, (char *)malloc(sizeof(char) * (cc)), 0, 0);
 	process_input(input, new_string, cc);
-	return (tokenize_input(new_string));
+	return (tokenize_input(c, new_string));
 }

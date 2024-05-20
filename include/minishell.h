@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 13:31:52 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/20 15:41:17 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ typedef struct common_data
 	unsigned int		exitstatus;
 	char				*raw_prompt;
 	int					old_pipe;
+	int					print_shlvl_warning;
 }	t_common;
 
 //main
@@ -142,6 +143,7 @@ int			ft_execute(t_common *c);
 int			create_list_element(t_common *c, void **element, size_t size);
 int			ft_init_env(t_common *c, t_env *node, char *envp, t_env *prev);
 int			dup_env(t_common *c, char **envp);
+char		*shlvl(t_common *c, char *value);
 //free
 void		free_2d(char **str);
 void		free_tokens(void *content);
@@ -225,7 +227,7 @@ int			check_space_after(char *input, int k);
 //lexer_tokenizing.c
 int			check_tokens(char *input);
 int			check_double(char *input, int i, int len);
-char		**tokenize_input(char *input);
+char		**tokenize_input(t_common *c, char *input);
 void		counting_up(int *i, int *cc, int a, int b);
 char		**tokenize_one(t_common *c, char *input, int pipe);
 //lexer_token.c

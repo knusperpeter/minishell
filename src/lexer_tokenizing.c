@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:31:47 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/19 13:36:02 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/20 15:40:43 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	check_tokens(char *input)
 	return (space);
 }
 
-char	**tokenize_input(char *input)
+char	**tokenize_input(t_common *c, char *input)
 {
 	char	**result;
 	char	*token;
@@ -42,7 +42,7 @@ char	**tokenize_input(char *input)
 	int		tok;
 
 	tok = check_tokens(input);
-	result = malloc(sizeof(char *) * (tok + 2));
+	result = ft_protect(c, malloc(sizeof(char *) * (tok + 2)), 0, 0);
 	if (!result)
 	{
 		printf("Error - malloc - tokenize_one\n");

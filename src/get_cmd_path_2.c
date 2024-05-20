@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 11:30:56 by chris             #+#    #+#             */
-/*   Updated: 2024/05/13 01:29:45 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/20 15:11:22 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,24 @@ char	*join_path(t_common *c, char *cmd, char *path)
 	fullpath = ft_protect(c, ft_strjoin(prepath, cmd), prepath, 0);
 	free(prepath);
 	return (fullpath);
+}
+
+char	*shlvl(t_common *c, char *value)
+{
+	int		shlvl;
+	char	*new_value;
+
+	shlvl = ft_atoi(value) + 1;
+	if (shlvl < 0)
+		shlvl = 0;
+	if (shlvl > 999 && !c->print_shlvl_warning)
+	{
+		c->print_shlvl_warning = 1;
+		ft_putstr_fd("minishell: warning: shell level (", STDERR);
+		ft_putstr_fd(value, STDERR);
+		ft_putstr_fd(") too high, resetting to 1\n", STDERR);
+		shlvl = 1;
+	}
+	new_value = ft_protect(c, ft_itoa(shlvl), 0, 0);
+	return (new_value);
 }

@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:37:00 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 16:32:50 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/20 14:15:52 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	init_loop_data(t_common *c)
 	c->subshell_level = 0;
 	c->old_pipe = 0;
 	c->heredoc_counter = 0;
+	c->print_shlvl_warning = 1;
 }
 
 int	ft_loop(t_common *c)

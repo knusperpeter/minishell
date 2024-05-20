@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 20:01:51 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 12:53:08 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/20 15:10:55 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ int	create_list_element(t_common *c, void **element, size_t size)
 	return (0);
 }
 
-int	ft_get_var_size(char *envp, char *equals)
+int	ft_get_var_size(char *envp, char *eq)
 {
 	int	size;
 
-	if (equals)
-		size = equals - envp;
+	if (eq)
+		size = eq - envp;
 	else
 		size = ft_strlen(envp);
 	return (size);
@@ -31,22 +31,25 @@ int	ft_get_var_size(char *envp, char *equals)
 
 int	ft_init_env(t_common *c, t_env *node, char *envp, t_env *prev)
 {
-	char	*equals;
+	char	*eq;
 	int		size;
 
-	equals = ft_strchr(envp, '=');
-	if (equals)
-		if (*(equals - 1) == '+')
-			equals -= 1;
-	size = ft_get_var_size(envp, equals);
+	eq = ft_strchr(envp, '=');
+	if (eq)
+		if (*(eq - 1) == '+')
+			eq -= 1;
+	size = ft_get_var_size(envp, eq);
 	node->variable = ft_protect(c, malloc(sizeof(char) * (size + 1)), 0, 0);
 	ft_strlcpy(node->variable, envp, size + 1);
 	node->flag = 0;
-	if (equals)
+	if (eq)
 	{
-		if (*equals == '+')
-			equals++;
-		node->value = ft_protect(c, ft_strdup(equals + 1), node->variable, 0);
+		if (*eq == '+')
+			eq++;
+		if (!ft_strncmp(node->variable, "SHLVL", 6))
+			node->value = shlvl(c, eq + 1);
+		else
+			node->value = ft_protect(c, ft_strdup(eq + 1), node->variable, 0);
 	}
 	else
 		node->value = NULL;
