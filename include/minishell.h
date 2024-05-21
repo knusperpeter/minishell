@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/20 15:41:17 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/21 19:46:39 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,7 @@ void		cmd_c_here(int sig);
 void		interactive(t_common *c);
 void		interactive_here(t_common *c);
 void		non_interactive(t_common *c);
+void		ignore_all(t_common *c);
 
 // builtins
 int			ft_pwd(t_common *c, char **args);

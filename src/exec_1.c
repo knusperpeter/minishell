@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/19 16:42:15 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/21 19:54:52 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,13 @@ void	execute_child(t_common *c, t_cmd_table *table, int curr, int *fd)
 	ft_clean_exit(c, NULL, 1);
 }
 
+void	check_ms(t_common *c, char *str)
+{
+	if (ft_strncmp("./minishell", &str[0], 12) == 0 || ft_strncmp("minishell", &str[0], 10) == 0)
+			ignore_all(c);
+}
+
+
 int	execute_cmds(t_common *c)
 {
 	int			curr;
@@ -81,6 +88,7 @@ int	execute_cmds(t_common *c)
 		if (curr < c->cmd_count)
 			if (pipe(fd) == -1)
 				return (ft_printerrno("pipe: "), EXIT_FAILURE);
+		check_ms(c, *curr_cmd_table->str);
 		curr_cmd_table->id = fork();
 		if (curr_cmd_table->id == -1)
 			return (ft_printerrno("fork: "), EXIT_FAILURE);
@@ -107,6 +115,7 @@ int	ft_execute(t_common *c)
 	{
 		status = execute_cmds(c);
 		wait_all_childs(c);
+		interactive(c);
 	}
 	if (status == EXIT_FAILURE)
 		return (EXIT_FAILURE);

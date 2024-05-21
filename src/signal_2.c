@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:50:22 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 20:50:37 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/21 19:46:00 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,16 @@ void	interactive_here(t_common *c)
 		g_signal = 0;
 	}
 	signal(SIGINT, cmd_c_here);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	ignore_all(t_common *c)
+{
+	if (g_signal != 0)
+	{
+		c->exitstatus = g_signal + 128;
+		g_signal = 0;
+	}
+	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }

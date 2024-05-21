@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 21:22:44 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/18 22:08:44 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/21 19:56:48 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ void	cmd_c_here(int sig)
 	if (sig == SIGINT)
 	{
 		g_signal = SIGINT;
-		printf("\n");
+//		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		rl_redisplay();
+//		rl_redisplay();
 		ioctl(1, TIOCSTI, "\n");
 		(void)sig;
 	}
