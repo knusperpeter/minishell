@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 19:38:11 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/21 19:46:39 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/22 14:42:24 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,7 @@ char		*quotes_in_strtok(char *str, const char *delim, int in_quotes, \
 char		*ft_strtok(char *s1, const char *delim);
 //lexer_error.c
 int			error_lexer(t_common *c, int i);
+void		check_ms(t_common *c, char *str);
 //parsing
 int			ft_parsing(t_common *c);
 void		ft_cmd_args_to_2d(t_common *c, t_list_d *cmd_table);

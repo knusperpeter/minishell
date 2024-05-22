@@ -6,7 +6,7 @@
 /*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 20:25:50 by chris             #+#    #+#             */
-/*   Updated: 2024/05/21 19:54:52 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/22 14:41:56 by miheider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,6 @@ void	execute_child(t_common *c, t_cmd_table *table, int curr, int *fd)
 		c->exitstatus = 1;
 	ft_clean_exit(c, NULL, 1);
 }
-
-void	check_ms(t_common *c, char *str)
-{
-	if (ft_strncmp("./minishell", &str[0], 12) == 0 || ft_strncmp("minishell", &str[0], 10) == 0)
-			ignore_all(c);
-}
-
 
 int	execute_cmds(t_common *c)
 {
