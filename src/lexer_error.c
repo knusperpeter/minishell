@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miheider <miheider@student.42.fr>          +#+  +:+       +#+        */
+/*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 17:16:46 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/22 14:42:54 by miheider         ###   ########.fr       */
+/*   Updated: 2024/05/22 17:29:36 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ int	error_lexer(t_common *c, int i)
 
 void	check_ms(t_common *c, char *str)
 {
-	if (ft_strncmp("./minishell", &str[0], 12) == 0
-		|| ft_strncmp("minishell", &str[0], 10) == 0)
-		ignore_all(c);
+	if (str)
+	{
+		if (ft_strncmp("./minishell", &str[0], 12) == 0
+			|| ft_strncmp("minishell", &str[0], 10) == 0)
+			ignore_all(c);
+	}
 }

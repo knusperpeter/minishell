@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 23:49:24 by caigner           #+#    #+#             */
-/*   Updated: 2024/05/19 13:32:25 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/22 17:22:58 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,23 @@ void	join_path_else(t_common *c, char **path, char *oldpwd, char *args)
 
 void	print_error(int errorno, char *arg)
 {
-	ft_putstr_fd("minishell: cd: ", 2);
-	ft_putstr_fd(arg, 2);
-	if (errorno == -1)
-		ft_putstr_fd("HOME not set", 2);
-	if (errorno == -2)
-		ft_putstr_fd("OLDPWD not set", 2);
-	if (errorno == -3)
-		ft_putstr_fd("too many arguments", 2);
-	if (errno != 0)
+	if (arg)
 	{
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd(arg, 2);
+		if (errorno == -1)
+			ft_putstr_fd("HOME not set", 2);
+		if (errorno == -2)
+			ft_putstr_fd("OLDPWD not set", 2);
+		if (errorno == -3)
+			ft_putstr_fd("too many arguments", 2);
+		if (errno != 0)
+		{
+			ft_putstr_fd(": ", 2);
+			ft_putstr_fd(strerror(errno), 2);
+		}
+		ft_putstr_fd("\n", 2);
 	}
-	ft_putstr_fd("\n", 2);
 }
 
 int	ft_cd(char **args, t_common *c)

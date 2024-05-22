@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 10:53:28 by chris             #+#    #+#             */
-/*   Updated: 2024/05/13 18:16:12 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/22 15:56:28 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	*ft_protect(t_common *c, void *p1, void *p2, void *p3)
 	{
 		free(p2);
 		free(p3);
-		ft_clean_exit(c, "malloc-fail", 1);
+		ft_clean_exit(c, "malloc-fail", 0);
 		return (NULL);
 	}
 	return (ptr);
