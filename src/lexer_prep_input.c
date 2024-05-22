@@ -6,7 +6,7 @@
 /*   By: caigner <caigner@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:00:11 by miheider          #+#    #+#             */
-/*   Updated: 2024/05/19 13:35:31 by caigner          ###   ########.fr       */
+/*   Updated: 2024/05/22 18:01:32 by caigner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ char	**prep_input(t_common *c, char *input)
 			process_checks(input, &i, &cc, len);
 			i = skip_whitespace(input, i, 0);
 		}
-		counting_up(&i, &cc, 1, 1);
+		if (input[i])
+			counting_up(&i, &cc, 1, 1);
 	}
 	return (set_up_array(c, cc + 1, input));
 }
